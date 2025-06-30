@@ -58,10 +58,28 @@ namespace BookTracker.Managers
         public void ListGenres()
         {
             Console.WriteLine("Genres:");
-            foreach (var genre in genres)
+            foreach (var genre in genres.OrderBy(x => x.Name))
             {
                 Console.WriteLine($"{genre.GenrePK} - {genre.Name}");
             }
+        }
+
+        // <summary>
+        /// Deletes the name of the author by.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public void DeleteGenreByName(string name)
+        {
+            var genre = genres.FirstOrDefault(a => a.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (genre != null)
+            {
+                genres.Remove(genre);
+                GenreRepository.Save(genres);
+
+                Console.WriteLine($"The {genre.Name} is deleted");
+            }
+            Console.WriteLine("This genre is not present in database");
         }
     }
 }

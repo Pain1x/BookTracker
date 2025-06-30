@@ -7,15 +7,32 @@ namespace BookTracker
 {
     internal class Program
     {
+
+        #region Fields
+
         /// <summary>
         /// The manager
         /// </summary>
         static BookManager BookManager = new();
 
+        /// <summary>
+        /// The author manager
+        /// </summary>
         static AuthorManager authorManager = new AuthorManager();
+
+        /// <summary>
+        /// The genre manager
+        /// </summary>
         static GenreManager genreManager = new GenreManager();
 
+        /// <summary>
+        /// The mapper configuration
+        /// </summary>
         static MapperConfiguration? mapperConfiguration;
+
+        #endregion
+
+        #region Main
 
         static void Main()
         {
@@ -40,8 +57,10 @@ namespace BookTracker
                 Console.WriteLine("7. Count books by author");
                 Console.WriteLine("8. Count books by genre");
                 Console.WriteLine("9. Add author");
-                Console.WriteLine("10. Add Genre");
-                Console.WriteLine("11. Exit");
+                Console.WriteLine("10. Delete author");
+                Console.WriteLine("11. Add Genre");
+                Console.WriteLine("12. Delete Genre");
+                Console.WriteLine("13. Exit");
                 Console.Write("Choose an option: ");
                 var choice = Console.ReadLine();
 
@@ -56,8 +75,10 @@ namespace BookTracker
                     case "7": CountBooksByAuthor(); break;
                     case "8": CountBooksByGenre(); break;
                     case "9": AddAuthor(); break;
-                    case "10": AddGenre(); break;
-                    case "11": return;
+                    case "10": DeleteAuthor(); break;
+                    case "11": AddGenre(); break;
+                    case "12": DeleteGenre(); break;
+                    case "13": return;
                     default: Console.WriteLine("Invalid choice."); break;
                 }
 
@@ -65,6 +86,10 @@ namespace BookTracker
                 Console.ReadLine();
             }
         }
+
+        #endregion
+
+        #region Books
 
         /// <summary>
         /// Lists the books.
@@ -250,6 +275,10 @@ namespace BookTracker
             Console.WriteLine($"You have read {count} books in the {genreName} genre.");
         }
 
+        #endregion
+
+        #region Authors
+
         /// <summary>
         /// Adds the author.
         /// </summary>
@@ -257,9 +286,25 @@ namespace BookTracker
         {
             Console.Write("Enter author name: ");
             var name = Console.ReadLine() ?? "";
+
             var author = authorManager.AddAuthor(name);
             Console.WriteLine($"Author '{author.Name}' added with ID {author.AuthorPK}");
         }
+
+        /// <summary>
+        /// Deletes the author.
+        /// </summary>
+        static void DeleteAuthor()
+        {
+            Console.Write("Enter author name to delete: ");
+            var name = Console.ReadLine() ?? "";
+
+            authorManager.DeleteAuthorByName(name);
+        }
+
+        #endregion
+
+        #region Genres
 
         /// <summary>
         /// Adds the genre.
@@ -271,5 +316,18 @@ namespace BookTracker
             var genre = genreManager.AddGenre(name);
             Console.WriteLine($"Genre '{genre.Name}' added with ID {genre.GenrePK}");
         }
+
+        /// <summary>
+        /// Deletes the genre.
+        /// </summary>
+        static void DeleteGenre()
+        {
+            Console.Write("Enter genre name to delete: ");
+            var name = Console.ReadLine() ?? "";
+
+            genreManager.DeleteGenreByName(name);
+        }
+
+        #endregion
     }
 }

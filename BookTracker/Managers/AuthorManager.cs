@@ -59,10 +59,28 @@ namespace BookTracker.Managers
         public void ListAuthors()
         {
             Console.WriteLine("Authors:");
-            foreach (var author in authors)
+            foreach (var author in authors.OrderBy(x => x.Name))
             {
                 Console.WriteLine($"{author.AuthorPK} - {author.Name}");
             }
+        }
+
+        /// <summary>
+        /// Deletes the name of the author by.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public void DeleteAuthorByName(string name)
+        {
+            var author = authors.FirstOrDefault(a => a.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (author != null)
+            {
+                authors.Remove(author);
+                AuthorRepository.Save(authors);
+
+                Console.WriteLine($"The {author.Name} is deleted");
+            }
+            Console.WriteLine("This author is not present in database");
         }
     }
 }

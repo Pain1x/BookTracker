@@ -51,7 +51,7 @@ public class BookManager
                 DateRead = book.DateRead,
                 Rating = book.Rating
             };
-        }).ToList();
+        }).OrderBy(x => x.Title).ToList();
     }
 
     /// <summary>
