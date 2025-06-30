@@ -80,4 +80,11 @@ public class BookManager
             BookRepository.Save(books);
         }
     }
+
+    /// <summary>
+    /// Counts the books by year.
+    /// </summary>
+    /// <param name="year">The year.</param>
+    /// <returns></returns>
+    public int CountBooksByYear(int year) => books.Count(b => b.DateRead.HasValue && b.DateRead.Value.Year == year);
 }
