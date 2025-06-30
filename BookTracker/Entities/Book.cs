@@ -11,7 +11,7 @@
         /// <value>
         /// The identifier.
         /// </value>
-        public Guid BookPK { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the title.
@@ -22,20 +22,20 @@
         public string Title { get; set; } = "";
 
         /// <summary>
-        /// Gets or sets the author pk.
+        /// Gets or sets the author.
         /// </summary>
         /// <value>
-        /// The author pk.
+        /// The author.
         /// </value>
-        public Guid AuthorPK { get; set; }
+        public string Author { get; set; } = "";
 
         /// <summary>
-        /// Gets or sets the genre pk.
+        /// Gets or sets the genre.
         /// </summary>
         /// <value>
-        /// The genre pk.
+        /// The genre.
         /// </value>
-        public Guid GenrePK { get; set; }
+        public string Genre { get; set; } = "";
 
         /// <summary>
         /// Gets or sets the date read.
