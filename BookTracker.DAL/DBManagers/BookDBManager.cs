@@ -1,21 +1,23 @@
-﻿using BookTracker.Entities;
+﻿using BookTracker.DAL.DBContexts;
+using BookTracker.DAL.Entities;
 using BookTracker.Managers;
-using BookTracker.Models;
-using BookTracker.Repositories;
+using Microsoft.EntityFrameworkCore;
 
-public class BookManager
+public class BookDBManager
 {
     /// <summary>
     /// The books
     /// </summary>
     private List<Book> books;
 
+    private BooksDbContext BooksDbContext;
+
     /// <summary>
-    /// Initializes a new instance of the <see cref="BookManager"/> class.
+    /// Initializes a new instance of the <see cref="BookDBManager"/> class.
     /// </summary>
-    public BookManager()
+    public BookDBManager(BooksDbContext booksDBContext)
     {
-        books = BookRepository.Load();
+        BooksDbContext = booksDBContext;
     }
 
     /// <summary>
@@ -25,34 +27,15 @@ public class BookManager
     public void AddBook(Book book)
     {
         book.BookPK = Guid.NewGuid();
-        books.Add(book);
-        BookRepository.Save(books);
+        BooksDbContext.Add(book);
+        BooksDbContext.SaveChanges();
     }
 
     /// <summary>
-    /// Gets all books detailed.
+    /// Gets all books.
     /// </summary>
-    /// <param name="authorManager">The author manager.</param>
-    /// <param name="genreManager">The genre manager.</param>
     /// <returns></returns>
-    public List<BookModel> GetAllBooks(AuthorManager authorManager, GenreManager genreManager)
-    {
-        return books.Select(book =>
-        {
-            var author = authorManager.FindAuthorById(book.AuthorPK);
-            var genre = genreManager.FindGenreById(book.GenrePK);
-
-            return new BookModel
-            {
-                BookPK = book.BookPK,
-                Title = book.Title,
-                AuthorName = author?.Name ?? "Unknown Author",
-                GenreName = genre?.Name ?? "Unknown Genre",
-                DateRead = book.DateRead,
-                Rating = book.Rating
-            };
-        }).OrderBy(x => x.Title).ToList();
-    }
+    public List<Book> GetAllBooks() => BooksDbContext.Books.Include(b => b.Author).Include(b => b.Genre).OrderBy(b => b.Title).ToList();
 
     /// <summary>
     /// Finds the book by identifier.
@@ -71,7 +54,9 @@ public class BookManager
         if (book != null)
         {
             books.Remove(book);
-            BookRepository.Save(books);
+
+            BooksDbContext.Remove(book);
+            BooksDbContext.SaveChanges();
         }
     }
 
@@ -86,7 +71,9 @@ public class BookManager
         if (book != null)
         {
             editAction(book);
-            BookRepository.Save(books);
+
+            BooksDbContext.Update(book);
+            BooksDbContext.SaveChanges();
         }
     }
 
@@ -103,7 +90,7 @@ public class BookManager
     /// <param name="authorName">Name of the author.</param>
     /// <param name="authorManager">The author manager.</param>
     /// <returns></returns>
-    public int CountBooksByAuthor(string authorName, AuthorManager authorManager)
+    public int CountBooksByAuthor(string authorName, AuthorDBManager authorManager)
     {
         var author = authorManager.FindAuthorByName(authorName);
         if (author == null) return 0;
@@ -117,7 +104,7 @@ public class BookManager
     /// <param name="genreName">Name of the genre.</param>
     /// <param name="genreManager">The genre manager.</param>
     /// <returns></returns>
-    public int CountBooksByGenre(string genreName, GenreManager genreManager)
+    public int CountBooksByGenre(string genreName, GenreDBManager genreManager)
     {
         var genre = genreManager.FindGenreByName(genreName);
         if (genre == null) return 0;

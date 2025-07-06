@@ -1,4 +1,4 @@
-﻿namespace BookTracker.Entities
+﻿namespace BookTracker.DAL.Entities
 {
     /// <summary>
     /// Book Entity
@@ -60,5 +60,21 @@
         /// The notes.
         /// </value>
         public string Notes { get; set; } = "";
+
+        /// <summary>
+        /// Gets or sets the author.
+        /// </summary>
+        /// <value>
+        /// The author.
+        /// </value>
+        public Author Author { get; set; }
+
+        /// <summary>
+        /// Gets or sets the genre.
+        /// </summary>
+        /// <value>
+        /// The genre.
+        /// </value>
+        public Genre Genre { get; set; }
     }
 }
