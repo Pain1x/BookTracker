@@ -22,22 +22,6 @@
         public string Title { get; set; } = "";
 
         /// <summary>
-        /// Gets or sets the author pk.
-        /// </summary>
-        /// <value>
-        /// The author pk.
-        /// </value>
-        public Guid AuthorPK { get; set; }
-
-        /// <summary>
-        /// Gets or sets the genre pk.
-        /// </summary>
-        /// <value>
-        /// The genre pk.
-        /// </value>
-        public Guid GenrePK { get; set; }
-
-        /// <summary>
         /// Gets or sets the date read.
         /// </summary>
         /// <value>
@@ -67,7 +51,7 @@
         /// <value>
         /// The author.
         /// </value>
-        public Author Author { get; set; }
+        public required Author Author { get; set; }
 
         /// <summary>
         /// Gets or sets the genre.
@@ -75,6 +59,6 @@
         /// <value>
         /// The genre.
         /// </value>
-        public Genre Genre { get; set; }
+        public required Genre Genre { get; set; }
     }
 }

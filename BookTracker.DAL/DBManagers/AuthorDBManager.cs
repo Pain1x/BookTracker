@@ -1,18 +1,15 @@
-﻿using BookTracker.DAL.Entities;
+﻿using BookTracker.DAL.DBContexts;
+using BookTracker.DAL.DBManagers;
+using BookTracker.DAL.Entities;
 
 namespace BookTracker.Managers
 {
-    public class AuthorDBManager
+    public class AuthorDBManager(BooksDbContext booksDbContext) : BaseDBManager(booksDbContext)
     {
         /// <summary>
         /// The authors
         /// </summary>
         private List<Author> authors;
-
-        //public AuthorDBManager()
-        //{
-        //    authors = AuthorsRepostitory.Load();
-        //}
 
         ///// <summary>
         ///// Adds the author.

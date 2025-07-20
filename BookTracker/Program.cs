@@ -1,12 +1,7 @@
 ﻿using AutoMapper;
 using BookTracker.AutoMapper;
-using BookTracker.BLL.Models;
 using BookTracker.BLL.Services;
 using BookTracker.DAL.DBContexts;
-using BookTracker.DAL.Entities;
-using BookTracker.Helpers;
-using BookTracker.Managers;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace BookTracker
@@ -17,16 +12,6 @@ namespace BookTracker
         #region Fields
 
         /// <summary>
-        /// The author manager
-        /// </summary>
-        static AuthorDBManager AuthorsDBManager = new();
-
-        /// <summary>
-        /// The genre manager
-        /// </summary>
-        static GenreDBManager GenresDBManager = new();
-
-        /// <summary>
         /// The mapper configuration
         /// </summary>
         static MapperConfiguration? mapperConfiguration;
@@ -35,7 +20,7 @@ namespace BookTracker
 
         #region Main
 
-        static void Main()
+        static async Task Main()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -70,7 +55,7 @@ namespace BookTracker
 
                 switch (choice)
                 {
-                    case "1": ListBooks(); break;
+                    case "1": await ListBooks(); break;
                     // case "2": AddBook(); break;
                     //case "3": EditBook(); break;
                     //case "4": DeleteBook(); break;
@@ -97,7 +82,7 @@ namespace BookTracker
         /// <summary>
         /// Lists the books.
         /// </summary>
-        static void ListBooks()
+        static async Task ListBooks()
         {
             var mapper = mapperConfiguration.CreateMapper();
 
@@ -105,34 +90,34 @@ namespace BookTracker
 
             var books = BooksService.GetAllBooks();
 
-            if (books.Count == 0)
+            if (books.Result.Count == 0)
             {
                 Console.WriteLine("No books found.");
                 return;
             }
 
-            foreach (var book in books)
+            foreach (var book in books.Result)
             {
                 Console.WriteLine($"{book.Title} by {book.Author.Name} - Genre: {book.Genre.Name} - Read on: {book.DateRead?.ToString("yyyy-MM-dd") ?? "N/A"} - Rating: {book.Rating}");
             }
         }
 
-        ///// <summary>
-        ///// Adds the book.
-        ///// </summary>
+        /// <summary>
+        /// Adds the book.
+        /// </summary>
         //static void AddBook()
         //{
         //    Console.Write("Enter book title: ");
         //    var title = Console.ReadLine() ?? "";
 
-        //    // Select or add author
+        //    Select or add author
         //    Console.WriteLine("Choose an author or type a new one:");
         //    AuthorsDBManager.ListAuthors();
         //    Console.Write("Author name: ");
         //    var authorName = Console.ReadLine() ?? "";
         //    var author = AuthorsDBManager.AddAuthor(authorName);
 
-        //    // Select or add genre
+        //    Select or add genre
         //    Console.WriteLine("Choose a genre or type a new one:");
         //    GenresDBManager.ListGenres();
         //    Console.Write("Genre name: ");

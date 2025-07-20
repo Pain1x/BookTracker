@@ -1,17 +1,15 @@
-﻿using BookTracker.DAL.Entities;
+﻿using BookTracker.DAL.DBContexts;
+using BookTracker.DAL.DBManagers;
+using BookTracker.DAL.Entities;
 
 namespace BookTracker.Managers
 {
-    public class GenreDBManager
+    public class GenreDBManager(BooksDbContext booksDbContext) : BaseDBManager(booksDbContext)
     {
         /// <summary>
         /// The genres
         /// </summary>
         private List<Genre> genres;
-
-        public GenreDBManager()
-        {
-        }
 
         /// <summary>
         /// Adds the genre.
