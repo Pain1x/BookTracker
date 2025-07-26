@@ -8,7 +8,7 @@ namespace BookTracker.BLL.Models
 
         public string Title { get; set; } = "";
 
-        public DateTime? DateRead { get; set; }
+        public DateTimeOffset? DateRead { get; set; }
 
         public int Rating { get; set; }
 

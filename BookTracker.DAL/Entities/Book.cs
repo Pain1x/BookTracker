@@ -27,7 +27,7 @@
         /// <value>
         /// The date read.
         /// </value>
-        public DateTime? DateRead { get; set; }
+        public DateTimeOffset? DateRead { get; set; }
 
         /// <summary>
         /// Gets or sets the rating.
@@ -54,11 +54,27 @@
         public required Author Author { get; set; }
 
         /// <summary>
+        /// Gets or sets the author pk.
+        /// </summary>
+        /// <value>
+        /// The author pk.
+        /// </value>
+        public Guid AuthorPK { get; set; }
+
+        /// <summary>
         /// Gets or sets the genre.
         /// </summary>
         /// <value>
         /// The genre.
         /// </value>
         public required Genre Genre { get; set; }
+
+        /// <summary>
+        /// Gets or sets the genre pk.
+        /// </summary>
+        /// <value>
+        /// The genre pk.
+        /// </value>
+        public Guid GenrePK { get; set; }
     }
 }

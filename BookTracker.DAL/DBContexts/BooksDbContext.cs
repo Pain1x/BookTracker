@@ -29,13 +29,13 @@ namespace BookTracker.DAL.DBContexts
             modelBuilder.Entity<Book>()
                 .HasOne(b => b.Author)
                 .WithMany() // .WithMany(a => a.Books) if you add collection
-                .HasForeignKey(b => b.Author.AuthorPK)
+                .HasForeignKey(b => b.AuthorPK)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Book>()
                 .HasOne(b => b.Genre)
                 .WithMany() // .WithMany(g => g.Books) if you add collection
-                .HasForeignKey(b => b.Genre.GenrePK)
+                .HasForeignKey(b => b.GenrePK)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Book>()
