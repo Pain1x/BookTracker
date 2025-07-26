@@ -61,7 +61,7 @@ namespace BookTracker.Helpers
                     Title = bookInput.Title,
                     Author = bookInput.Author,
                     Genre = bookInput.Genre,
-                    DateRead = bookInput.DateRead.HasValue ? DateTime.SpecifyKind(bookInput.DateRead.Value, DateTimeKind.Utc) : null,
+                    DateRead = bookInput.DateRead,
                     Rating = bookInput.Rating,
                     Notes = bookInput.Notes
                 };
