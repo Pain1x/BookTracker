@@ -1,4 +1,5 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 @using BookTracker.BLL.Abstarctions
 @using BookTracker.BLL.Models
 @inject IBooksService BooksService
@@ -39,9 +40,9 @@ else
         </tbody>
     </table>
 
-    <button @onclick="@PreviousPage" disabled="@(pageIndex == 1)">Previous Page</button>
+    <button class="btn btn-primary" @onclick="PreviousPage" disabled="@(pageIndex == 1)">Previous Page</button>
     <span> Page @pageIndex </span>
-    <button @onclick="@NextPage" disabled="@(!hasMore)">Next Page</button>
+    <button class="btn btn-primary" @onclick="NextPage" disabled="@(!hasMore)">Next Page</button>
 }
 
 @code {
