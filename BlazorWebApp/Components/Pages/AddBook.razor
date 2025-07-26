@@ -1,0 +1,54 @@
+﻿@page "/add-book"
+@using BookTracker.BLL.Abstarctions
+@using BookTracker.BLL.Models
+@inject IBooksService BooksService
+@inject NavigationManager Navigation
+
+<h3>Add a New Book</h3>
+
+<EditForm Model="@newBook" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Title:</label>
+        <InputText @bind-Value="newBook.Title" />
+    </div>
+
+    <div>
+        <label>Author:</label>
+        <InputText @bind-Value="newBook.Author.Name" />
+    </div>
+
+    <div>
+        <label>Genre:</label>
+        <InputText @bind-Value="newBook.Genre.Name" />
+    </div>
+
+    <div>
+        <label>Date Read:</label>
+        <InputDate @bind-Value="newBook.DateRead" />
+    </div>
+
+    <div>
+        <label>Rating:</label>
+        <InputNumber @bind-Value="newBook.Rating" />
+    </div>
+
+    <button type="submit">Add Book</button>
+</EditForm>
+
+@code {
+    private BookModel newBook = new BookModel
+    {
+        Author = new AuthorModel(),
+        Genre = new GenreModel(),
+        DateRead = DateTimeOffset.UtcNow
+    };
+
+    private async Task HandleValidSubmit()
+    {
+        await BooksService.AddBook(newBook);
+        Navigation.NavigateTo("/");
+    }
+}

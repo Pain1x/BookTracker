@@ -5,8 +5,9 @@ namespace BookTracker.DAL.DBContexts
 {
     public class BooksDbContext : DbContext
     {
-        public BooksDbContext()
+        public BooksDbContext(DbContextOptions<BooksDbContext> options) : base(options)
         {
+
         }
 
         public DbSet<Book> Books { get; set; }
@@ -40,11 +41,7 @@ namespace BookTracker.DAL.DBContexts
 
             modelBuilder.Entity<Book>()
             .Property(e => e.DateRead)
-            .HasColumnType("timestamp with time zone")
-            .HasConversion(
-                v => v,
-                v => DateTimeOffset.FromUnixTimeSeconds(v.Value.ToUniversalTime().Ticks / 10000000).UtcDateTime
-            );
+            .HasColumnType("timestamptz");
 
             #endregion
 

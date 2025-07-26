@@ -4,6 +4,8 @@ namespace BookTracker.BLL.Models
 {
     public class BookModel
     {
+        public string? DateReadString => DateRead?.UtcDateTime.ToString("yyyy-MM-dd");
+
         public Guid BookPK { get; set; }
 
         public string Title { get; set; } = "";
@@ -18,7 +20,7 @@ namespace BookTracker.BLL.Models
         /// <value>
         /// The author.
         /// </value>
-        public Author Author { get; set; }
+        public required AuthorModel Author { get; set; }
 
         /// <summary>
         /// Gets or sets the genre.
@@ -26,6 +28,6 @@ namespace BookTracker.BLL.Models
         /// <value>
         /// The genre.
         /// </value>
-        public Genre Genre { get; set; }
+        public required GenreModel Genre { get; set; }
     }
 }

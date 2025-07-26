@@ -1,18 +1,19 @@
 ﻿using AutoMapper;
 using BookTracker.BLL.Abstarctions;
 using BookTracker.BLL.Models;
+using BookTracker.DAL.Abstractions;
 using BookTracker.DAL.Entities;
 
 namespace BookTracker.BLL.Services
 {
-    public class BooksService(BookDBManager booksDBManager, IMapper mapper) : IBooksService
+    public class BooksService(IBookDBManager booksDBManager, IMapper mapper) : IBooksService
     {
         #region Private Fields
 
         /// <summary>
         /// The manager
         /// </summary>
-        private BookDBManager BooksDBManager = booksDBManager;
+        private IBookDBManager BooksDBManager = booksDBManager;
 
         /// <summary>
         /// The manager
