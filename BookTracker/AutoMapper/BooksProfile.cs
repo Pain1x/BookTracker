@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using BookTracker.Entities;
-using BookTracker.Models;
+using BookTracker.BLL.Models;
+using BookTracker.DAL.Entities;
 
 namespace BookTracker.AutoMapper
 {
@@ -8,13 +8,7 @@ namespace BookTracker.AutoMapper
     {
         public BooksProfile()
         {
-            CreateMap<Book, BookModel>()
-                .ForMember(dest => dest.AuthorName, opt => opt.Ignore()) // needs AuthorManager to resolve
-                .ForMember(dest => dest.GenreName, opt => opt.Ignore());
-
-            CreateMap<BookModel, Book>()
-                .ForMember(dest => dest.AuthorPK, opt => opt.Ignore()) // needs AuthorManager to resolve
-                .ForMember(dest => dest.GenrePK, opt => opt.Ignore());
+            CreateMap<Book, BookModel>();
         }
     }
 }

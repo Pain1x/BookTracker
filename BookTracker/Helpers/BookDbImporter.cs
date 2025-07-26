@@ -1,46 +1,76 @@
-﻿namespace BookTracker.Helpers
+﻿using BookTracker.DAL.DBContexts;
+using BookTracker.DAL.Entities;
+
+namespace BookTracker.Helpers
 {
     internal class BookDbImporter
     {
         /// <summary>
         /// The connection string
         /// </summary>
-        private readonly string connectionString;
+        private readonly BooksDbContext _context;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BookDbImporter"/> class.
-        /// </summary>
-        /// <param name="connStr">The connection string.</param>
-        public BookDbImporter(string connStr)
+        public BookDbImporter(BooksDbContext context)
         {
-            connectionString = connStr;
+            _context = context;
         }
 
-        ///// <summary>
-        ///// Inserts the books.
-        ///// </summary>
-        ///// <param name="books">The books.</param>
-        //public void InsertBooks(List<Book> books)
-        //{
-        //    using var connection = new SqlConnection(connectionString);
-        //    connection.Open();
+        public void ImportBooks(List<Book> booksToImport)
+        {
+            foreach (var bookInput in booksToImport)
+            {
+                // Check or create author
+                var author = bookInput.Author;
 
-        //    foreach (var book in books)
-        //    {
-        //        var command = new SqlCommand(@"
-        //        INSERT INTO Books (BookPK, Title, Author, Genre, DateRead, Rating, Notes)
-        //        VALUES (@BookPK, @Title, @Author, @Genre, @DateRead, @Rating, @Notes)", connection);
+                if (author != null)
+                {
+                    author = new Author
+                    {
+                        AuthorPK = bookInput.Author.AuthorPK,
+                        Name = bookInput.Author.Name
+                    };
 
-        //        command.Parameters.AddWithValue("@BookPK", Guid.NewGuid());
-        //        command.Parameters.AddWithValue("@Title", book.Title);
-        //        command.Parameters.AddWithValue("@Author", book.Author);
-        //        command.Parameters.AddWithValue("@Genre", book.Genre);
-        //        command.Parameters.AddWithValue("@DateRead", (object?)book.DateRead ?? DBNull.Value);
-        //        command.Parameters.AddWithValue("@Rating", book.Rating);
-        //        command.Parameters.AddWithValue("@Notes", book.Notes);
+                    if (!_context.Authors.Contains(author))
+                    {
+                        _context.Authors.Add(author);
+                        _context.SaveChanges(); // save to get PK for book insert
+                    }
+                }
 
-        //        command.ExecuteNonQuery();
-        //    }
-        //}
+                // Check or create genre
+                var genre = bookInput.Genre;
+                if (genre != null)
+                {
+                    genre = new Genre
+                    {
+                        GenrePK = bookInput.Genre.GenrePK,
+                        Name = bookInput.Genre.Name
+                    };
+
+                    if (!_context.Genres.Contains(genre))
+                    {
+                        _context.Genres.Add(genre);
+                        _context.SaveChanges(); // save to get PK for book insert
+                    }
+                }
+
+                // Insert book
+                var book = new Book
+                {
+                    BookPK = bookInput.BookPK,
+                    Title = bookInput.Title,
+                    Author = bookInput.Author,
+                    Genre = bookInput.Genre,
+                    DateRead = bookInput.DateRead,
+                    Rating = bookInput.Rating,
+                    Notes = bookInput.Notes
+                };
+
+                _context.Books.Add(book);
+            }
+
+            // Final save for all books
+            _context.SaveChanges();
+        }
     }
 }

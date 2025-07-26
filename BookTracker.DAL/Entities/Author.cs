@@ -1,9 +1,9 @@
-﻿namespace BookTracker.Entities
+﻿namespace BookTracker.DAL.Entities
 {
     /// <summary>
-    /// Genre Entity
+    /// Author Entity
     /// </summary>
-    public class Genre
+    public class Author
     {
         /// <summary>
         /// Gets or sets the identifier.
@@ -11,7 +11,7 @@
         /// <value>
         /// The identifier.
         /// </value>
-        public Guid GenrePK { get; set; } = Guid.NewGuid();
+        public Guid AuthorPK { get; set; }
 
         /// <summary>
         /// Gets or sets the name.

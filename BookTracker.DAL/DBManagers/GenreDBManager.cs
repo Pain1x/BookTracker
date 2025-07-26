@@ -1,19 +1,15 @@
-﻿using BookTracker.Entities;
-using BookTracker.Repositories;
+﻿using BookTracker.DAL.DBContexts;
+using BookTracker.DAL.DBManagers;
+using BookTracker.DAL.Entities;
 
 namespace BookTracker.Managers
 {
-    public class GenreManager
+    public class GenreDBManager(BooksDbContext booksDbContext) : BaseDBManager(booksDbContext)
     {
         /// <summary>
         /// The genres
         /// </summary>
         private List<Genre> genres;
-
-        public GenreManager()
-        {
-            genres = GenreRepository.Load();
-        }
 
         /// <summary>
         /// Adds the genre.
@@ -28,7 +24,6 @@ namespace BookTracker.Managers
 
             var genre = new Genre { Name = name };
             genres.Add(genre);
-            GenreRepository.Save(genres);
             return genre;
         }
 
@@ -75,7 +70,6 @@ namespace BookTracker.Managers
             if (genre != null)
             {
                 genres.Remove(genre);
-                GenreRepository.Save(genres);
 
                 Console.WriteLine($"The {genre.Name} is deleted");
             }
