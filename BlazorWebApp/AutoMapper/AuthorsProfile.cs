@@ -8,7 +8,7 @@ namespace BlazorWebApp.AutoMapper
     {
         public AuthorsProfile()
         {
-            CreateMap<Author, AuthorModel>();
+            CreateMap<Author, AuthorModel>().ReverseMap();
         }
     }
 }

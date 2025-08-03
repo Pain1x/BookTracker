@@ -8,7 +8,7 @@ namespace BlazorWebApp.AutoMapper
     {
         public GenresProfile()
         {
-            CreateMap<Genre, GenreModel>();
+            CreateMap<Genre, GenreModel>().ReverseMap();
         }
     }
 }

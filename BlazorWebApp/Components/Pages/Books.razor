@@ -1,85 +1,48 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+@using BlazorWebApp.Components.Shared
 @using BookTracker.BLL.Abstarctions
 @using BookTracker.BLL.Models
 @inject IBooksService BooksService
 
 <h3 class="text-xl font-semibold mb-4">My Books List</h3>
 
-@if (books == null)
-{
-    <p>Loading...</p>
-}
-else if (!books.Any())
-{
-    <p>No books found.</p>
-}
-else
-{
-    <table class="table-auto w-full border">
-        <thead class="bg-gray-100">
-            <tr>
-                <th class="px-4 py-2">Title</th>
-                <th class="px-4 py-2">Author</th>
-                <th class="px-4 py-2">Genre</th>
-                <th class="px-4 py-2">Date Read</th>
-                <th class="px-4 py-2">Rating</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var book in books)
-            {
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="px-4 py-2">Title</th>
+            <th class="px-4 py-2">Author</th>
+            <th class="px-4 py-2">Genre</th>
+            <th class="px-4 py-2">Date Read</th>
+            <th class="px-4 py-2">Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+        <PaginatedList TItem="BookModel"
+                       PageLoader="LoadBooks">
+            <ItemTemplate Context="book">
                 <tr class="border-t">
                     <td class="px-4 py-2">@book.Title</td>
                     <td class="px-4 py-2">@book.Author?.Name</td>
                     <td class="px-4 py-2">@book.Genre?.Name</td>
-                    <td class="px-4 py-2">@book.DateReadString</td>
+                    <td class="px-4 py-2">@book.DateRead?.ToString("yyyy-MM-dd")</td>
                     <td class="px-4 py-2">@book.Rating</td>
                 </tr>
-            }
-        </tbody>
-    </table>
-
-    <button class="btn btn-primary" @onclick="PreviousPage" disabled="@(pageIndex == 1)">Previous Page</button>
-    <span> Page @pageIndex </span>
-    <button class="btn btn-primary" @onclick="NextPage" disabled="@(!hasMore)">Next Page</button>
-}
+            </ItemTemplate>
+        </PaginatedList>
+    </tbody>
+</table>
 
 @code {
+    private int TotalBooksCount;
 
-    private List<BookModel>? books;
-    private int pageIndex = 1;
-    private int pageSize = 10;
-    private bool hasMore = true;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadBooks();
-    }
-
-    private async Task LoadBooks()
+    private async Task<(List<BookModel> Books, int BooksCount)> LoadBooks(int pageIndex, int pageSize)
     {
         var allBooks = await BooksService.GetAllBooks();
-        books = allBooks
+
+        return (allBooks
             .Skip((pageIndex - 1) * pageSize)
             .Take(pageSize)
-            .ToList();
-
-        hasMore = (pageIndex * pageSize) < allBooks.Count;
-    }
-
-    private async Task NextPage()
-    {
-        pageIndex++;
-        await LoadBooks();
-    }
-
-    private async Task PreviousPage()
-    {
-        if (pageIndex > 1)
-        {
-            pageIndex--;
-            await LoadBooks();
-        }
+            .ToList(), allBooks.Count());
     }
 }
