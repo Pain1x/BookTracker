@@ -1,6 +1,6 @@
 ﻿using BookTracker.BLL.Models;
 
-namespace BookTracker.BLL.Abstarctions
+namespace BookTracker.BLL.Abstractions
 {
     public interface IBooksService
     {
@@ -21,9 +21,9 @@ namespace BookTracker.BLL.Abstarctions
         /// <summary>
         /// Deletes the book.
         /// </summary>
-        /// <param name="bookPK">The book pk.</param>
+        /// <param name="bookPk">The book pk.</param>
         /// <returns></returns>
-        public Task DeleteBook(Guid bookPK);
+        public Task DeleteBook(Guid bookPk);
 
         /// <summary>
         /// Gets all books.
@@ -34,9 +34,9 @@ namespace BookTracker.BLL.Abstarctions
         /// <summary>
         /// Finds the book by identifier.
         /// </summary>
-        /// <param name="bookPK">The book pk.</param>
+        /// <param name="bookPk">The book pk.</param>
         /// <returns></returns>
-        public Task<BookModel?> FindBookById(Guid bookPK);
+        public Task<BookModel?> FindBookById(Guid bookPk);
 
         /// <summary>
         /// Counts the books by year.

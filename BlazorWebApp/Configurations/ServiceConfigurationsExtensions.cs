@@ -1,4 +1,4 @@
-﻿using BookTracker.BLL.Abstarctions;
+﻿using BookTracker.BLL.Abstractions;
 using BookTracker.BLL.Services;
 
 namespace BlazorWebApp.Configurations

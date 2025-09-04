@@ -3,7 +3,7 @@
 
 namespace BookTracker.DAL.Abstractions
 {
-    public interface IBookDBManager
+    public interface IBookDbManager
     {
         /// <summary>
         /// Adds the book.
@@ -22,9 +22,9 @@ namespace BookTracker.DAL.Abstractions
         /// <summary>
         /// Deletes the book.
         /// </summary>
-        /// <param name="bookPK">The book pk.</param>
+        /// <param name="bookPk">The book pk.</param>
         /// <returns></returns>
-        public Task DeleteBook(Guid bookPK);
+        public Task DeleteBook(Guid bookPk);
 
         /// <summary>
         /// Gets all books.
@@ -35,9 +35,9 @@ namespace BookTracker.DAL.Abstractions
         /// <summary>
         /// Finds the book by identifier.
         /// </summary>
-        /// <param name="bookPK">The book pk.</param>
+        /// <param name="bookPk">The book pk.</param>
         /// <returns></returns>
-        public Task<Book?> FindBookById(Guid bookPK);
+        public Task<Book?> FindBookById(Guid bookPk);
 
         /// <summary>
         /// Counts the books by year.

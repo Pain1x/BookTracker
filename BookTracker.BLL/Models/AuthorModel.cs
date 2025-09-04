@@ -8,7 +8,7 @@
         /// <value>
         /// The identifier.
         /// </value>
-        public Guid AuthorPK { get; set; }
+        public Guid AuthorPk { get; set; }
 
         /// <summary>
         /// Gets or sets the name.

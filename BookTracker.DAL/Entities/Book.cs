@@ -11,7 +11,7 @@
         /// <value>
         /// The identifier.
         /// </value>
-        public Guid BookPK { get; set; }
+        public Guid BookPk { get; set; }
 
         /// <summary>
         /// Gets or sets the title.
@@ -59,7 +59,7 @@
         /// <value>
         /// The author pk.
         /// </value>
-        public Guid AuthorPK { get; set; }
+        public Guid AuthorPk { get; set; }
 
         /// <summary>
         /// Gets or sets the genre.
@@ -75,6 +75,6 @@
         /// <value>
         /// The genre pk.
         /// </value>
-        public Guid GenrePK { get; set; }
+        public Guid GenrePk { get; set; }
     }
 }

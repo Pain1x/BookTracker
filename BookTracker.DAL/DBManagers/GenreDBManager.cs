@@ -4,12 +4,12 @@ using BookTracker.DAL.Entities;
 
 namespace BookTracker.Managers
 {
-    public class GenreDBManager(BooksDbContext booksDbContext) : BaseDBManager(booksDbContext)
+    public class GenreDbManager(BooksDbContext booksDbContext) : BaseDbManager(booksDbContext)
     {
         /// <summary>
         /// The genres
         /// </summary>
-        private List<Genre> genres;
+        private List<Genre> _genres;
 
         /// <summary>
         /// Adds the genre.
@@ -18,12 +18,12 @@ namespace BookTracker.Managers
         /// <returns></returns>
         public Genre AddGenre(string name)
         {
-            var existing = genres.FirstOrDefault(g => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            var existing = _genres.FirstOrDefault(g => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
             if (existing != null)
                 return existing;
 
             var genre = new Genre { Name = name };
-            genres.Add(genre);
+            _genres.Add(genre);
             return genre;
         }
 
@@ -34,7 +34,7 @@ namespace BookTracker.Managers
         /// <returns></returns>
         public Genre? FindGenreById(Guid id)
         {
-            return genres.FirstOrDefault(g => g.GenrePK == id);
+            return _genres.FirstOrDefault(g => g.GenrePk == id);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace BookTracker.Managers
         /// <returns></returns>
         public Genre? FindGenreByName(string name)
         {
-            return genres.FirstOrDefault(g => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return _genres.FirstOrDefault(g => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -53,9 +53,9 @@ namespace BookTracker.Managers
         public void ListGenres()
         {
             Console.WriteLine("Genres:");
-            foreach (var genre in genres.OrderBy(x => x.Name))
+            foreach (var genre in _genres.OrderBy(x => x.Name))
             {
-                Console.WriteLine($"{genre.GenrePK} - {genre.Name}");
+                Console.WriteLine($"{genre.GenrePk} - {genre.Name}");
             }
         }
 
@@ -66,10 +66,10 @@ namespace BookTracker.Managers
         /// <returns></returns>
         public void DeleteGenreByName(string name)
         {
-            var genre = genres.FirstOrDefault(a => a.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            var genre = _genres.FirstOrDefault(a => a.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
             if (genre != null)
             {
-                genres.Remove(genre);
+                _genres.Remove(genre);
 
                 Console.WriteLine($"The {genre.Name} is deleted");
             }

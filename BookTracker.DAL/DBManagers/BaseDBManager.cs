@@ -2,7 +2,7 @@
 
 namespace BookTracker.DAL.DBManagers
 {
-    public class BaseDBManager
+    public class BaseDbManager
     {
         /// <summary>
         /// The books database context
@@ -10,12 +10,12 @@ namespace BookTracker.DAL.DBManagers
         internal BooksDbContext BooksDbContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseDBManager"/> class.
+        /// Initializes a new instance of the <see cref="BaseDbManager"/> class.
         /// </summary>
-        /// <param name="booksDBContext">The books database context.</param>
-        internal BaseDBManager(BooksDbContext booksDBContext)
+        /// <param name="booksDbContext">The books database context.</param>
+        internal BaseDbManager(BooksDbContext booksDbContext)
         {
-            BooksDbContext = booksDBContext;
+            BooksDbContext = booksDbContext;
         }
     }
 }

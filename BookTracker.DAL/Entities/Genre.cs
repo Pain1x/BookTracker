@@ -11,7 +11,7 @@
         /// <value>
         /// The identifier.
         /// </value>
-        public Guid GenrePK { get; set; }
+        public Guid GenrePk { get; set; }
 
         /// <summary>
         /// Gets or sets the name.

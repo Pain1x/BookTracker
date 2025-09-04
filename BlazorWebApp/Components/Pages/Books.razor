@@ -1,48 +1,46 @@
 ﻿@page "/"
 @rendermode InteractiveServer
 @using BlazorWebApp.Components.Shared
-@using BookTracker.BLL.Abstarctions
+@using BookTracker.BLL.Abstractions
 @using BookTracker.BLL.Models
 @inject IBooksService BooksService
 
 <h3 class="text-xl font-semibold mb-4">My Books List</h3>
 
 <table class="table table-striped">
-    <thead>
-        <tr>
-            <th class="px-4 py-2">Title</th>
-            <th class="px-4 py-2">Author</th>
-            <th class="px-4 py-2">Genre</th>
-            <th class="px-4 py-2">Date Read</th>
-            <th class="px-4 py-2">Rating</th>
-        </tr>
-    </thead>
-    <tbody>
-        <PaginatedList TItem="BookModel"
-                       PageLoader="LoadBooks">
-            <ItemTemplate Context="book">
-                <tr class="border-t">
-                    <td class="px-4 py-2">@book.Title</td>
-                    <td class="px-4 py-2">@book.Author?.Name</td>
-                    <td class="px-4 py-2">@book.Genre?.Name</td>
-                    <td class="px-4 py-2">@book.DateRead?.ToString("yyyy-MM-dd")</td>
-                    <td class="px-4 py-2">@book.Rating</td>
-                </tr>
-            </ItemTemplate>
-        </PaginatedList>
-    </tbody>
+	<thead>
+		<tr>
+			<th class="px-4 py-2">Title</th>
+			<th class="px-4 py-2">Author</th>
+			<th class="px-4 py-2">Genre</th>
+			<th class="px-4 py-2">Date Read</th>
+			<th class="px-4 py-2">Rating</th>
+		</tr>
+	</thead>
+	<tbody>
+		<PaginatedList TItem="BookModel"
+					   PageLoader="LoadBooks">
+			<ItemTemplate Context="book">
+				<tr class="border-t">
+					<td class="px-4 py-2">@book.Title</td>
+					<td class="px-4 py-2">@book.Author.Name</td>
+					<td class="px-4 py-2">@book.Genre.Name</td>
+					<td class="px-4 py-2">@book.DateRead?.ToString("yyyy-MM-dd")</td>
+					<td class="px-4 py-2">@book.Rating</td>
+				</tr>
+			</ItemTemplate>
+		</PaginatedList>
+	</tbody>
 </table>
 
 @code {
-    private int TotalBooksCount;
+	private async Task<(List<BookModel> Books, int BooksCount)> LoadBooks(int pageIndex, int pageSize)
+	{
+		var allBooks = await BooksService.GetAllBooks();
 
-    private async Task<(List<BookModel> Books, int BooksCount)> LoadBooks(int pageIndex, int pageSize)
-    {
-        var allBooks = await BooksService.GetAllBooks();
-
-        return (allBooks
-            .Skip((pageIndex - 1) * pageSize)
-            .Take(pageSize)
-            .ToList(), allBooks.Count());
-    }
+		return (allBooks
+			.Skip((pageIndex - 1) * pageSize)
+			.Take(pageSize)
+			.ToList(), allBooks.Count());
+	}
 }

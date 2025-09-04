@@ -1,55 +1,55 @@
 ﻿@page "/add-book"
 @rendermode InteractiveServer
-@using BookTracker.BLL.Abstarctions
+@using BookTracker.BLL.Abstractions
 @using BookTracker.BLL.Models
 @inject IBooksService BooksService
 @inject NavigationManager Navigation
 
-<h3>Add a New Book</h3>
+<h3 class="text-xl font-semibold mb-4">Add a New Book</h3>
 
-<EditForm Model="@newBook" OnValidSubmit="HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<EditForm Model="@_newBook" OnValidSubmit="HandleValidSubmit" class="border rounded p-4 shadow-sm bg-light" style="max-width: 500px; margin: auto;">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
 
-    <div>
-        <label>Title:</label>
-        <InputText @bind-Value="newBook.Title" />
-    </div>
+	<div class="mb-3">
+		<label class="form-label">Title:</label>
+		<InputText @bind-Value="_newBook.Title" class="form-control" />
+	</div>
 
-    <div>
-        <label>Author:</label>
-        <InputText @bind-Value="newBook.Author.Name" />
-    </div>
+	<div class="mb-3">
+		<label class="form-label">Author:</label>
+		<InputText @bind-Value="_newBook.Author.Name" class="form-control" />
+	</div>
 
-    <div>
-        <label>Genre:</label>
-        <InputText @bind-Value="newBook.Genre.Name" />
-    </div>
+	<div class="mb-3">
+		<label class="form-label">Genre:</label>
+		<InputText @bind-Value="_newBook.Genre.Name" class="form-control" />
+	</div>
 
-    <div>
-        <label>Date Read:</label>
-        <InputDate @bind-Value="newBook.DateRead" />
-    </div>
+	<div class="mb-3">
+		<label class="form-label">Date Read:</label>
+		<InputDate @bind-Value="_newBook.DateRead" class="form-control" />
+	</div>
 
-    <div>
-        <label>Rating:</label>
-        <InputNumber @bind-Value="newBook.Rating" />
-    </div>
+	<div class="mb-3">
+		<label class="form-label">Rating:</label>
+		<InputNumber @bind-Value="_newBook.Rating" class="form-control" />
+	</div>
 
-    <button type="submit">Add Book</button>
+	<button type="submit" class="btn btn-primary w-100">Add Book</button>
 </EditForm>
 
 @code {
-    private BookModel newBook = new BookModel
-    {
-        Author = new AuthorModel(),
-        Genre = new GenreModel(),
-        DateRead = DateTimeOffset.UtcNow
-    };
+	private readonly BookModel _newBook = new()
+	{
+		Author = new AuthorModel(),
+		Genre = new GenreModel(),
+		DateRead = DateTimeOffset.UtcNow
+	};
 
-    private async Task HandleValidSubmit()
-    {
-        await BooksService.AddBook(newBook);
-        Navigation.NavigateTo("/");
-    }
+	private async Task HandleValidSubmit()
+	{
+		await BooksService.AddBook(_newBook);
+		Navigation.NavigateTo("/");
+	}
 }
