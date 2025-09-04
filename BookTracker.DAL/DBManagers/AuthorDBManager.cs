@@ -4,12 +4,12 @@ using BookTracker.DAL.Entities;
 
 namespace BookTracker.Managers
 {
-    public class AuthorDBManager(BooksDbContext booksDbContext) : BaseDBManager(booksDbContext)
+    public class AuthorDbManager(BooksDbContext booksDbContext) : BaseDbManager(booksDbContext)
     {
         /// <summary>
         /// The authors
         /// </summary>
-        private List<Author> authors;
+        private List<Author> _authors;
 
         ///// <summary>
         ///// Adds the author.
@@ -32,11 +32,11 @@ namespace BookTracker.Managers
         /// <summary>
         /// Finds the author by identifier.
         /// </summary>
-        /// <param name="authorPK">The author pk.</param>
+        /// <param name="authorPk">The author pk.</param>
         /// <returns></returns>
-        public Author? FindAuthorById(Guid authorPK)
+        public Author? FindAuthorById(Guid authorPk)
         {
-            return authors.FirstOrDefault(a => a.AuthorPK == authorPK);
+            return _authors.FirstOrDefault(a => a.AuthorPk == authorPk);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace BookTracker.Managers
         /// <returns></returns>
         public Author? FindAuthorByName(string name)
         {
-            return authors.FirstOrDefault(a => a.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return _authors.FirstOrDefault(a => a.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -55,9 +55,9 @@ namespace BookTracker.Managers
         public void ListAuthors()
         {
             Console.WriteLine("Authors:");
-            foreach (var author in authors.OrderBy(x => x.Name))
+            foreach (var author in _authors.OrderBy(x => x.Name))
             {
-                Console.WriteLine($"{author.AuthorPK} - {author.Name}");
+                Console.WriteLine($"{author.AuthorPk} - {author.Name}");
             }
         }
 

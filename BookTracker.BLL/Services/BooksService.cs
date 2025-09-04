@@ -1,51 +1,52 @@
 ﻿using AutoMapper;
-using BookTracker.BLL.Abstarctions;
+using BookTracker.BLL.Abstractions;
 using BookTracker.BLL.Models;
+using BookTracker.DAL.Abstractions;
 using BookTracker.DAL.Entities;
 
 namespace BookTracker.BLL.Services
 {
-    public class BooksService(BookDBManager booksDBManager, IMapper mapper) : IBooksService
+    public class BooksService(IBookDbManager booksDbManager, IMapper mapper) : IBooksService
     {
         #region Private Fields
 
         /// <summary>
         /// The manager
         /// </summary>
-        private BookDBManager BooksDBManager = booksDBManager;
+        private readonly IBookDbManager _booksDbManager = booksDbManager;
 
         /// <summary>
         /// The manager
         /// </summary>
-        private IMapper Mapper = mapper;
+        private readonly IMapper _mapper = mapper;
 
         #endregion
 
         #region Implementation of IBooksService
 
         ///<inheritdoc/>
-        public Task AddBook(BookModel book) => BooksDBManager.AddBook(Mapper.Map<BookModel, Book>(book));
+        public Task AddBook(BookModel book) => _booksDbManager.AddBook(_mapper.Map<BookModel, Book>(book));
 
         ///<inheritdoc/>
-        public Task EditBook(BookModel updatedBook) => BooksDBManager.EditBook(Mapper.Map<BookModel, Book>(updatedBook));
+        public Task EditBook(BookModel updatedBook) => _booksDbManager.EditBook(_mapper.Map<BookModel, Book>(updatedBook));
 
         ///<inheritdoc/>
-        public Task DeleteBook(Guid bookPK) => BooksDBManager.DeleteBook(bookPK);
+        public Task DeleteBook(Guid bookPk) => _booksDbManager.DeleteBook(bookPk);
 
         ///<inheritdoc/>
-        public async Task<List<BookModel>> GetAllBooks() => Mapper.Map<List<Book>, List<BookModel>>(await BooksDBManager.GetAllBooks());
+        public async Task<List<BookModel>> GetAllBooks() => _mapper.Map<List<Book>, List<BookModel>>(await _booksDbManager.GetAllBooks());
 
         ///<inheritdoc/>
-        public async Task<BookModel?> FindBookById(Guid bookPK) => Mapper.Map<Book?, BookModel?>(await BooksDBManager.FindBookById(bookPK));
+        public async Task<BookModel?> FindBookById(Guid bookPk) => _mapper.Map<Book?, BookModel?>(await _booksDbManager.FindBookById(bookPk));
 
         ///<inheritdoc/>
-        public Task<int> CountBooksByYear(int year) => BooksDBManager.CountBooksByYear(year);
+        public Task<int> CountBooksByYear(int year) => _booksDbManager.CountBooksByYear(year);
 
         ///<inheritdoc/>
-        public Task<int> CountBooksByAuthor(string authorName) => BooksDBManager.CountBooksByAuthor(authorName);
+        public Task<int> CountBooksByAuthor(string authorName) => _booksDbManager.CountBooksByAuthor(authorName);
 
         ///<inheritdoc/>
-        public Task<int> CountBooksByGenre(string genreName) => BooksDBManager.CountBooksByGenre(genreName);
+        public Task<int> CountBooksByGenre(string genreName) => _booksDbManager.CountBooksByGenre(genreName);
 
         #endregion
     }

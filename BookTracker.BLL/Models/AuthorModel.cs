@@ -1,9 +1,6 @@
-﻿namespace BookTracker.DAL.Entities
+﻿namespace BookTracker.BLL.Models
 {
-    /// <summary>
-    /// Author Entity
-    /// </summary>
-    public class Author
+    public class AuthorModel
     {
         /// <summary>
         /// Gets or sets the identifier.
