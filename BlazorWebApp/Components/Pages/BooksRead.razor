@@ -1,0 +1,36 @@
+﻿@page "/books-read"
+@rendermode InteractiveServer
+@using BookTracker.BLL.Abstractions
+@inject IBooksService BooksService
+
+<h3>Books Read</h3>
+
+<p><strong>This Year (@_currentYear):</strong> @_booksReadThisYear</p>
+
+<div class="mb-3">
+	<label>Enter a year:</label>
+	<input @bind="_searchYear" type="number" class="form-control" />
+	<button class="btn btn-primary mt-2" @onclick="CheckBooksForYear">Check</button>
+</div>
+
+@if (_booksReadInSearchedYear.HasValue)
+{
+	<p><strong>Books read in @_searchYear:</strong> @_booksReadInSearchedYear</p>
+}
+
+@code {
+	private readonly int _currentYear = DateTime.Now.Year;
+	private int _booksReadThisYear;
+	private int _searchYear = DateTime.Now.Year;
+	private int? _booksReadInSearchedYear;
+
+	protected override async Task OnInitializedAsync()
+	{
+		_booksReadThisYear = await BooksService.CountBooksByYear(_currentYear);
+	}
+
+	private async Task CheckBooksForYear()
+	{
+		_booksReadInSearchedYear = await BooksService.CountBooksByYear(_searchYear);
+	}
+}
