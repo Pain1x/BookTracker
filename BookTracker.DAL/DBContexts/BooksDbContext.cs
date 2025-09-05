@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookTracker.DAL.DBContexts
 {
-	public class BooksDbContext(DbContextOptions<BooksDbContext> options) : DbContext(options)
+	public class BooksDbContext : DbContext
 	{
+		public BooksDbContext(DbContextOptions<BooksDbContext> options) : base(options) { }
+
 		public DbSet<Book> Books { get; set; }
 		public DbSet<Author> Authors { get; set; }
 		public DbSet<Genre> Genres { get; set; }
