@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:16
@@ -15,15 +13,15 @@ services:
 
   blazorwebapp:
     build:
-      context: ./BlazorWebApp
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: /BlazorWebApp/Dockerfile
     depends_on:
       - db
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      # ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__BooksConnection: Host=db;Port=5432;Database=Books;Username=postgres;Password=admin1;IncludeErrorDetail=true
     ports:
-      - "8080:8080"
+      - "5001:8080"
 
 volumes:
   pgdata:
