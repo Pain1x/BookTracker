@@ -1,0 +1,11 @@
+@typeparam T
+<div class="badge px-3 py-2 mb-2 d-inline-block" @attributes="AdditionalAttributes">
+    <span class="fw-semibold">@Label:</span>
+    <span class="ms-1">@Value</span>
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public T Value { get; set; } = default!;
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}

@@ -28,7 +28,7 @@ namespace BookTracker.BLL.Services
         public Task AddBook(BookModel book) => _booksDbManager.AddBook(_mapper.Map<BookModel, Book>(book));
 
         ///<inheritdoc/>
-        public Task EditBook(BookModel updatedBook) => _booksDbManager.EditBook(_mapper.Map<BookModel, Book>(updatedBook));
+        public Task UpdateBook(BookModel updatedBook) => _booksDbManager.UpdateBook(_mapper.Map<BookModel, Book>(updatedBook));
 
         ///<inheritdoc/>
         public Task DeleteBook(Guid bookPk) => _booksDbManager.DeleteBook(bookPk);
@@ -37,7 +37,7 @@ namespace BookTracker.BLL.Services
         public async Task<List<BookModel>> GetAllBooks() => _mapper.Map<List<Book>, List<BookModel>>(await _booksDbManager.GetAllBooks());
 
         ///<inheritdoc/>
-        public async Task<BookModel?> FindBookById(Guid bookPk) => _mapper.Map<Book?, BookModel?>(await _booksDbManager.FindBookById(bookPk));
+        public async Task<BookModel?> FindBookByPk(Guid bookPk) => _mapper.Map<Book?, BookModel?>(await _booksDbManager.FindBookByPk(bookPk));
 
         ///<inheritdoc/>
         public Task<int> CountBooksByYear(int year) => _booksDbManager.CountBooksByYear(year);

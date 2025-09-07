@@ -17,7 +17,7 @@ namespace BookTracker.DAL.Abstractions
         /// </summary>
         /// <param name="updatedBook">The updated book.</param>
         /// <returns></returns>
-        public Task EditBook(Book updatedBook);
+        public Task UpdateBook(Book updatedBook);
 
         /// <summary>
         /// Deletes the book.
@@ -37,7 +37,7 @@ namespace BookTracker.DAL.Abstractions
         /// </summary>
         /// <param name="bookPk">The book pk.</param>
         /// <returns></returns>
-        public Task<Book?> FindBookById(Guid bookPk);
+        public Task<Book?> FindBookByPk(Guid bookPk);
 
         /// <summary>
         /// Counts the books by year.
