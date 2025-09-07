@@ -16,7 +16,7 @@ namespace BookTracker.BLL.Abstractions
         /// </summary>
         /// <param name="updatedBook">The updated book.</param>
         /// <returns></returns>
-        public Task EditBook(BookModel updatedBook);
+        public Task UpdateBook(BookModel updatedBook);
 
         /// <summary>
         /// Deletes the book.
@@ -36,7 +36,7 @@ namespace BookTracker.BLL.Abstractions
         /// </summary>
         /// <param name="bookPk">The book pk.</param>
         /// <returns></returns>
-        public Task<BookModel?> FindBookById(Guid bookPk);
+        public Task<BookModel?> FindBookByPk(Guid bookPk);
 
         /// <summary>
         /// Counts the books by year.

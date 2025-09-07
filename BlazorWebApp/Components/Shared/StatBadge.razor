@@ -1,0 +1,28 @@
+@typeparam T
+
+@if (YearCounts != null)
+{
+    <div class="badge px-3 py-2 mb-2 d-inline-block" @attributes="AdditionalAttributes">
+        <span class="fw-semibold">@Label:</span>
+        <ul class="mb-0 ms-2" style="list-style:none; padding-left:0;">
+            @foreach (var givenYear in YearCounts)
+            {
+                <li><span class="fw-normal">@givenYear.Key:</span> <span class="fw-bold">@givenYear.Value</span></li>
+            }
+        </ul>
+    </div>
+}
+else
+{
+    <div class="badge px-3 py-2 mb-2 d-inline-block" @attributes="AdditionalAttributes">
+        <span class="fw-semibold">@Label:</span>
+        <span class="ms-1">@Value</span>
+    </div>
+}
+
+@code {
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public T Value { get; set; } = default!;
+    [Parameter] public Dictionary<int, int>? YearCounts { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}

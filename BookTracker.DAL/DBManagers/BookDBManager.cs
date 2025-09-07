@@ -57,7 +57,7 @@ namespace BookTracker.DAL.DBManagers
 		}
 
 		///<inheritdoc/>
-		public async Task EditBook(Book updatedBook)
+		public async Task UpdateBook(Book updatedBook)
 		{
 			var book = await BooksDbContext.Books.FirstOrDefaultAsync(b => b.BookPk == updatedBook.BookPk);
 			if (book == null)
@@ -119,7 +119,11 @@ namespace BookTracker.DAL.DBManagers
 															   .ToListAsync();
 
 		///<inheritdoc/>
-		public Task<Book?> FindBookById(Guid bookPk) => BooksDbContext.Books.FirstOrDefaultAsync(b => b.BookPk == bookPk);
+		public Task<Book?> FindBookByPk(Guid bookPk) =>
+			BooksDbContext.Books
+				.Include(b => b.Author)
+				.Include(b => b.Genre)
+				.FirstOrDefaultAsync(b => b.BookPk == bookPk);
 
 		///<inheritdoc/>
 		public Task<int> CountBooksByYear(int year) => BooksDbContext.Books.CountAsync(b => b.DateRead.HasValue && b.DateRead.Value.Year == year);
