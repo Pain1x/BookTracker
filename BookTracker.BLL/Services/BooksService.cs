@@ -40,13 +40,14 @@ namespace BookTracker.BLL.Services
         public async Task<BookModel?> FindBookByPk(Guid bookPk) => _mapper.Map<Book?, BookModel?>(await _booksDbManager.FindBookByPk(bookPk));
 
         ///<inheritdoc/>
-        public Task<int> CountBooksByYear(int year) => _booksDbManager.CountBooksByYear(year);
-
-        ///<inheritdoc/>
         public Task<int> CountBooksByAuthor(string authorName) => _booksDbManager.CountBooksByAuthor(authorName);
 
         ///<inheritdoc/>
         public Task<int> CountBooksByGenre(string genreName) => _booksDbManager.CountBooksByGenre(genreName);
+
+        ///<inheritdoc/>
+        public Task<Dictionary<int, int>> CountBooksByYears()
+            => _booksDbManager.CountBooksByYears();
 
         #endregion
     }
