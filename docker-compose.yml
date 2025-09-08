@@ -18,7 +18,6 @@ services:
     depends_on:
       - db
     environment:
-      # ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__BooksConnection: Host=db;Port=5432;Database=Books;Username=postgres;Password=admin1;IncludeErrorDetail=true
     ports:
       - "5001:8080"

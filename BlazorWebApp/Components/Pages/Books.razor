@@ -48,7 +48,6 @@
 
 @code {
 	private List<BookModel> books = new();
-	private int booksReadThisYear;
 	Dictionary<int, int> booksReadLastFiveYears = new();
 
 	// Paging state
@@ -65,14 +64,8 @@
 	protected override async Task OnInitializedAsync()
 	{
 		books = await BooksService.GetAllBooks();
-		booksReadThisYear = await BooksService.CountBooksByYear(DateTime.UtcNow.Year);
-
-		var currentYear = DateTime.UtcNow.Year;
-		for (var i = 0; i < 5; i++)
-		{
-			var year = currentYear - i;
-			booksReadLastFiveYears[year] = await BooksService.CountBooksByYear(year);
-		}
+		
+		booksReadLastFiveYears = await BooksService.CountBooksByYears();
 	}
 
 	private void NavigateToDetails(Guid bookPk)

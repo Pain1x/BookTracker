@@ -126,9 +126,6 @@ namespace BookTracker.DAL.DBManagers
 				.FirstOrDefaultAsync(b => b.BookPk == bookPk);
 
 		///<inheritdoc/>
-		public Task<int> CountBooksByYear(int year) => BooksDbContext.Books.CountAsync(b => b.DateRead.HasValue && b.DateRead.Value.Year == year);
-
-		///<inheritdoc/>
 		public async Task<int> CountBooksByAuthor(string authorName)
 		{
 			var author = await BooksDbContext.Authors.FirstOrDefaultAsync(a => a.Name == authorName);
@@ -150,6 +147,29 @@ namespace BookTracker.DAL.DBManagers
 			}
 
 			return await BooksDbContext.Books.CountAsync(b => b.Genre.GenrePk == genre.GenrePk);
+		}
+
+		///<inheritdoc/>
+		public async Task<Dictionary<int, int>> CountBooksByYears()
+		{
+			var currentYear = DateTime.UtcNow.Year;
+			var years = Enumerable.Range(currentYear - 4, 5).Reverse().ToList();
+			// Get all books with a DateRead in the given years
+			var yearSet = years.ToHashSet();
+
+			var query = await BooksDbContext.Books
+				.Where(b => b.DateRead.HasValue && yearSet.Contains(b.DateRead.Value.Year))
+				.GroupBy(b => b.DateRead!.Value.Year)
+				.Select(g => new { Year = g.Key, Count = g.Count() })
+				.ToListAsync();
+
+			var result = years.ToDictionary(y => y, y => 0);
+			foreach (var item in query)
+			{
+				result[item.Year] = item.Count;
+			}
+
+			return result;
 		}
 	}
 }
