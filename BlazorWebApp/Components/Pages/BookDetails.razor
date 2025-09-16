@@ -2,10 +2,13 @@
 @rendermode InteractiveServer
 @using BookTracker.BLL.Models
 @using BookTracker.BLL.Abstractions
+@using BookTracker.Resources
+@using Microsoft.Extensions.Localization
 @inject IBooksService BooksService
 @inject NavigationManager Navigation
+@inject IStringLocalizer<ApplicationResources> Localizer
 
-<h3 class="bookdetails-heading">Book Details</h3>
+<h3 class="bookdetails-heading">@Localizer[ApplicationResources.BookDetails]</h3>
 
 @if (book == null)
 {
@@ -17,18 +20,18 @@ else
     {
         <div class="flex-row-buttons">
             <button class="btn-back-violet" @onclick="GoBack">
-                &#8592; Back to List
+                &#8592; @Localizer[ApplicationResources.BackToList]
             </button>
             <button class="btn-violet" @onclick="EnableEdit">
-                &#9998; Edit
+                &#9998; @Localizer[ApplicationResources.Edit]
             </button>
         </div>
         <div class="bookdetails-violet">
             <h4>@book.Title</h4>
-            <p><strong>Author:</strong> @book.Author.Name</p>
-            <p><strong>Genre:</strong> @book.Genre.Name</p>
-            <p><strong>Date Read:</strong> @book.DateReadString</p>
-            <p><strong>Rating:</strong> @book.Rating</p>
+            <p><strong>@Localizer[ApplicationResources.Author]:</strong> @book.Author.Name</p>
+            <p><strong>@Localizer[ApplicationResources.Genre]:</strong> @book.Genre.Name</p>
+            <p><strong>@Localizer[ApplicationResources.DateRead]:</strong> @book.DateReadString</p>
+            <p><strong>@Localizer[ApplicationResources.Rating]:</strong> @book.Rating</p>
         </div>
     }
     else
@@ -38,26 +41,26 @@ else
             <ValidationSummary />
 
             <div class="mb-3">
-                <label class="form-label">Title:</label>
+                <label class="form-label">@Localizer[ApplicationResources.Title]:</label>
                 <InputText @bind-Value="editBook.Title" class="form-control" />
             </div>
             <div class="mb-3">
-                <label class="form-label">Author:</label>
+                <label class="form-label">@Localizer[ApplicationResources.Author]:</label>
                 <InputText @bind-Value="editBook.Author.Name" class="form-control" />
             </div>
             <div class="mb-3">
-                <label class="form-label">Genre:</label>
+                <label class="form-label">@Localizer[ApplicationResources.Genre]:</label>
                 <InputText @bind-Value="editBook.Genre.Name" class="form-control" />
             </div>
             <div class="mb-3">
-                <label class="form-label">Date Read:</label>
+                <label class="form-label">@Localizer[ApplicationResources.DateRead]:</label>
                 <InputDate @bind-Value="editBook.DateRead" class="form-control" />
             </div>
             <div class="mb-3">
-                <label class="form-label">Rating:</label>
+                <label class="form-label">@Localizer[ApplicationResources.Rating]:</label>
                 <InputNumber @bind-Value="editBook.Rating" class="form-control" />
             </div>
-            <button type="submit" class="btn-violet">Save</button>
+            <button type="submit" class="btn-violet">@Localizer[ApplicationResources.Save]</button>
             <button type="button" class="btn btn-outline-secondary ms-2" @onclick="CancelEdit">Cancel</button>
         </EditForm>
     }

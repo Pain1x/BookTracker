@@ -12,21 +12,21 @@
 <h3 class="text-xl font-semibold mb-4">My Books List</h3>
 
 <div class="statbadge-violet d-flex justify-content-end">
-	<StatBadge T="int" Label="Books read last 5 years" YearCounts="booksReadLastFiveYears" />
+	<StatBadge T="int" Label="@Localizer[ApplicationResources.ReadLast5Years]" YearCounts="booksReadLastFiveYears" />
 </div>
 
 <button class="btn-violet" @onclick="NavigateToAddBook">
-	<span class="oi oi-plus"></span> Add New Book
+	<span class="oi oi-plus"></span> @Localizer[ApplicationResources.AddBook]
 </button>
 
 <table class="table violet-table">
 	<thead>
 		<tr>
-			<th>Title</th>
-			<th>Author</th>
-			<th>Genre</th>
-			<th>Date Read</th>
-			<th>Rating</th>
+			<th>@Localizer[ApplicationResources.Title]</th>
+			<th>@Localizer[ApplicationResources.Author]</th>
+			<th>@Localizer[ApplicationResources.Genre]</th>
+			<th>@Localizer[ApplicationResources.DateRead]</th>
+			<th>@Localizer[ApplicationResources.Rating]</th>
 		</tr>
 	</thead>
 	<tbody>
