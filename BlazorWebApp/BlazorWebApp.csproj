@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\culture-selector.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BookTracker.BLL\BookTracker.BLL.csproj" />
     <ProjectReference Include="..\BookTracker.DAL\BookTracker.DAL.csproj" />
     <ProjectReference Include="..\Resources\BookTracker.Resources.csproj" />

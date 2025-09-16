@@ -5,6 +5,9 @@
 		<NavMenu />
 	</div>
 	<main>
+		<div class="d-flex justify-content-end align-items-center mb-3">
+			<CultureSelector @rendermode="InteractiveServer" />
+		</div>
 		<article class="content px-4">
 			@Body
 		</article>

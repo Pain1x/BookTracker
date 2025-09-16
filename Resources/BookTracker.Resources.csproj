@@ -12,10 +12,10 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Update="ApplicationResources.Designer.cs">
+    <Compile Update="ApplicationResources.en.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>ApplicationResources.resx</DependentUpon>
+      <DependentUpon>ApplicationResources.en.resx</DependentUpon>
     </Compile>
     <Compile Update="ApplicationResources\ApplicationResources.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -29,9 +29,9 @@
       <LastGenOutput>ApplicationResources.uk-UA.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="ApplicationResources.resx">
+    <EmbeddedResource Update="ApplicationResources.en.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ApplicationResources.Designer.cs</LastGenOutput>
+      <LastGenOutput>ApplicationResources.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="ApplicationResources\ApplicationResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

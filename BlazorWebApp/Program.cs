@@ -27,13 +27,16 @@ namespace BlazorWebApp
 				cfg.AddProfile<GenresProfile>();
 			});
 
+			builder.Services.AddLocalization();
+			builder.Services.AddControllers();
+
 			var app = builder.Build();
 
 			var supportedCultures = new[] { "en", "uk-UA" };
 			var localizationOptions = new RequestLocalizationOptions()
 				.AddSupportedCultures(supportedCultures)
 				.AddSupportedUICultures(supportedCultures)
-				.SetDefaultCulture("en")
+				.SetDefaultCulture(supportedCultures[1])
 				.AddInitialRequestCultureProvider(new CookieRequestCultureProvider());
 
 			app.UseRequestLocalization(localizationOptions);
@@ -50,6 +53,8 @@ namespace BlazorWebApp
 
 			app.UseStaticFiles();
 			app.UseAntiforgery();
+
+			app.MapControllers();
 
 			app.MapRazorComponents<App>()
 				.AddInteractiveServerRenderMode();
