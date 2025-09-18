@@ -61,4 +61,9 @@
 		await BooksService.AddBook(_newBook);
 		Navigation.NavigateTo("/");
 	}
+
+	private void GoBack()
+	{
+		Navigation.NavigateTo("/");
+	}
 }
