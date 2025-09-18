@@ -61,7 +61,7 @@ else
                 <InputNumber @bind-Value="editBook.Rating" class="form-control" />
             </div>
             <button type="submit" class="btn-violet">@Localizer[ApplicationResources.Save]</button>
-            <button type="button" class="btn btn-outline-secondary ms-2" @onclick="CancelEdit">Cancel</button>
+            <button type="button" class="btn btn-outline-secondary ms-2" @onclick="CancelEdit">@Localizer[ApplicationResources.Cancel]</button>
         </EditForm>
     }
 }

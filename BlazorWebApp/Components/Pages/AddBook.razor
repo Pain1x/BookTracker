@@ -2,54 +2,63 @@
 @rendermode InteractiveServer
 @using BookTracker.BLL.Abstractions
 @using BookTracker.BLL.Models
+@using BookTracker.Resources
+@using Microsoft.Extensions.Localization
 @inject IBooksService BooksService
 @inject NavigationManager Navigation
+@inject IStringLocalizer<ApplicationResources> Localizer
 
-<h3 class="text-xl font-semibold mb-4" style="color:#6a1b9a;">Add a New Book</h3>
+<h3 class="text-xl font-semibold mb-4" style="color:#6a1b9a;">@Localizer[ApplicationResources.AddBook]</h3>
+
+<div class="flex-row-buttons">
+	<button class="btn-back-violet" @onclick="GoBack">
+		&#8592; @Localizer[ApplicationResources.BackToList]
+	</button>
+</div>
 
 <EditForm Model="@_newBook" OnValidSubmit="HandleValidSubmit" class="addbook-violet">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+	<DataAnnotationsValidator />
+	<ValidationSummary />
 
-    <div class="mb-3">
-        <label class="form-label">Title:</label>
-        <InputText @bind-Value="_newBook.Title" class="form-control" />
-    </div>
+	<div class="mb-3">
+		<label class="form-label">@Localizer[ApplicationResources.Title]:</label>
+		<InputText @bind-Value="_newBook.Title" class="form-control" />
+	</div>
 
-    <div class="mb-3">
-        <label class="form-label">Author:</label>
-        <InputText @bind-Value="_newBook.Author.Name" class="form-control" />
-    </div>
+	<div class="mb-3">
+		<label class="form-label">@Localizer[ApplicationResources.Author]:</label>
+		<InputText @bind-Value="_newBook.Author.Name" class="form-control" />
+	</div>
 
-    <div class="mb-3">
-        <label class="form-label">Genre:</label>
-        <InputText @bind-Value="_newBook.Genre.Name" class="form-control" />
-    </div>
+	<div class="mb-3">
+		<label class="form-label">@Localizer[ApplicationResources.Genre]:</label>
+		<InputText @bind-Value="_newBook.Genre.Name" class="form-control" />
+	</div>
 
-    <div class="mb-3">
-        <label class="form-label">Date Read:</label>
-        <InputDate @bind-Value="_newBook.DateRead" class="form-control" />
-    </div>
+	<div class="mb-3">
+		<label class="form-label">@Localizer[ApplicationResources.DateRead]:</label>
+		<InputDate @bind-Value="_newBook.DateRead" class="form-control" />
+	</div>
 
-    <div class="mb-3">
-        <label class="form-label">Rating:</label>
-        <InputNumber @bind-Value="_newBook.Rating" class="form-control" />
-    </div>
+	<div class="mb-3">
+		<label class="form-label">@Localizer[ApplicationResources.Rating]:</label>
+		<InputNumber @bind-Value="_newBook.Rating" class="form-control" />
+	</div>
 
-    <button type="submit" class="btn-violet">Add Book</button>
+	<button type="submit" class="btn-violet">@Localizer[ApplicationResources.AddBook]</button>
 </EditForm>
 
 @code {
-    private readonly BookModel _newBook = new()
-    {
-        Author = new AuthorModel(),
-        Genre = new GenreModel(),
-        DateRead = DateTimeOffset.UtcNow
-    };
+	private readonly BookModel _newBook = new()
+	{
+		Author = new AuthorModel(),
+		Genre = new GenreModel(),
+		DateRead = DateTimeOffset.UtcNow
+	};
 
-    private async Task HandleValidSubmit()
-    {
-        await BooksService.AddBook(_newBook);
-        Navigation.NavigateTo("/");
-    }
+	private async Task HandleValidSubmit()
+	{
+		await BooksService.AddBook(_newBook);
+		Navigation.NavigateTo("/");
+	}
 }

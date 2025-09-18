@@ -129,6 +129,9 @@
   <data name="BookDetails" xml:space="preserve">
     <value>Деталі книжки</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Відмінити</value>
+  </data>
   <data name="DateRead" xml:space="preserve">
     <value>Прочитано</value>
   </data>

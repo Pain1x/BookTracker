@@ -61,7 +61,7 @@ namespace BookTracker.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add a book.
+        ///   Looks up a localized string similar to Add a new book.
         /// </summary>
         public static string AddBook {
             get {
@@ -93,6 +93,15 @@ namespace BookTracker.Resources {
         public static string BookDetails {
             get {
                 return ResourceManager.GetString("BookDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
             }
         }
         
