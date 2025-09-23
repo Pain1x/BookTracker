@@ -2,6 +2,8 @@ using BlazorWebApp.AutoMapper;
 using BlazorWebApp.Components;
 using BlazorWebApp.Configurations;
 
+using Microsoft.AspNetCore.Localization;
+
 namespace BlazorWebApp
 {
 	public class Program
@@ -9,6 +11,8 @@ namespace BlazorWebApp
 		public static void Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
+
+			builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 			// Add services to the container.
 			builder.Services.AddRazorComponents()
@@ -23,7 +27,19 @@ namespace BlazorWebApp
 				cfg.AddProfile<GenresProfile>();
 			});
 
+			builder.Services.AddLocalization();
+			builder.Services.AddControllers();
+
 			var app = builder.Build();
+
+			var supportedCultures = new[] { "en", "uk-UA" };
+			var localizationOptions = new RequestLocalizationOptions()
+				.AddSupportedCultures(supportedCultures)
+				.AddSupportedUICultures(supportedCultures)
+				.SetDefaultCulture(supportedCultures[1])
+				.AddInitialRequestCultureProvider(new CookieRequestCultureProvider());
+
+			app.UseRequestLocalization(localizationOptions);
 
 			// Configure the HTTP request pipeline.
 			if (!app.Environment.IsDevelopment())
@@ -37,6 +53,8 @@ namespace BlazorWebApp
 
 			app.UseStaticFiles();
 			app.UseAntiforgery();
+
+			app.MapControllers();
 
 			app.MapRazorComponents<App>()
 				.AddInteractiveServerRenderMode();

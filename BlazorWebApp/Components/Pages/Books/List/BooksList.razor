@@ -3,27 +3,30 @@
 @using BookTracker.BLL.Abstractions
 @using BookTracker.BLL.Models
 @using BlazorWebApp.Components.Shared
+@using BookTracker.Resources
+@using Microsoft.Extensions.Localization
 @inject IBooksService BooksService
 @inject NavigationManager Navigation
+@inject IStringLocalizer<ApplicationResources> Localizer
 
-<h3 class="text-xl font-semibold mb-4">My Books List</h3>
+<h3 class="text-xl font-semibold mb-4">@Localizer[ApplicationResources.ReadBooks]</h3>
 
 <div class="statbadge-violet d-flex justify-content-end">
-	<StatBadge T="int" Label="Books read last 5 years" YearCounts="booksReadLastFiveYears" />
+	<StatBadge T="int" Label="@Localizer[ApplicationResources.ReadLast5Years]" YearCounts="booksReadLastFiveYears" />
 </div>
 
 <button class="btn-violet" @onclick="NavigateToAddBook">
-	<span class="oi oi-plus"></span> Add New Book
+	<span class="oi oi-plus"></span> @Localizer[ApplicationResources.AddBook]
 </button>
 
 <table class="table violet-table">
 	<thead>
 		<tr>
-			<th>Title</th>
-			<th>Author</th>
-			<th>Genre</th>
-			<th>Date Read</th>
-			<th>Rating</th>
+			<th>@Localizer[ApplicationResources.Title]</th>
+			<th>@Localizer[ApplicationResources.Author]</th>
+			<th>@Localizer[ApplicationResources.Genre]</th>
+			<th>@Localizer[ApplicationResources.DateRead]</th>
+			<th>@Localizer[ApplicationResources.Rating]</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -41,9 +44,9 @@
 </table>
 
 <div class="d-flex justify-content-center align-items-center my-3">
-	<button class="btn-violet-paging" @onclick="PrevPage" disabled="@IsFirstPage">Previous</button>
+	<button class="btn-violet-paging" @onclick="PrevPage" disabled="@IsFirstPage">@Localizer[ApplicationResources.PreviousPage]</button>
 	<span>Page @CurrentPage of @TotalPages</span>
-	<button class="btn-violet-paging" @onclick="NextPage" disabled="@IsLastPage">Next</button>
+	<button class="btn-violet-paging" @onclick="NextPage" disabled="@IsLastPage">@Localizer[ApplicationResources.NextPage]</button>
 </div>
 
 @code {
@@ -64,7 +67,7 @@
 	protected override async Task OnInitializedAsync()
 	{
 		books = await BooksService.GetAllBooks();
-		
+
 		booksReadLastFiveYears = await BooksService.CountBooksByYears();
 	}
 

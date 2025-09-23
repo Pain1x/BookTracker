@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.BLL", "BookTrac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebApp", "BlazorWebApp\BlazorWebApp.csproj", "{04192025-A989-4E19-8DF4-E47475C9A175}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Resources", "Resources\BookTracker.Resources.csproj", "{4BA870C2-0536-4B51-B594-FB9273C4E37B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{04192025-A989-4E19-8DF4-E47475C9A175}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04192025-A989-4E19-8DF4-E47475C9A175}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04192025-A989-4E19-8DF4-E47475C9A175}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BA870C2-0536-4B51-B594-FB9273C4E37B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BA870C2-0536-4B51-B594-FB9273C4E37B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BA870C2-0536-4B51-B594-FB9273C4E37B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BA870C2-0536-4B51-B594-FB9273C4E37B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

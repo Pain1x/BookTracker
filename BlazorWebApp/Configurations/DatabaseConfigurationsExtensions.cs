@@ -10,7 +10,7 @@ namespace BlazorWebApp.Configurations
 	{
 		public static IServiceCollection RegisterDatabase(this IServiceCollection services, IConfiguration configuration)
 		{
-			services.AddDbContext<BooksDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("BooksConnection")));
+			services.AddDbContextFactory<BooksDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("BooksConnection")));
 			services.AddScoped<IBookDbManager, BookDbManager>();
 
 			return services;
