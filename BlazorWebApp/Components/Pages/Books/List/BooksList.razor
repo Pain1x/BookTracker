@@ -9,7 +9,7 @@
 @inject NavigationManager Navigation
 @inject IStringLocalizer<ApplicationResources> Localizer
 
-<h3 class="text-xl font-semibold mb-4">My Books List</h3>
+<h3 class="text-xl font-semibold mb-4">@Localizer[ApplicationResources.ReadBooks]</h3>
 
 <div class="statbadge-violet d-flex justify-content-end">
 	<StatBadge T="int" Label="@Localizer[ApplicationResources.ReadLast5Years]" YearCounts="booksReadLastFiveYears" />

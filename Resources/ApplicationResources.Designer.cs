@@ -160,6 +160,15 @@ namespace BookTracker.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Read books.
+        /// </summary>
+        public static string ReadBooks {
+            get {
+                return ResourceManager.GetString("ReadBooks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Books read for last 5 years.
         /// </summary>
         public static string ReadLast5Years {

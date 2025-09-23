@@ -141,6 +141,9 @@
   <data name="Genre" xml:space="preserve">
     <value>Genre</value>
   </data>
+  <data name="ReadBooks" xml:space="preserve">
+    <value>Read books</value>
+  </data>
   <data name="NextPage" xml:space="preserve">
     <value>Next page</value>
   </data>

@@ -141,6 +141,9 @@
   <data name="Genre" xml:space="preserve">
     <value>Жанр</value>
   </data>
+  <data name="ReadBooks" xml:space="preserve">
+    <value>Прочитані книги</value>
+  </data>
   <data name="NextPage" xml:space="preserve">
     <value>Наступна сторінка</value>
   </data>
