@@ -1,10 +1,13 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+@using System.Globalization
 @using BookTracker.BLL.Abstractions
 @using BookTracker.BLL.Models
 @using BlazorWebApp.Components.Shared
 @using BookTracker.Resources
 @using Microsoft.Extensions.Localization
+
+@implements IDisposable
 @inject IBooksService BooksService
 @inject NavigationManager Navigation
 @inject IStringLocalizer<ApplicationResources> Localizer
@@ -66,9 +69,38 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		books = await BooksService.GetAllBooks();
-
+		Navigation.LocationChanged += OnLocationChanged;
+		await LoadBooks();
 		booksReadLastFiveYears = await BooksService.CountBooksByYears();
+	}
+
+	private async Task LoadBooks()
+	{
+		byte languagePk = GetLanguagePk();
+		books = await BooksService.GetAllBooksLocalized(languagePk);
+	}
+
+	private async void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+	{
+		await LoadBooks();
+		await InvokeAsync(StateHasChanged);
+	}
+
+	public void Dispose()
+	{
+		Navigation.LocationChanged -= OnLocationChanged;
+	}
+
+	private static byte GetLanguagePk()
+	{
+		var cultureName = CultureInfo.CurrentUICulture.Name;
+
+		return cultureName switch
+		{
+			"uk-UA" => 2,
+			"en-US" => 1,
+			_ => 1
+		};
 	}
 
 	private void NavigateToDetails(Guid bookPk)

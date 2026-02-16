@@ -5,7 +5,6 @@ using BookTracker.DAL.Entities.Books;
 using BookTracker.DAL.Entities.Genres;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace BookTracker.DAL.DBManagers
 {
@@ -131,8 +130,6 @@ namespace BookTracker.DAL.DBManagers
 		{
 			await using (var context = await contextFactory.CreateDbContextAsync())
 			{
-				var sho = GetAllBooksLocalized(2);
-
 				return await context.Books
 					.Include(b => b.Author)
 					.Include(b => b.Genre)
@@ -188,6 +185,45 @@ namespace BookTracker.DAL.DBManagers
 					.Include(b => b.Genre)
 					.FirstOrDefaultAsync(b => b.BookPk == bookPk);
 			}
+		}
+
+		///<inheritdoc/>
+		public async Task<Book?> FindBookByPkLocalized(Guid bookPk, byte languagePk)
+		{
+			await using var context = await contextFactory.CreateDbContextAsync();
+
+			var query = await context.Books
+				.Where(b => b.BookPk == bookPk)
+				.Select(b => new Book
+				{
+					BookPk = b.BookPk,
+					Title = b.Translations
+						.Where(t => t.LanguagePk == languagePk)
+						.Select(t => t.Title)
+						.FirstOrDefault() ?? b.Title,
+					Author = new Author
+					{
+						AuthorPk = b.AuthorPk,
+						Name = b.Author.Translations
+							.Where(t => t.LanguagePk == languagePk)
+							.Select(t => t.Name)
+							.FirstOrDefault() ?? b.Author.Name
+					},
+					Genre = new Genre
+					{
+						GenrePk = b.GenrePk,
+						Name = b.Genre.Translations
+							.Where(t => t.LanguagePk == languagePk)
+							.Select(t => t.Name)
+							.FirstOrDefault() ?? b.Genre.Name
+					},
+					DateRead = b.DateRead,
+					Rating = b.Rating,
+					Notes = b.Notes
+				})
+				.FirstOrDefaultAsync();
+
+			return query;
 		}
 
 		///<inheritdoc/>

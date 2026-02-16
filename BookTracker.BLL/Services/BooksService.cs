@@ -38,8 +38,15 @@ namespace BookTracker.BLL.Services
         public async Task<List<BookModel>> GetAllBooks() => _mapper.Map<List<Book>, List<BookModel>>(await _booksDbManager.GetAllBooks());
 
         ///<inheritdoc/>
-        public async Task<BookModel?> FindBookByPk(Guid bookPk) => _mapper.Map<Book?, BookModel?>(await _booksDbManager.FindBookByPk(bookPk));
+        public async Task<List<BookModel>> GetAllBooksLocalized(byte languagePk)
+            => _mapper.Map<List<Book>, List<BookModel>>(await _booksDbManager.GetAllBooksLocalized(languagePk));
 
+        ///<inheritdoc/>
+		public async Task<BookModel?> FindBookByPk(Guid bookPk) => _mapper.Map<Book?, BookModel?>(await _booksDbManager.FindBookByPk(bookPk));
+
+		///<inheritdoc/>
+		public async Task<BookModel?> FindBookByPkLocalized(Guid bookPk, byte languagePk)
+			=> _mapper.Map<Book?, BookModel?>(await _booksDbManager.FindBookByPkLocalized(bookPk, languagePk));
         ///<inheritdoc/>
         public Task<int> CountBooksByAuthor(string authorName) => _booksDbManager.CountBooksByAuthor(authorName);
 
