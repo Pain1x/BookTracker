@@ -187,6 +187,15 @@ namespace BookTracker.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Choose language.
+        /// </summary>
+        public static string SelectYourLanguage {
+            get {
+                return ResourceManager.GetString("SelectYourLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Title.
         /// </summary>
         public static string Title {

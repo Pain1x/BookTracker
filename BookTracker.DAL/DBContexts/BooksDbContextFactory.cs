@@ -8,15 +8,17 @@ namespace BookTracker.DAL.DBContexts
 	{
 		public BooksDbContext CreateDbContext(string[] args)
 		{
+			var basePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "BlazorWebApp");
+
 			var config = new ConfigurationBuilder()
-				.SetBasePath(Directory.GetCurrentDirectory())
+				.SetBasePath(basePath)
 				.AddJsonFile("appsettings.json", optional: true)
 				.AddJsonFile("appsettings.Development.json", optional: true)
 				.Build();
 
 			var optionsBuilder = new DbContextOptionsBuilder<BooksDbContext>();
 			var connectionString = config.GetConnectionString("BooksConnection");
-				optionsBuilder.UseNpgsql(connectionString);
+			optionsBuilder.UseNpgsql(connectionString);
 
 			return new BooksDbContext(optionsBuilder.Options);
 		}

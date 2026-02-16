@@ -1,4 +1,4 @@
-﻿using BookTracker.DAL.Entities;
+﻿using BookTracker.DAL.Entities.Books;
 
 
 namespace BookTracker.DAL.Abstractions

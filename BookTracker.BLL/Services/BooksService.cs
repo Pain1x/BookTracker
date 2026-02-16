@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
+
 using BookTracker.BLL.Abstractions;
 using BookTracker.BLL.Models;
 using BookTracker.DAL.Abstractions;
-using BookTracker.DAL.Entities;
+using BookTracker.DAL.Entities.Books;
 
 namespace BookTracker.BLL.Services
 {

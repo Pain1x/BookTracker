@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BookTracker.BLL.Models;
-using BookTracker.DAL.Entities;
+using BookTracker.DAL.Entities.Books;
 
 namespace BlazorWebApp.AutoMapper
 {
