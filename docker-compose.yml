@@ -11,14 +11,29 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  libretranslate:
+    image: libretranslate/libretranslate:latest
+    restart: always
+    environment:
+      LT_LOAD_ONLY: en,uk
+      LT_DISABLE_WEB_UI: true
+    ports:
+      - "5000:5000"
+
   blazorwebapp:
     build:
       context: .
       dockerfile: /BlazorWebApp/Dockerfile
     depends_on:
       - db
+      - libretranslate
     environment:
       ConnectionStrings__BooksConnection: Host=db;Port=5432;Database=Books;Username=postgres;Password=admin1;IncludeErrorDetail=true
+      Translation__Provider: libretranslate
+      Translation__LibreTranslate__Endpoint: http://libretranslate:5000
+      Translation__LibreTranslate__ApiKey: ""
+      Hangfire__Dashboard__Username: admin
+      Hangfire__Dashboard__Password: change-me
     ports:
       - "5001:8080"
 

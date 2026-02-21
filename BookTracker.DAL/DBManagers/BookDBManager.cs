@@ -3,12 +3,15 @@ using BookTracker.DAL.DBContexts;
 using BookTracker.DAL.Entities.Authors;
 using BookTracker.DAL.Entities.Books;
 using BookTracker.DAL.Entities.Genres;
+using BookTracker.DAL.Models;
 
 using Microsoft.EntityFrameworkCore;
 
 namespace BookTracker.DAL.DBManagers
 {
-	public class BookDbManager(IDbContextFactory<BooksDbContext> contextFactory) : IBookDbManager
+	public class BookDbManager(
+		IDbContextFactory<BooksDbContext> contextFactory,
+		IBookTranslationJobScheduler translationJobScheduler) : IBookDbManager
 	{
 		#region Implementation of IBookDbManager
 
@@ -58,6 +61,16 @@ namespace BookTracker.DAL.DBManagers
 
 				await context.Books.AddAsync(bookToSave);
 				await context.SaveChangesAsync();
+
+				translationJobScheduler.Enqueue(new BookTranslationJob
+				{
+					BookPk = bookToSave.BookPk,
+					AuthorPk = author.AuthorPk,
+					GenrePk = genre.GenrePk,
+					Title = bookToSave.Title,
+					AuthorName = author.Name,
+					GenreName = genre.Name
+				});
 			}
 		}
 
@@ -107,6 +120,16 @@ namespace BookTracker.DAL.DBManagers
 				book.Notes = updatedBook.Notes;
 
 				await context.SaveChangesAsync();
+
+				translationJobScheduler.Enqueue(new BookTranslationJob
+				{
+					BookPk = book.BookPk,
+					AuthorPk = author.AuthorPk,
+					GenrePk = genre.GenrePk,
+					Title = book.Title,
+					AuthorName = author.Name,
+					GenreName = genre.Name
+				});
 			}
 		}
 
