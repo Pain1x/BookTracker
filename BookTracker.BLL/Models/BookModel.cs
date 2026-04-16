@@ -12,6 +12,8 @@
 
 		public int Rating { get; set; }
 
+		public string Notes { get; set; } = "";
+
 		/// <summary>
 		/// Gets or sets the author.
 		/// </summary>

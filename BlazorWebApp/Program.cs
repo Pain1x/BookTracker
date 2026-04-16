@@ -1,8 +1,15 @@
 using BlazorWebApp.AutoMapper;
 using BlazorWebApp.Components;
 using BlazorWebApp.Configurations;
+using BlazorWebApp.Services;
+
+using BookTracker.DAL.DBContexts;
+
+using Hangfire;
+using Hangfire.PostgreSql;
 
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorWebApp
 {
@@ -20,6 +27,13 @@ namespace BlazorWebApp
 
 			builder.Services.RegisterDatabase(builder.Configuration);
 			builder.Services.RegisterAppServices();
+			builder.Services.AddHttpClient();
+			builder.Services.AddHangfire(config =>
+				config.UseSimpleAssemblyNameTypeSerializer()
+					.UseRecommendedSerializerSettings()
+					.UsePostgreSqlStorage(options =>
+						options.UseNpgsqlConnection(builder.Configuration.GetConnectionString("BooksConnection"))));
+			builder.Services.AddHangfireServer();
 			builder.Services.AddAutoMapper(cfg =>
 			{
 				cfg.AddProfile<BooksProfile>();
@@ -31,6 +45,12 @@ namespace BlazorWebApp
 			builder.Services.AddControllers();
 
 			var app = builder.Build();
+
+			using (var scope = app.Services.CreateScope())
+			{
+				var dbContext = scope.ServiceProvider.GetRequiredService<BooksDbContext>();
+				dbContext.Database.Migrate();
+			}
 
 			var supportedCultures = new[] { "en", "uk-UA" };
 			var localizationOptions = new RequestLocalizationOptions()
@@ -53,6 +73,16 @@ namespace BlazorWebApp
 
 			app.UseStaticFiles();
 			app.UseAntiforgery();
+
+			var dashboardUsername = builder.Configuration["Hangfire:Dashboard:Username"] ?? string.Empty;
+			var dashboardPassword = builder.Configuration["Hangfire:Dashboard:Password"] ?? string.Empty;
+			app.UseHangfireDashboard("/hangfire", new DashboardOptions
+			{
+				Authorization =
+				[
+					new HangfireDashboardAuthorizationFilter(dashboardUsername, dashboardPassword)
+				]
+			});
 
 			app.MapControllers();
 

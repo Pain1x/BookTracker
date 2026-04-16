@@ -162,4 +162,7 @@
   <data name="Title" xml:space="preserve">
     <value>Назва</value>
   </data>
+  <data name="SelectYourLanguage" xml:space="preserve">
+    <value>Виберіть мову</value>
+  </data>
 </root>

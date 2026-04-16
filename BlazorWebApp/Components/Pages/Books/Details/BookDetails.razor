@@ -1,9 +1,12 @@
 @page "/book/{bookPk:guid}"
 @rendermode InteractiveServer
+@using System.Globalization
 @using BookTracker.BLL.Models
 @using BookTracker.BLL.Abstractions
 @using BookTracker.Resources
 @using Microsoft.Extensions.Localization
+
+@implements IDisposable
 @inject IBooksService BooksService
 @inject NavigationManager Navigation
 @inject IStringLocalizer<ApplicationResources> Localizer
@@ -73,10 +76,39 @@ else
     private bool isEditing;
 
     protected override async Task OnInitializedAsync()
-    {
-        book = await BooksService.FindBookByPk(bookPk);
-    }
+	{
+		Navigation.LocationChanged += OnLocationChanged;
+		await LoadBook();
+	}
 
+	private async Task LoadBook()
+	{
+		byte languagePk = GetLanguagePk();
+		book = await BooksService.FindBookByPkLocalized(bookPk, languagePk);
+	}
+
+	private async void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+	{
+		await LoadBook();
+		await InvokeAsync(StateHasChanged);
+	}
+
+	public void Dispose()
+	{
+		Navigation.LocationChanged -= OnLocationChanged;
+	}
+
+	private static byte GetLanguagePk()
+	{
+		var cultureName = CultureInfo.CurrentUICulture.Name;
+
+		return cultureName switch
+		{
+			"uk-UA" => 2,
+			"en-US" => 1,
+			_ => 1
+		};
+	}
     private void GoBack()
     {
         Navigation.NavigateTo("/");
@@ -101,15 +133,14 @@ else
     }
 
     private async Task HandleEditSubmit()
-    {
-        if (editBook != null)
-        {
-            await BooksService.UpdateBook(editBook);
-            book = await BooksService.FindBookByPk(bookPk); // Refresh details
-            isEditing = false;
-        }
-    }
-
+	{
+		if (editBook != null)
+		{
+			await BooksService.UpdateBook(editBook);
+			await LoadBook(); // Refresh details with localization
+			isEditing = false;
+		}
+	}
     private void CancelEdit()
     {
         isEditing = false;

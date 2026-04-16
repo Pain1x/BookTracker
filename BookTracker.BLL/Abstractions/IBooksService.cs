@@ -32,11 +32,26 @@ namespace BookTracker.BLL.Abstractions
 		public Task<List<BookModel>> GetAllBooks();
 
 		/// <summary>
+		/// Gets all books localized by language.
+		/// </summary>
+		/// <param name="languagePk">Language identifier.</param>
+		/// <returns></returns>
+		public Task<List<BookModel>> GetAllBooksLocalized(byte languagePk);
+
+		/// <summary>
 		/// Finds the book by identifier.
 		/// </summary>
 		/// <param name="bookPk">The book pk.</param>
 		/// <returns></returns>
 		public Task<BookModel?> FindBookByPk(Guid bookPk);
+
+		/// <summary>
+		/// Finds the book by identifier with localized data.
+		/// </summary>
+		/// <param name="bookPk">The book pk.</param>
+		/// <param name="languagePk">Language identifier.</param>
+		/// <returns></returns>
+		public Task<BookModel?> FindBookByPkLocalized(Guid bookPk, byte languagePk);
 
 		/// <summary>
 		/// Counts the books by author.

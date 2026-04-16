@@ -1,9 +1,12 @@
 ﻿@using System.Globalization
+@using BookTracker.Resources
+@using Microsoft.Extensions.Localization
 @inject NavigationManager Navigation
+@inject IStringLocalizer<ApplicationResources> Localizer
 
 <p class="culture-selector">
 	<label class="culture-label">
-		<span class="culture-text">Select your locale:</span>
+		<span class="culture-text">@Localizer[ApplicationResources.SelectYourLanguage]:</span>
 		<select class="culture-select" aria-label="Select your locale"
 				@bind="SelectedCultureName"
 				@bind:after="ApplySelectedCulture">
@@ -18,12 +21,12 @@
 @code
 {
 	// Map your custom display names to actual culture names
-	private sealed record CultureOption(string DisplayName, string CultureName);
+	private sealed record CultureOption(string DisplayName, string CultureName, byte CultutePK);
 
 	private readonly CultureOption[] cultureOptions =
 	[
-		new("English", "en-US"),
-		new("Українська", "uk-UA"),
+		new("English", "en-US", 1),
+		new("Українська", "uk-UA", 2),
 	];
 
 	public string? SelectedCultureName { get; private set; }
