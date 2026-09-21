@@ -9,7 +9,6 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="15.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.7" />
-    <PackageReference Include="Newtonsoft.Json" Version="14.0.1-beta2" />
   </ItemGroup>
 
   <ItemGroup>

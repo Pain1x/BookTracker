@@ -11,7 +11,6 @@ namespace BlazorWebApp.Configurations
 		public static IServiceCollection RegisterAppServices(this IServiceCollection services)
 		{
 			services.AddScoped<IBooksService, BooksService>();
-			services.AddScoped<ITranslationService, LocalLlmTranslationService>(); // Register the local LLM service
 			services.AddScoped<IBookTranslationJobScheduler, HangfireBookTranslationJobScheduler>();
 
 			return services;

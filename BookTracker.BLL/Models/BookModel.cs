@@ -20,15 +20,14 @@
 		/// <value>
 		/// The author.
 		/// </value>
-		public string? TitleEn { get; set; }
-		public string? TitleUk { get; set; }
+		public required AuthorModel Author { get; set; }
 
-		// Author localization
-		public string? AuthorEn { get; set; }
-		public string? AuthorUk { get; set; }
-
-		// Genre localization
-		public string? GenreEn { get; set; }
-		public string? GenreUk { get; set; }
+		/// <summary>
+		/// Gets or sets the genre.
+		/// </summary>
+		/// <value>
+		/// The genre.
+		/// </value>
+		public required GenreModel Genre { get; set; }
 	}
 }
