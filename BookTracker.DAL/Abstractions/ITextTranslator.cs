@@ -1,7 +1,9 @@
+using BookTracker.DAL.Entities.Languages;
+
 namespace BookTracker.DAL.Abstractions
 {
 	public interface ITextTranslator
 	{
-		Task<string> TranslateToUkrainianAsync(string sourceText, CancellationToken cancellationToken = default);
+		Task<string> TranslateAsync(string sourceText, Languages targetLanguage, string contentType, CancellationToken cancellationToken = default);
 	}
 }

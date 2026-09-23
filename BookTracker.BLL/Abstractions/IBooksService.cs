@@ -1,4 +1,5 @@
 ﻿using BookTracker.BLL.Models;
+using BookTracker.DAL.Entities.Languages;
 
 namespace BookTracker.BLL.Abstractions
 {
@@ -9,14 +10,14 @@ namespace BookTracker.BLL.Abstractions
 		/// </summary>
 		/// <param name="book">The book.</param>
 		/// <returns></returns>
-		public Task AddBook(BookModel book);
+		public Task AddBook(BookModel book, Languages targetLanguage);
 
 		/// <summary>
 		/// Edits the book.
 		/// </summary>
 		/// <param name="updatedBook">The updated book.</param>
 		/// <returns></returns>
-		public Task UpdateBook(BookModel updatedBook);
+		public Task UpdateBook(BookModel updatedBook, Languages targetLanguage);
 
 		/// <summary>
 		/// Deletes the book.

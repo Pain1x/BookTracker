@@ -1,3 +1,5 @@
+using BookTracker.DAL.Entities.Languages;
+
 namespace BookTracker.DAL.Models
 {
 	public class BookTranslationJob
@@ -12,6 +14,8 @@ namespace BookTracker.DAL.Models
 
 		public string AuthorName { get; init; } = "";
 
-		public string GenreName { get; init; } = "";
+		public string Genre { get; init; } = "";
+
+		public Languages TargetLanguage { get; init; } = Languages.Ukrainian;
 	}
 }

@@ -4,6 +4,6 @@ namespace BookTracker.DAL.Abstractions
 {
 	public interface IBookTranslationProcessor
 	{
-		Task ProcessUkrainianTranslationAsync(BookTranslationJob job);
+		Task ProcessTranslationAsync(BookTranslationJob job);
 	}
 }

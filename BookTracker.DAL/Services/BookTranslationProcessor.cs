@@ -1,5 +1,6 @@
 using BookTracker.DAL.Abstractions;
 using BookTracker.DAL.DBContexts;
+using BookTracker.DAL.Entities.Books;
 using BookTracker.DAL.Entities.Languages;
 using BookTracker.DAL.Entities.Translations;
 using BookTracker.DAL.Models;
@@ -12,31 +13,29 @@ namespace BookTracker.DAL.Services
 		IDbContextFactory<BooksDbContext> contextFactory,
 		ITextTranslator textTranslator) : IBookTranslationProcessor
 	{
-		private const string UkrainianLanguageName = "Ukrainian";
-
-		public async Task ProcessUkrainianTranslationAsync(BookTranslationJob job)
+		public async Task ProcessTranslationAsync(BookTranslationJob job)
 		{
-			var translatedTitle = await textTranslator.TranslateToUkrainianAsync(job.Title);
-			var translatedAuthorName = await textTranslator.TranslateToUkrainianAsync(job.AuthorName);
-			var translatedGenreName = await textTranslator.TranslateToUkrainianAsync(job.GenreName);
+			var translatedTitle = await textTranslator.TranslateAsync(job.Title, job.TargetLanguage, nameof(Book.Title));
+			var translatedAuthorName = await textTranslator.TranslateAsync(job.AuthorName, job.TargetLanguage, nameof(Book.Author));
+			var translatedGenreName = await textTranslator.TranslateAsync(job.Genre, job.TargetLanguage, nameof(Book.Genre));
 
 			for (var attempt = 1; attempt <= 2; attempt++)
 			{
 				await using var context = await contextFactory.CreateDbContextAsync();
-				var ukrainianLanguage = await GetOrCreateUkrainianLanguageAsync(context);
+				var targetLanguage = await GetOrCreateLanguageAsync(context, job.TargetLanguage);
 
-				await EnsureBookTranslationAsync(context, job.BookPk, ukrainianLanguage.LanguagePk, translatedTitle);
-				await EnsureAuthorTranslationAsync(context, job.AuthorPk, ukrainianLanguage.LanguagePk, translatedAuthorName);
-				await EnsureGenreTranslationAsync(context, job.GenrePk, ukrainianLanguage.LanguagePk, translatedGenreName);
+				await EnsureBookTranslationAsync(context, job.BookPk, targetLanguage.LanguagePk, translatedTitle);
+				await EnsureAuthorTranslationAsync(context, job.AuthorPk, targetLanguage.LanguagePk, translatedAuthorName);
+				await EnsureGenreTranslationAsync(context, job.GenrePk, targetLanguage.LanguagePk, translatedGenreName);
 
 				await context.SaveChangesAsync();
 			}
 		}
 
-		private static async Task<Language> GetOrCreateUkrainianLanguageAsync(BooksDbContext context)
+		private static async Task<Language> GetOrCreateLanguageAsync(BooksDbContext context, Languages languageName)
 		{
 			var language = await context.Languages
-				.FirstOrDefaultAsync(l => l.LanguageName.ToLower() == UkrainianLanguageName.ToLower());
+				.FirstOrDefaultAsync(l => l.LanguagePk == (byte)languageName);
 
 			if (language != null)
 			{
@@ -50,7 +49,7 @@ namespace BookTracker.DAL.Services
 			language = new Language
 			{
 				LanguagePk = (byte)(maxLanguagePk + 1),
-				LanguageName = UkrainianLanguageName
+				LanguageName = languageName.ToString()
 			};
 
 			await context.Languages.AddAsync(language);

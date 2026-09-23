@@ -1,4 +1,6 @@
-﻿namespace BookTracker.BLL.Models
+﻿using BookTracker.DAL.Entities.Languages;
+
+namespace BookTracker.BLL.Models
 {
 	public class BookModel
 	{
@@ -29,5 +31,7 @@
 		/// The genre.
 		/// </value>
 		public required GenreModel Genre { get; set; }
+		
+		public Languages TargetLanguage { get; set; }
 	}
 }

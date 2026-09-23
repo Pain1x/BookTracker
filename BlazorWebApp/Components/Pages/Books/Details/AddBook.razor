@@ -1,7 +1,9 @@
 ﻿@page "/add-book"
 @rendermode InteractiveServer
+@using System.Globalization
 @using BookTracker.BLL.Abstractions
 @using BookTracker.BLL.Models
+@using BookTracker.DAL.Entities.Languages
 @using BookTracker.Resources
 @using Microsoft.Extensions.Localization
 @inject IBooksService BooksService
@@ -49,6 +51,19 @@
 </EditForm>
 
 @code {
+	
+	private static byte GetLanguagePk()
+	{
+		var cultureName = CultureInfo.CurrentUICulture.Name;
+
+		return cultureName switch
+		{
+			"uk-UA" => 2,
+			"en-US" => 1,
+			_ => 1
+		};
+	}
+	
 	private readonly BookModel _newBook = new()
 	{
 		Author = new AuthorModel(),
@@ -58,7 +73,7 @@
 
 	private async Task HandleValidSubmit()
 	{
-		await BooksService.AddBook(_newBook);
+		await BooksService.AddBook(_newBook, (Languages)GetLanguagePk());
 		Navigation.NavigateTo("/");
 	}
 

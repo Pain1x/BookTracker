@@ -3,6 +3,7 @@ using BookTracker.DAL.DBContexts;
 using BookTracker.DAL.Entities.Authors;
 using BookTracker.DAL.Entities.Books;
 using BookTracker.DAL.Entities.Genres;
+using BookTracker.DAL.Entities.Languages;
 using BookTracker.DAL.Models;
 
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,7 @@ namespace BookTracker.DAL.DBManagers
 		#region Implementation of IBookDbManager
 
 		///<inheritdoc/>
-		public async Task AddBook(Book book)
+		public async Task AddBook(Book book, Languages targetLanguage)
 		{
 			await using (var context = await contextFactory.CreateDbContextAsync())
 			{
@@ -69,13 +70,14 @@ namespace BookTracker.DAL.DBManagers
 					GenrePk = genre.GenrePk,
 					Title = bookToSave.Title,
 					AuthorName = author.Name,
-					GenreName = genre.Name
+					Genre = genre.Name,
+					TargetLanguage = targetLanguage
 				});
 			}
 		}
 
 		///<inheritdoc/>
-		public async Task UpdateBook(Book updatedBook)
+		public async Task UpdateBook(Book updatedBook, Languages targetLanguage)
 		{
 			await using (var context = await contextFactory.CreateDbContextAsync())
 			{
@@ -128,7 +130,8 @@ namespace BookTracker.DAL.DBManagers
 					GenrePk = genre.GenrePk,
 					Title = book.Title,
 					AuthorName = author.Name,
-					GenreName = genre.Name
+					Genre = genre.Name,
+					TargetLanguage = targetLanguage
 				});
 			}
 		}

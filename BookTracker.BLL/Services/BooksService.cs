@@ -4,6 +4,7 @@ using BookTracker.BLL.Abstractions;
 using BookTracker.BLL.Models;
 using BookTracker.DAL.Abstractions;
 using BookTracker.DAL.Entities.Books;
+using BookTracker.DAL.Entities.Languages;
 
 namespace BookTracker.BLL.Services
 {
@@ -26,10 +27,10 @@ namespace BookTracker.BLL.Services
 		#region Implementation of IBooksService
 
 		///<inheritdoc/>
-		public Task AddBook(BookModel book) => _booksDbManager.AddBook(_mapper.Map<BookModel, Book>(book));
+		public Task AddBook(BookModel book, Languages targetLanguage) => _booksDbManager.AddBook(_mapper.Map<BookModel, Book>(book), targetLanguage);
 
 		///<inheritdoc/>
-		public Task UpdateBook(BookModel updatedBook) => _booksDbManager.UpdateBook(_mapper.Map<BookModel, Book>(updatedBook));
+		public Task UpdateBook(BookModel updatedBook, Languages targetLanguage) => _booksDbManager.UpdateBook(_mapper.Map<BookModel, Book>(updatedBook), targetLanguage);
 
 		///<inheritdoc/>
 		public Task DeleteBook(Guid bookPk) => _booksDbManager.DeleteBook(bookPk);

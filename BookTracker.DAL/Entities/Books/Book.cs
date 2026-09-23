@@ -1,6 +1,7 @@
 ﻿using BookTracker.DAL.Entities.Authors;
 using BookTracker.DAL.Entities.Genres;
 using BookTracker.DAL.Entities.Translations;
+using Language = BookTracker.DAL.Entities.Languages.Languages;
 
 namespace BookTracker.DAL.Entities.Books
 {
@@ -81,6 +82,9 @@ namespace BookTracker.DAL.Entities.Books
 		/// </value>
 		public Guid GenrePk { get; set; }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public ICollection<BookTranslation> Translations { get; set; } = new List<BookTranslation>();
 	}
 }

@@ -10,7 +10,7 @@ namespace BlazorWebApp.Services
 		public void Enqueue(BookTranslationJob job)
 		{
 			backgroundJobClient.Enqueue<IBookTranslationProcessor>(
-				processor => processor.ProcessUkrainianTranslationAsync(job));
+				processor => processor.ProcessTranslationAsync(job));
 		}
 	}
 }

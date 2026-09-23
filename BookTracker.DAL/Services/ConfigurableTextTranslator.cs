@@ -1,112 +1,94 @@
 using BookTracker.DAL.Abstractions;
-
 using Microsoft.Extensions.Configuration;
-
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
+using BookTracker.DAL.Entities.Languages;
 
 namespace BookTracker.DAL.Services
 {
-	public class ConfigurableTextTranslator(
-		IHttpClientFactory httpClientFactory,
-		IConfiguration configuration) : ITextTranslator
-	{
-		private const string DefaultOllamaEndpoint = "http://localhost:11434";
-		private const string DefaultOllamaPromptTemplate = """
-			Translate to Ukrainian.
+    public class ConfigurableTextTranslator(
+        IHttpClientFactory httpClientFactory,
+        IConfiguration configuration) : ITextTranslator
+    {
+        public async Task<string> TranslateAsync(string sourceText, Languages targetLanguage, string contentType, CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(sourceText))
+            {
+                return sourceText;
+            }
 
-			Rules:
-			- Keep proper names recognizable.
-			- Do not invent anything.
-			- If the text is already a proper name, transliterate it.
-			- Return only translation.
+            var provider = configuration["Translation:Provider"]?.Trim();
 
-			Text:
-			{{text}}
-			""";
+            return provider?.ToLowerInvariant() switch
+            {
+                "lmstudio" => await TranslateWithLMStudioAsync(sourceText, targetLanguage, contentType, cancellationToken),
+                _ => sourceText
+            };
+        }
 
-		public async Task<string> TranslateToUkrainianAsync(string sourceText, CancellationToken cancellationToken = default)
-		{
-			if (string.IsNullOrWhiteSpace(sourceText))
-			{
-				return sourceText;
-			}
+        private async Task<string> TranslateWithLMStudioAsync(string sourceText, Languages targetLanguage, string contentType, CancellationToken cancellationToken)
+        {
+            var endpoint = configuration["Translation:LMStudio:Endpoint"];
+            var model = configuration["Translation:LMStudio:Model"];
+            var promptTemplate = configuration["Translation:LMStudio:Templates:" + contentType + ":" + targetLanguage];
 
-			var provider = configuration["Translation:Provider"]?.Trim();
+            if (string.IsNullOrWhiteSpace(model))
+            {
+                return sourceText;
+            }
 
-			if (string.IsNullOrWhiteSpace(provider) || provider.Equals("none", StringComparison.OrdinalIgnoreCase))
-			{
-				return sourceText;
-			}
+            var baseUrl = string.IsNullOrWhiteSpace(endpoint)
+                ? "http://192.168.0.250:1234"
+                : endpoint.Trim();
 
-			return provider.ToLowerInvariant() switch
-			{
-				"ollama" => await TranslateWithOllamaAsync(sourceText, cancellationToken),
-				_ => sourceText
-			};
-		}
+            var template = string.IsNullOrWhiteSpace(promptTemplate)
+                ? "Translate to " + targetLanguage + ". Return only the translation."
+                : promptTemplate;
 
-		private async Task<string> TranslateWithOllamaAsync(string sourceText, CancellationToken cancellationToken)
-		{
-			var endpoint = configuration["Translation:Ollama:Endpoint"];
-			var model = configuration["Translation:Ollama:Model"];
-			var promptTemplate = configuration["Translation:Ollama:PromptTemplate"];
+            var prompt = template.Replace("{{text}}", sourceText);
+            
+            var requestBody = new
+            {
+                model, 
+                input = prompt,
+                messages = new[]
+                {
+                    new { role = "system", content = "You are a professional and neutral translation engine. " +
+                                                     "Translate the provided text accurately to the target language and provide only the translated text, " +
+                                                     "with no additional commentary or formatting." },
+                    new { role = "user", content = prompt}
+                },
+                temperature = 0.2
+            };
 
-			if (string.IsNullOrWhiteSpace(model))
-			{
-				return sourceText;
-			}
+            try
+            {
+                var client = httpClientFactory.CreateClient();
+                var requestUri = baseUrl.TrimEnd('/') + "/api/v1/chat";
+                
+                string jsonPayload = JsonSerializer.Serialize(requestBody);
+                var reqcontent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                
+                HttpResponseMessage response = await client.PostAsync(requestUri,  reqcontent);
+                var jsonString = await response.Content.ReadAsStringAsync(cancellationToken);
+                using var jsonDocument = JsonDocument.Parse(jsonString);
 
-			var baseUrl = string.IsNullOrWhiteSpace(endpoint)
-				? DefaultOllamaEndpoint
-				: endpoint.Trim();
+                if (jsonDocument.RootElement.TryGetProperty("choices", out var choices) &&
+                    choices.GetArrayLength() > 0 &&
+                    choices[0].TryGetProperty("message", out var message) &&
+                    message.TryGetProperty("content", out var content))
+                {
+                    var translated = content.GetString()?.Trim();
+                    return string.IsNullOrWhiteSpace(translated) ? sourceText : translated;
+                }
 
-			var template = string.IsNullOrWhiteSpace(promptTemplate)
-				? DefaultOllamaPromptTemplate
-				: promptTemplate;
-
-			var prompt = template.Replace("{{text}}", sourceText);
-
-			try
-			{
-				var client = httpClientFactory.CreateClient();
-				var requestUri = baseUrl.TrimEnd('/') + "/api/generate";
-
-				using var request = new HttpRequestMessage(HttpMethod.Post, requestUri)
-				{
-					Content = JsonContent.Create(new
-					{
-						model,
-						prompt,
-						stream = false,
-						options = new
-						{
-							temperature = 0.1
-						}
-					})
-				};
-
-				using var response = await client.SendAsync(request, cancellationToken);
-				if (!response.IsSuccessStatusCode)
-				{
-					return sourceText;
-				}
-
-				await using var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken);
-				using var jsonDocument = await JsonDocument.ParseAsync(responseStream, cancellationToken: cancellationToken);
-
-				if (!jsonDocument.RootElement.TryGetProperty("response", out var responseElement))
-				{
-					return sourceText;
-				}
-
-				var translated = responseElement.GetString()?.Trim();
-				return string.IsNullOrWhiteSpace(translated) ? sourceText : translated;
-			}
-			catch
-			{
-				return sourceText;
-			}
-		}
-	}
+                return sourceText;
+            }
+            catch
+            {
+                return sourceText;
+            }
+        }
+    }
 }
