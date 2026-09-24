@@ -15,9 +15,9 @@ namespace BookTracker.DAL.Services
 	{
 		public async Task ProcessTranslationAsync(BookTranslationJob job)
 		{
-			var translatedTitle = await textTranslator.TranslateAsync(job.Title, job.TargetLanguage, nameof(Book.Title));
-			var translatedAuthorName = await textTranslator.TranslateAsync(job.AuthorName, job.TargetLanguage, nameof(Book.Author));
-			var translatedGenreName = await textTranslator.TranslateAsync(job.Genre, job.TargetLanguage, nameof(Book.Genre));
+			var translatedTitle = await textTranslator.TranslateAsync(job.Title, job.TargetLanguage);
+			var translatedAuthorName = await textTranslator.TranslateAsync(job.AuthorName, job.TargetLanguage);
+			var translatedGenreName = await textTranslator.TranslateAsync(job.Genre, job.TargetLanguage);
 
 			for (var attempt = 1; attempt <= 2; attempt++)
 			{

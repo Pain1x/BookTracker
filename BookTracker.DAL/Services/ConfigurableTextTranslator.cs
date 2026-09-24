@@ -3,228 +3,121 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using BookTracker.DAL.Entities.Languages;
 
 namespace BookTracker.DAL.Services
 {
-    public class ConfigurableTextTranslator(
-        IHttpClientFactory httpClientFactory,
-        IConfiguration configuration) : ITextTranslator
+    public class ConfigurableTextTranslator(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        : ITextTranslator
     {
         private readonly HttpClient _httpClient = httpClientFactory.CreateClient();
+
+        private readonly string _modelName = configuration["Translation:LMStudio:Model"];
+
+        private string _provider = configuration["Translation:Provider"]?.Trim();
         
-        public async Task<string> TranslateAsync(string sourceText, Languages targetLanguage, string contentType, CancellationToken cancellationToken = default)
+        private string _endpoint = configuration["Translation:LMStudio:Endpoint"]?.Trim();
+
+
+        public async Task<string> TranslateAsync(string sourceText, Languages targetLanguage)
         {
             if (string.IsNullOrWhiteSpace(sourceText))
             {
                 return sourceText;
             }
-
-            var provider = configuration["Translation:Provider"]?.Trim();
-
-            if (string.IsNullOrEmpty(provider))
+            if (string.IsNullOrEmpty(_provider))
             {
                 // No translation provider configured, return original text.
                 return sourceText;
             }
 
-            return provider.ToLowerInvariant() switch
+            return _provider.ToLowerInvariant() switch
             {
-                "lmstudio" => await TranslateWithLMStudioAsync(sourceText, targetLanguage, contentType, cancellationToken),
-                "anthropic" => await TranslateWithAnthropicAsync(sourceText, targetLanguage, contentType, cancellationToken), // NEW PATH
+                "lmstudio" => await TranslateWithEvaluationAsync(sourceText, targetLanguage),
                 _ => sourceText
             };
         }
 
-        private async Task<string> TranslateWithLMStudioAsync(string sourceText, Languages targetLanguage, string contentType, CancellationToken cancellationToken)
+        private async Task<string> TranslateWithEvaluationAsync(string textToTranslate, Languages targetLanguage)
         {
-            var endpoint = configuration["Translation:LMStudio:Endpoint"];
-            var model = configuration["Translation:LMStudio:Model"];
-            var baseUrl = string.IsNullOrWhiteSpace(endpoint)
-                ? "http://192.168.0.250:1234"
-                : endpoint.Trim();
+            var languageToTranslate = targetLanguage == Languages.Ukrainian 
+                ? Languages.English 
+                : Languages.Ukrainian;
 
-            var template = $"Translate the 'text' to {targetLanguage}. Return only the translation.";
+            var step1SystemPrompt =
+                $"You are an expert, professional translator specializing in high-fidelity localization. " +
+                $"Your task is to translate the text to {languageToTranslate}.\n\n" +
+                $"Follow these graduation steps to ensure quality:\n" +
+                $"1. ANALYSIS: Identify the tone, idioms, and technical terms.\n" +
+                $"2. TRANSLATION: Translate accurately, preserving meaning.\n" +
+                $"3. REFINEMENT: Adapt the text so it sounds natural to a native speaker.\n\n" +
+                $"CRITICAL RULE: Output ONLY the final translation inside <translation>...</translation> tags. No notes.";
 
-            // The context instruction from the original system message is folded into the main prompt for compatibility with simpler APIs.
-            var prompt = template.Replace("'text'", sourceText);
+            var step1Body = new
+            {
+                model = _modelName,
+                messages = new[]
+                {
+                    new { role = "system", content = step1SystemPrompt },
+                    new { role = "user", content = textToTranslate }
+                },
+                temperature = 0.3
+            };
 
-            // // Simplified request body payload structure (LM Studio compatible)
-            // var requestBody = new 
-            // { 
-            //     model = model, 
-            //     messages = new[] 
-            //     { 
-            //         new 
-            //         { 
-            //             role = "system", 
-            //             content = new[] 
-            //             { 
-            //                 new 
-            //                 { 
-            //                     type = "text", 
-            //                     text = $"You are a professional and neutral translation engine. " +
-            //                            $"Translate the following text accurately to {targetLanguage} " +
-            //                            $"and provide only the translated text, with no additional commentary or formatting."
-            //                 } 
-            //             } 
-            //         }, 
-            //         new 
-            //         { 
-            //             role = "user", 
-            //             content = new[] 
-            //             { 
-            //                 new 
-            //                 { 
-            //                     type = "text", 
-            //                     text = prompt 
-            //                 } 
-            //             } 
-            //         } 
-            //     }, 
-            //     max_tokens = 1024, 
-            //     temperature = 0.1
-            // };
+            string firstResponse = await SendPostRequestAsync(step1Body);
+            string intermediateTranslation = ExtractTranslation(firstResponse);
             
-            var requestBody = new 
-            { 
-                // Назва моделі, яка зараз завантажена в LM Studio (або можна залишити будь-яку, якщо ввімкнено авто-визначення)
-                model, 
-                messages = new[] 
-                { 
-                    new 
-                    { 
-                        role = "system", 
-                        content = $"You are a professional and neutral translation engine. Translate the following text accurately to {targetLanguage} " +
-                                  $"and provide only the translated text, with no additional commentary or formatting."
-                    }, 
-                    new 
-                    { 
-                        role = "user", 
-                        content = prompt 
-                    } 
-                }, 
-                max_tokens = 1024, 
+            if (string.IsNullOrEmpty(intermediateTranslation))
+            {
+                intermediateTranslation = firstResponse;
+            }
+            
+            var step2SystemPrompt = "You are a senior editor and quality assurance assistant for translations.\n\n" +
+                                    "Your task is to evaluate the provided translation based on the original English text using these criteria:\n" +
+                                    "- Accuracy\n- Naturalness\n- Terminology\n\n" +
+                                    "After evaluation, fix any issues and output ONLY the polished, final translated text. " +
+                                    "No explanations, no markdown headers, just the final text.";
+
+            var step2Body = new
+            {
+                model = _modelName,
+                messages = new[]
+                {
+                    new { role = "system", content = step2SystemPrompt },
+                    new
+                    {
+                        role = "user",
+                        content =
+                            $"ORIGINAL TEXT:\n{textToTranslate}\n\nPROPOSED TRANSLATION:\n{intermediateTranslation}"
+                    }
+                },
                 temperature = 0.1
             };
 
-
-            try
-            {
-                var client = _httpClient; // Use injected client
-                var requestUri = baseUrl.TrimEnd('/') + "/v1/chat/completions";
-
-                string jsonPayload = JsonSerializer.Serialize(requestBody);
-                var reqcontent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-
-                HttpResponseMessage response = await client.PostAsync(requestUri, reqcontent);
-                var jsonString = await response.Content.ReadAsStringAsync(cancellationToken);
-                using var jsonDocument = JsonDocument.Parse(jsonString);
-
-                // Assuming the API structure still contains "choices" and "message" properties at this level for success
-                if (jsonDocument.RootElement.TryGetProperty("choices", out var choices) &&
-                    choices.GetArrayLength() > 0 &&
-                    choices[0].TryGetProperty("message", out var message) &&
-                    message.TryGetProperty("content", out var content))
-                {
-                    var translated = content.GetString()?.Trim();
-                    return string.IsNullOrWhiteSpace(translated) ? sourceText : translated;
-                }
-
-                return sourceText;
-            }
-            catch (Exception ex)
-            {
-                // Log the exception in a real application, but for now, just return original text.
-                System.Diagnostics.Debug.WriteLine($"LMStudio translation failed: {ex.Message}");
-                return sourceText;
-            }
+            string finalTranslation = await SendPostRequestAsync(step2Body);
+            return finalTranslation.Trim();
         }
-
-        private async Task<string> TranslateWithAnthropicAsync(string sourceText, Languages targetLanguage, string contentType, CancellationToken cancellationToken)
+        
+        private async Task<string> SendPostRequestAsync(object body)
         {
-            var model = configuration["Translation:LMStudio:Model"];
-            // Anthropic uses a specific base URL and requires the Authorization header to be set up in the HttpClient factory,
-            // but we'll assume _httpClient is already correctly configured with the BaseAddress/Authorization headers for simplicity here.
-            var apiEndpoint = "http://192.168.0.250/v1/messages";
+            var jsonPayload = JsonSerializer.Serialize(body);
+            using var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(_endpoint, content);
+            response.EnsureSuccessStatusCode();
+
+            var responseString = await response.Content.ReadAsStringAsync();
             
-            var template = $"Translate the text to {targetLanguage}. Return only the translation.";
-
-            var userPrompt = template.Replace("{{text}}", sourceText);
-            
-            // The required structure for Anthropic messages array.
-            var requestBody = new 
-            { 
-                model = model, 
-                messages = new[] 
-                { 
-                    new 
-                    { 
-                        role = "system", 
-                        content = new[] 
-                        { 
-                            new 
-                            { 
-                                type = "text", 
-                                text = $"You are a professional and neutral translation engine. " +
-                                       $"Translate the following text accurately to {targetLanguage} " +
-                                       $"and provide only the translated text, with no additional commentary or formatting."
-                            } 
-                        } 
-                    }, 
-                    new 
-                    { 
-                        role = "user", 
-                        content = new[] 
-                        { 
-                            new 
-                            { 
-                                type = "text", 
-                                text = userPrompt 
-                            } 
-                        } 
-                    } 
-                }, 
-                max_tokens = 1024, 
-                temperature = 0.1
-            };
-            
-            try
-            {
-                var client = _httpClient;
-                // NOTE: The actual endpoint might be different depending on the wrapper used in the project (e.g., a custom API facade).
-                var requestUri = apiEndpoint;
-
-                string jsonPayload = JsonSerializer.Serialize(requestBody);
-                var reqcontent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-
-                HttpResponseMessage response = await client.PostAsync(requestUri, reqcontent, cancellationToken);
-                response.EnsureSuccessStatusCode(); // Throw exception on non-success status code
-
-                var jsonString = await response.Content.ReadAsStringAsync(cancellationToken);
-                using var jsonDocument = JsonDocument.Parse(jsonString);
-
-                // Anthropic specific parsing: content is usually nested under "content" property of the last message object.
-                if (jsonDocument.RootElement.TryGetProperty("content", out var rootContent) &&
-                    rootContent.ValueKind == JsonValueKind.String)
-                {
-                    var translated = rootContent.GetString()?.Trim();
-                    return string.IsNullOrWhiteSpace(translated) ? sourceText : translated;
-                }
-
-                return sourceText;
-            }
-            catch (HttpRequestException ex) when (ex.StatusCode != null && ((int)ex.StatusCode) == 401)
-            {
-                System.Diagnostics.Debug.WriteLine("Anthropic API Error: Unauthorized. Check API Key and permissions.");
-                return sourceText; // Handle auth failure gracefully
-            }
-            catch (Exception ex)
-            {
-                // Log the exception in a real application, but for now, just return original text.
-                System.Diagnostics.Debug.WriteLine($"Anthropic translation failed: {ex.Message}");
-                return sourceText;
-            }
+            using var jsonDoc = JsonDocument.Parse(responseString);
+            var root = jsonDoc.RootElement;
+            return root.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString() ?? "";
+        }
+        
+        private string ExtractTranslation(string input)
+        {
+            var match = Regex.Match(input, @"<translation>(.*?)</translation>", RegexOptions.Singleline);
+            return match.Success ? match.Groups[1].Value.Trim() : "";
         }
     }
 }

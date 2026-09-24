@@ -4,6 +4,6 @@ namespace BookTracker.DAL.Abstractions
 {
 	public interface ITextTranslator
 	{
-		Task<string> TranslateAsync(string sourceText, Languages targetLanguage, string contentType, CancellationToken cancellationToken = default);
+		Task<string> TranslateAsync(string sourceText, Languages targetLanguage);
 	}
 }

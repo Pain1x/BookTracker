@@ -64,18 +64,6 @@
 		};
 	}
 	
-	private static byte GetLanguagePk2()
-	{
-		var cultureName = CultureInfo.CurrentUICulture.Name;
-
-		return cultureName switch
-		{
-			"uk-UA" => 1,
-			"en-US" => 2,
-			_ => 1
-		};
-	}
-	
 	private readonly BookModel _newBook = new()
 	{
 		Author = new AuthorModel(),
@@ -85,7 +73,7 @@
 
 	private async Task HandleValidSubmit()
 	{
-		await BooksService.AddBook(_newBook, (Languages)GetLanguagePk2());
+		await BooksService.AddBook(_newBook, (Languages)GetLanguagePk());
 		Navigation.NavigateTo("/");
 	}
 

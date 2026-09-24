@@ -16,9 +16,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4712fe08-e66f-4def-ae33-3c7ce6824b36" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.BookTracker/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BookTracker/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.BookTracker/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BookTracker/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BlazorWebApp/Components/Pages/Books/Details/AddBook.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorWebApp/Components/Pages/Books/Details/AddBook.razor" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BlazorWebApp/Components/Pages/Books/Details/BookDetails.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorWebApp/Components/Pages/Books/Details/BookDetails.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorWebApp/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorWebApp/appsettings.Development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BookTracker.DAL/Abstractions/ITextTranslator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.DAL/Abstractions/ITextTranslator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BookTracker.DAL/Services/BookTranslationProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.DAL/Services/BookTranslationProcessor.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,7 +53,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d65d8dd6af5669905bd6d55baa11d05965d2c35dab0553524c64dd0c775311d/EventDefinition`.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6780d13016c376c4491c5618b257d84da7eacf747ed2719783e775546b79b/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/BookTracker.DAL/Entities/Languages/Languages.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///Immediate Window" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -303,45 +307,6 @@
           <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
           <option name="timeStamp" value="3" />
         </breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs</url>
-          <line>201</line>
-          <properties documentPath="$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs" containingFunctionPresentation="Method 'TranslateWithAnthropicAsync'">
-            <startOffsets>
-              <option value="8934" />
-            </startOffsets>
-            <endOffsets>
-              <option value="8969" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs</url>
-          <line>121</line>
-          <properties documentPath="$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs" containingFunctionPresentation="Method 'TranslateWithLMStudioAsync'">
-            <startOffsets>
-              <option value="5170" />
-            </startOffsets>
-            <endOffsets>
-              <option value="5226" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs</url>
-          <line>130</line>
-          <properties documentPath="$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs" containingFunctionPresentation="Method 'TranslateWithLMStudioAsync'">
-            <startOffsets>
-              <option value="5746" />
-            </startOffsets>
-            <endOffsets>
-              <option value="5817" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
