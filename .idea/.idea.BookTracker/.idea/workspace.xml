@@ -16,21 +16,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4712fe08-e66f-4def-ae33-3c7ce6824b36" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/BookTracker.DAL/Entities/Languages/Languages.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.BookTracker/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BookTracker/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BlazorWebApp/Components/Pages/Books/Details/AddBook.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorWebApp/Components/Pages/Books/Details/AddBook.razor" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BlazorWebApp/Components/Pages/Books/Details/BookDetails.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorWebApp/Components/Pages/Books/Details/BookDetails.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorWebApp/Services/HangfireBookTranslationJobScheduler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorWebApp/Services/HangfireBookTranslationJobScheduler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorWebApp/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorWebApp/appsettings.Development.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookTracker.BLL/Abstractions/IBooksService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.BLL/Abstractions/IBooksService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookTracker.BLL/Models/BookModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.BLL/Models/BookModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookTracker.BLL/Services/BooksService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.BLL/Services/BooksService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookTracker.DAL/Abstractions/IBookDBManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.DAL/Abstractions/IBookDBManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookTracker.DAL/Abstractions/IBookTranslationProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.DAL/Abstractions/IBookTranslationProcessor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookTracker.DAL/Abstractions/ITextTranslator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.DAL/Abstractions/ITextTranslator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookTracker.DAL/DBManagers/BookDBManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.DAL/DBManagers/BookDBManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookTracker.DAL/Entities/Books/Book.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.DAL/Entities/Books/Book.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookTracker.DAL/Models/BookTranslationJob.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.DAL/Models/BookTranslationJob.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookTracker.DAL/Services/BookTranslationProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.DAL/Services/BookTranslationProcessor.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -72,61 +60,61 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.8829225473056928" />
-      <entry key="MS500" value="4.078079205483112" />
-      <entry key="S2" value="8.087266472629054" />
-      <entry key="S5" value="11.065725760646972" />
-      <entry key="S10" value="13.20224692921673" />
-      <entry key="S30" value="15.503452778487038" />
-      <entry key="S60" value="16.4679107368537" />
-      <entry key="M2" value="17.322552519991223" />
-      <entry key="M5" value="18.281376692040187" />
-      <entry key="M10" value="19.571507512650996" />
-      <entry key="M15" value="21.78315059161941" />
-      <entry key="M30" value="32.913588981685066" />
-      <entry key="H1" value="53.86173245200791" />
-      <entry key="H2" value="75.76622112901491" />
-      <entry key="H4" value="91.90289973330624" />
-      <entry key="D1" value="109.07718810225317" />
-      <entry key="W1" value="112.42870980581856" />
+      <entry key="MS100" value="1.0000214301613093" />
+      <entry key="MS500" value="1.124488565739034" />
+      <entry key="S2" value="1.8834520662176448" />
+      <entry key="S5" value="2.423725678699581" />
+      <entry key="S10" value="2.683688181135186" />
+      <entry key="S30" value="2.887519976357848" />
+      <entry key="S60" value="2.9429497069506567" />
+      <entry key="M2" value="2.9833826567085917" />
+      <entry key="M5" value="3.3936543395551935" />
+      <entry key="M10" value="5.523890045192764" />
+      <entry key="M15" value="8.614695230702129" />
+      <entry key="M30" value="19.766150895981664" />
+      <entry key="H1" value="41.97263616345416" />
+      <entry key="H2" value="69.81372210627067" />
+      <entry key="H4" value="93.16837244939558" />
+      <entry key="D1" value="120.44109186079265" />
+      <entry key="W1" value="126.03741563844221" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="1.5589618608133927E-270" />
-      <entry key="S5" value="1.1951038062381195E-108" />
-      <entry key="S10" value="1.1201924403533971E-54" />
-      <entry key="S30" value="1.3312463281103075E-18" />
-      <entry key="S60" value="1.5637299410210648E-9" />
-      <entry key="M2" value="5.528520363985961E-5" />
-      <entry key="M5" value="0.030644345953613126" />
-      <entry key="M10" value="0.34343020665852186" />
-      <entry key="M15" value="1.0713638800518088" />
-      <entry key="M30" value="4.683136984269061" />
-      <entry key="H1" value="11.0777650332133" />
-      <entry key="H2" value="17.48174056489654" />
-      <entry key="H4" value="22.085731795307602" />
-      <entry key="D1" value="26.908028165390167" />
-      <entry key="W1" value="27.841175199860373" />
+      <entry key="MS500" value="1.9706854972639072E-185" />
+      <entry key="S2" value="6.683224878071069E-47" />
+      <entry key="S5" value="3.718734227912802E-19" />
+      <entry key="S10" value="7.646332006690102E-10" />
+      <entry key="S30" value="0.0014024174395368444" />
+      <entry key="S60" value="0.052717675944918566" />
+      <entry key="M2" value="0.32442216329092494" />
+      <entry key="M5" value="0.9899614071057665" />
+      <entry key="M10" value="1.5573422793736313" />
+      <entry key="M15" value="1.9743641747215446" />
+      <entry key="M30" value="3.8528322839319347" />
+      <entry key="H1" value="8.975914875390608" />
+      <entry key="H2" value="16.043086517963257" />
+      <entry key="H4" value="22.12046848339809" />
+      <entry key="D1" value="29.275205639203392" />
+      <entry key="W1" value="30.74681158339033" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.6870463164608693" />
-      <entry key="MS500" value="3.9304647476376857" />
-      <entry key="S2" value="8.00864924793723" />
-      <entry key="S5" value="11.024837037620411" />
-      <entry key="S10" value="13.178882017663568" />
-      <entry key="S30" value="15.492963082946748" />
-      <entry key="S60" value="16.458442992975073" />
-      <entry key="M2" value="17.31439298643838" />
-      <entry key="M5" value="18.306888351312967" />
-      <entry key="M10" value="19.91097438716937" />
-      <entry key="M15" value="22.8500254478595" />
-      <entry key="M30" value="37.589597294435784" />
-      <entry key="H1" value="64.93139611470083" />
-      <entry key="H2" value="93.24158570261521" />
-      <entry key="H4" value="113.98459815702346" />
-      <entry key="D1" value="135.98439543856097" />
-      <entry key="W1" value="140.26976362194355" />
+      <entry key="MS100" value="0.2414905873428315" />
+      <entry key="MS500" value="0.8518770393898936" />
+      <entry key="S2" value="1.7760242717464527" />
+      <entry key="S5" value="2.3725247129627665" />
+      <entry key="S10" value="2.656272041344237" />
+      <entry key="S30" value="2.879290586524339" />
+      <entry key="S60" value="2.9901128809082027" />
+      <entry key="M2" value="3.3029687563392645" />
+      <entry key="M5" value="4.377646605876948" />
+      <entry key="M10" value="7.073757318529214" />
+      <entry key="M15" value="10.581213029108836" />
+      <entry key="M30" value="23.610787210456675" />
+      <entry key="H1" value="50.94014637319572" />
+      <entry key="H2" value="85.8498419020745" />
+      <entry key="H4" value="115.28418987436314" />
+      <entry key="D1" value="149.7152946407614" />
+      <entry key="W1" value="156.78407728047162" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -141,34 +129,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.BlazorWebApp: http.executor": "Debug",
-    "Attach to Process.14349:BlazorWebApp.executor": "Debug",
-    "Docker.BlazorWebApp/Dockerfile.executor": "Debug",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "cidr.known.project.marker": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "feature/NC-Localization-of-db",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.BlazorWebApp: http.executor&quot;: &quot;Debug&quot;,
+    &quot;Attach to Process.14349:BlazorWebApp.executor&quot;: &quot;Debug&quot;,
+    &quot;Docker.BlazorWebApp/Dockerfile.executor&quot;: &quot;Debug&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/NC-Localization-of-db&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.BlazorWebApp: http">
     <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
       <deployment type="dockerfile">
@@ -317,16 +305,42 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs</url>
-          <line>74</line>
-          <properties documentPath="$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs" containingFunctionPresentation="Method 'TranslateWithLMStudioAsync'">
+          <line>201</line>
+          <properties documentPath="$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs" containingFunctionPresentation="Method 'TranslateWithAnthropicAsync'">
             <startOffsets>
-              <option value="3203" />
+              <option value="8934" />
             </startOffsets>
             <endOffsets>
-              <option value="3259" />
+              <option value="8969" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="21" />
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs</url>
+          <line>121</line>
+          <properties documentPath="$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs" containingFunctionPresentation="Method 'TranslateWithLMStudioAsync'">
+            <startOffsets>
+              <option value="5170" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5226" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs</url>
+          <line>130</line>
+          <properties documentPath="$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs" containingFunctionPresentation="Method 'TranslateWithLMStudioAsync'">
+            <startOffsets>
+              <option value="5746" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5817" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="15" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

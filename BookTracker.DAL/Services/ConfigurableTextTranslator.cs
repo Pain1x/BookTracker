@@ -11,12 +11,8 @@ namespace BookTracker.DAL.Services
         IHttpClientFactory httpClientFactory,
         IConfiguration configuration) : ITextTranslator
     {
-        private readonly HttpClient _httpClient;
-
-        public ConfigurableTextTranslator(IHttpClientFactory httpClientFactory, IConfiguration configuration)
-            : this(httpClientFactory.CreateClient(), configuration) { }
-
-
+        private readonly HttpClient _httpClient = httpClientFactory.CreateClient();
+        
         public async Task<string> TranslateAsync(string sourceText, Languages targetLanguage, string contentType, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(sourceText))
@@ -44,36 +40,79 @@ namespace BookTracker.DAL.Services
         {
             var endpoint = configuration["Translation:LMStudio:Endpoint"];
             var model = configuration["Translation:LMStudio:Model"];
-            var promptTemplate = configuration["Translation:LMStudio:Templates:" + contentType + ":" + targetLanguage];
-
-            if (string.IsNullOrWhiteSpace(model))
-            {
-                return sourceText;
-            }
-
             var baseUrl = string.IsNullOrWhiteSpace(endpoint)
                 ? "http://192.168.0.250:1234"
                 : endpoint.Trim();
 
-            var template = string.IsNullOrWhiteSpace(promptTemplate)
-                ? $"Translate the text to {targetLanguage}. Return only the translation."
-                : promptTemplate;
+            var template = $"Translate the 'text' to {targetLanguage}. Return only the translation.";
 
             // The context instruction from the original system message is folded into the main prompt for compatibility with simpler APIs.
-            var prompt = template.Replace("{{text}}", sourceText);
+            var prompt = template.Replace("'text'", sourceText);
 
-            // Simplified request body payload structure (LM Studio compatible)
-            var requestBody = new
-            {
-                model,
-                input = prompt,
-                temperature = 0.2
+            // // Simplified request body payload structure (LM Studio compatible)
+            // var requestBody = new 
+            // { 
+            //     model = model, 
+            //     messages = new[] 
+            //     { 
+            //         new 
+            //         { 
+            //             role = "system", 
+            //             content = new[] 
+            //             { 
+            //                 new 
+            //                 { 
+            //                     type = "text", 
+            //                     text = $"You are a professional and neutral translation engine. " +
+            //                            $"Translate the following text accurately to {targetLanguage} " +
+            //                            $"and provide only the translated text, with no additional commentary or formatting."
+            //                 } 
+            //             } 
+            //         }, 
+            //         new 
+            //         { 
+            //             role = "user", 
+            //             content = new[] 
+            //             { 
+            //                 new 
+            //                 { 
+            //                     type = "text", 
+            //                     text = prompt 
+            //                 } 
+            //             } 
+            //         } 
+            //     }, 
+            //     max_tokens = 1024, 
+            //     temperature = 0.1
+            // };
+            
+            var requestBody = new 
+            { 
+                // Назва моделі, яка зараз завантажена в LM Studio (або можна залишити будь-яку, якщо ввімкнено авто-визначення)
+                model, 
+                messages = new[] 
+                { 
+                    new 
+                    { 
+                        role = "system", 
+                        content = $"You are a professional and neutral translation engine. Translate the following text accurately to {targetLanguage} " +
+                                  $"and provide only the translated text, with no additional commentary or formatting."
+                    }, 
+                    new 
+                    { 
+                        role = "user", 
+                        content = prompt 
+                    } 
+                }, 
+                max_tokens = 1024, 
+                temperature = 0.1
             };
+
 
             try
             {
                 var client = _httpClient; // Use injected client
-                var requestUri = baseUrl.TrimEnd('/') + "/api/v1/chat";
+                var requestUri = baseUrl.TrimEnd('/') + "/v1/chat/completions";
 
                 string jsonPayload = JsonSerializer.Serialize(requestBody);
                 var reqcontent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
@@ -102,45 +141,54 @@ namespace BookTracker.DAL.Services
             }
         }
 
-        private async Task<string> TranslateWithAnthropicAsync(string sourceText, Languages targetLanguage, contentType, CancellationToken cancellationToken)
+        private async Task<string> TranslateWithAnthropicAsync(string sourceText, Languages targetLanguage, string contentType, CancellationToken cancellationToken)
         {
-            var model = configuration["Translation:Anthropic:Model"];
-            // In a real setup, the API Key would be read securely from environment variables or secret manager.
-            // For this demonstration, we assume it's configured in IConfiguration/HttpClientFactory setup.
-            var apiKey = configuration["Translation:Anthropic:ApiKey"];
-
-            if (string.IsNullOrWhiteSpace(model) || string.IsNullOrWhiteSpace(apiKey))
-            {
-                System.Diagnostics.Debug.WriteLine("Anthropic model or API Key not configured.");
-                return sourceText;
-            }
-
+            var model = configuration["Translation:LMStudio:Model"];
             // Anthropic uses a specific base URL and requires the Authorization header to be set up in the HttpClient factory,
             // but we'll assume _httpClient is already correctly configured with the BaseAddress/Authorization headers for simplicity here.
-            var apiEndpoint = "https://api.anthropic.com/v1/messages";
-
-            // Constructing the message payload according to Anthropic's standards.
-            var promptTemplate = configuration["Translation:Anthropic:Templates:" + contentType + ":" + targetLanguage];
-            var template = string.IsNullOrWhiteSpace(promptTemplate)
-                ? $"Translate the text to {targetLanguage}. Return only the translation."
-                : promptTemplate;
+            var apiEndpoint = "http://192.168.0.250/v1/messages";
+            
+            var template = $"Translate the text to {targetLanguage}. Return only the translation.";
 
             var userPrompt = template.Replace("{{text}}", sourceText);
-
-
+            
             // The required structure for Anthropic messages array.
-            var requestBody = new
-            {
-                model, // e.g., "claude-3-opus-20240229"
-                messages = new[]
-                {
-                    new { role = "system", content = $"You are a professional and neutral translation engine. Translate the following text accurately to {targetLanguage} and provide only the translated text, with no additional commentary or formatting." },
-                    new { role = "user", content = userPrompt }
-                },
-                max_tokens = 1024,
-                temperature = 0.1 // Anthropic recommends keeping temperature low for translation/extraction tasks.
+            var requestBody = new 
+            { 
+                model = model, 
+                messages = new[] 
+                { 
+                    new 
+                    { 
+                        role = "system", 
+                        content = new[] 
+                        { 
+                            new 
+                            { 
+                                type = "text", 
+                                text = $"You are a professional and neutral translation engine. " +
+                                       $"Translate the following text accurately to {targetLanguage} " +
+                                       $"and provide only the translated text, with no additional commentary or formatting."
+                            } 
+                        } 
+                    }, 
+                    new 
+                    { 
+                        role = "user", 
+                        content = new[] 
+                        { 
+                            new 
+                            { 
+                                type = "text", 
+                                text = userPrompt 
+                            } 
+                        } 
+                    } 
+                }, 
+                max_tokens = 1024, 
+                temperature = 0.1
             };
-
+            
             try
             {
                 var client = _httpClient;
@@ -158,7 +206,7 @@ namespace BookTracker.DAL.Services
 
                 // Anthropic specific parsing: content is usually nested under "content" property of the last message object.
                 if (jsonDocument.RootElement.TryGetProperty("content", out var rootContent) &&
-                    rootContent.ValueKind == StringValueKind)
+                    rootContent.ValueKind == JsonValueKind.String)
                 {
                     var translated = rootContent.GetString()?.Trim();
                     return string.IsNullOrWhiteSpace(translated) ? sourceText : translated;

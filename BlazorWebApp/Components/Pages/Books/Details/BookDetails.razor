@@ -105,11 +105,24 @@ else
 
 		return cultureName switch
 		{
-			"uk-UA" => 1,
-			"en-US" => 2,
+			"uk-UA" => 2,
+			"en-US" => 1,
 			_ => 1
 		};
 	}
+    
+    private static byte GetLanguagePk2()
+    {
+        var cultureName = CultureInfo.CurrentUICulture.Name;
+
+        return cultureName switch
+        {
+            "uk-UA" => 1,
+            "en-US" => 2,
+            _ => 1
+        };
+    }
+    
     private void GoBack()
     {
         Navigation.NavigateTo("/");
@@ -137,7 +150,7 @@ else
 	{
 		if (editBook != null)
 		{
-			await BooksService.UpdateBook(editBook, (Languages)GetLanguagePk());
+			await BooksService.UpdateBook(editBook, (Languages)GetLanguagePk2());
 			await LoadBook(); // Refresh details with localization
 			isEditing = false;
 		}
