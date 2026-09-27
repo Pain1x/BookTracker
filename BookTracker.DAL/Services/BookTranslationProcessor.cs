@@ -1,5 +1,6 @@
 using BookTracker.DAL.Abstractions;
 using BookTracker.DAL.DBContexts;
+using BookTracker.DAL.Entities.Enums;
 using BookTracker.DAL.Entities.Languages;
 using BookTracker.DAL.Entities.Translations;
 using BookTracker.DAL.Models;
@@ -26,30 +27,29 @@ namespace BookTracker.DAL.Services
             {
                 await using var context = await contextFactory.CreateDbContextAsync();
                 var targetLanguage = await GetOrCreateLanguageAsync(context, job.TargetLanguage);
-
-                // Use the generic helper for all three types
-                await EnsureTranslationAsync(
+                
+                await EnsureTranslationAsync<BookTranslation>(
                     context,
                     job.BookPk,
                     targetLanguage.LanguagePk,
                     translatedTitle,
-                    () => new BookTranslation { BookPk = job.BookPk, LanguagePk = targetLanguage.LanguagePk }
+                    new BookTranslation { BookPk = job.BookPk, LanguagePk = targetLanguage.LanguagePk }
                 );
 
-                await EnsureTranslationAsync(
+                await EnsureTranslationAsync<AuthorTranslation>(
                     context,
                     job.AuthorPk,
                     targetLanguage.LanguagePk,
                     translatedAuthorName,
-                    () => new AuthorTranslation { AuthorPk = job.AuthorPk, LanguagePk = targetLanguage.LanguagePk }
+                    new AuthorTranslation { AuthorPk = job.AuthorPk, LanguagePk = targetLanguage.LanguagePk }
                 );
 
-                await EnsureTranslationAsync(
+                await EnsureTranslationAsync<GenreTranslation>(
                     context,
                     job.GenrePk,
                     targetLanguage.LanguagePk,
                     translatedGenreName,
-                    () => new GenreTranslation { GenrePk = job.GenrePk, LanguagePk = targetLanguage.LanguagePk }
+                    new GenreTranslation { GenrePk = job.GenrePk, LanguagePk = targetLanguage.LanguagePk }
                 );
 
                 await context.SaveChangesAsync();
@@ -64,83 +64,78 @@ namespace BookTracker.DAL.Services
         /// <param name="entityPk">The primary key of the associated entity (e.g., Guid for Book).</param>
         /// <param name="languagePk">The primary key of the target language.</param>
         /// <param name="translatedName">The new translated string value.</param>
-        /// <param name="getExistingTranslation">A delegate to check if a translation already exists based on entity PK, language PK, and a partial match on the name/title field (to handle potential updates).</param>
-        /// <param name="createEntityFactory">A function that creates a new, unattached instance of TTrans with initial foreign keys.</param>
+        /// <param name="translationEntity">Entity to translate.</param>
         private static async Task EnsureTranslationAsync<TTrans>(
             BooksDbContext context,
-            Guid entityPk, // Assuming all primary keys are Guid for simplification across types in this refactor scope. Needs review if AuthorPk/GenrePk change type.
+            Guid entityPk,
             byte languagePk,
             string translatedName,
-            Func<TTrans, Guid, byte, string, bool> getExistingTranslation,
-            Func<TTrans> createEntityFactory) where TTrans : class
+            ITranslationEntity translationEntity) where TTrans : class
         {
-            // Use reflection or a switch statement to dispatch based on the expected translation type
-            // and its corresponding DbSet in the context. This keeps the helper generic while respecting EF Core structure.
-
-            switch (typeof(TTrans))
+            switch (translationEntity)
             {
-                case BookTranslation bookTranslation:
+                case BookTranslation:
                     await using(context);
-                    var existingTranslation = await context.Set<BookTranslation>()
+                    var existingBookTranslation = await context.Set<BookTranslation>()
                         .FirstOrDefaultAsync(t => t.BookPk == entityPk && t.LanguagePk == languagePk);
 
-                    if (existingTranslation != null)
+                    if (existingBookTranslation != null)
                     {
-                        existingTranslation.Title = translatedName;
+                        existingBookTranslation.Title = translatedName;
                         return;
                     }
 
-                    var newTranslation = createEntityFactory();
-                    // Note: We must rely on specific casting here as the factory returns an object.
-                    var bookTrans = (BookTranslation)(object)newTranslation;
-                    bookTrans.BookPk = entityPk;
-                    bookTrans.LanguagePk = languagePk;
-                    bookTrans.Title = translatedName;
-                    await context.BookTranslations.AddAsync(bookTrans);
+                    var newBookTranslation = new BookTranslation
+                    {
+                        BookPk = entityPk,
+                        LanguagePk = languagePk,
+                        Title = translatedName
+                    };
+
+                    await context.BookTranslations.AddAsync(newBookTranslation);
                     break;
 
-                case AuthorTranslation authorTranslation:
+                case AuthorTranslation:
                     await using(context);
-                    var existingTranslation = await context.Set<AuthorTranslation>()
+                    var existingAuthorTranslation = await context.Set<AuthorTranslation>()
                         .FirstOrDefaultAsync(t => t.AuthorPk == entityPk && t.LanguagePk == languagePk);
 
-                    if (existingTranslation != null)
+                    if (existingAuthorTranslation != null)
                     {
-                        existingTranslation.Name = translatedName;
+                        existingAuthorTranslation.Name = translatedName;
                         return;
                     }
 
-                    var newTranslation = createEntityFactory();
-                    // Note: We must rely on specific casting here as the factory returns an object.
-                    var authorTrans = (AuthorTranslation)(object)newTranslation;
-                    authorTrans.AuthorPk = entityPk;
-                    authorTrans.LanguagePk = languagePk;
-                    authorTrans.Name = translatedName;
-                    await context.AuthorTranslations.AddAsync(authorTrans);
+                    var newAuthorTranslation = new AuthorTranslation
+                    {
+                        AuthorPk = entityPk,
+                        LanguagePk = languagePk,
+                        Name = translatedName
+                    };
+                    await context.AuthorTranslations.AddAsync(newAuthorTranslation);
                     break;
 
-                case GenreTranslation genreTranslation:
+                case GenreTranslation:
                     await using(context);
-                    var existingTranslation = await context.Set<GenreTranslation>()
+                    var existingGenreTranslation = await context.Set<GenreTranslation>()
                         .FirstOrDefaultAsync(t => t.GenrePk == entityPk && t.LanguagePk == languagePk);
 
-                    if (existingTranslation != null)
+                    if (existingGenreTranslation != null)
                     {
-                        existingTranslation.Name = translatedName;
+                        existingGenreTranslation.Name = translatedName;
                         return;
                     }
 
-                    var newTranslation = createEntityFactory();
-                    // Note: We must rely on specific casting here as the factory returns an object.
-                    var genreTrans = (GenreTranslation)(object)newTranslation;
-                    genreTrans.GenrePk = entityPk;
-                    genreTrans.LanguagePk = languagePk;
-                    genreTrans.Name = translatedName;
-                    await context.GenreTranslations.AddAsync(genreTrans);
+                    var newGenreTranslation = new GenreTranslation
+                    {
+                        GenrePk = entityPk,
+                        LanguagePk = languagePk,
+                        Name = translatedName
+                    };
+                    await context.GenreTranslations.AddAsync(newGenreTranslation);
                     break;
 
                 default:
-                    // Handle unknown types gracefully in the future
                     throw new NotSupportedException($"Translation type {typeof(TTrans).Name} is not supported by this helper method.");
             }
         }
@@ -169,7 +164,6 @@ namespace BookTracker.DAL.Services
             };
 
             await context.Languages.AddAsync(language);
-            // Note: Keeping the SaveChanges here to ensure the PK is generated/available immediately.
             await context.SaveChangesAsync();
 
             return language;
