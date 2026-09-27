@@ -1,9 +1,10 @@
+using BookTracker.DAL.Abstractions;
 using BookTracker.DAL.Entities.Books;
 using BookTracker.DAL.Entities.Languages;
 
 namespace BookTracker.DAL.Entities.Translations
 {
-	public class BookTranslation
+	public class BookTranslation: ITranslationEntity
 	{
 		public int BookTranslationPk { get; set; }
 		public Guid BookPk { get; set; }

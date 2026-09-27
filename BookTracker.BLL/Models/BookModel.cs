@@ -1,4 +1,5 @@
-﻿using BookTracker.DAL.Entities.Languages;
+﻿using BookTracker.DAL.Entities.Enums;
+using BookTracker.DAL.Entities.Languages;
 
 namespace BookTracker.BLL.Models
 {

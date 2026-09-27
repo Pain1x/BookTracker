@@ -2,6 +2,7 @@
 using BookTracker.DAL.DBContexts;
 using BookTracker.DAL.Entities.Authors;
 using BookTracker.DAL.Entities.Books;
+using BookTracker.DAL.Entities.Enums;
 using BookTracker.DAL.Entities.Genres;
 using BookTracker.DAL.Entities.Languages;
 using Microsoft.EntityFrameworkCore;

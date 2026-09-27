@@ -1,4 +1,5 @@
 ﻿using BookTracker.DAL.Entities.Books;
+using BookTracker.DAL.Entities.Enums;
 using BookTracker.DAL.Entities.Languages;
 
 

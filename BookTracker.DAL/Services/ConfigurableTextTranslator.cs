@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using BookTracker.DAL.Entities.Enums;
 using BookTracker.DAL.Entities.Languages;
 
 namespace BookTracker.DAL.Services
@@ -10,16 +11,31 @@ namespace BookTracker.DAL.Services
     public class ConfigurableTextTranslator(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         : ITextTranslator
     {
+        #region Constants
+
+        private const string MODEL_NAME = "Translation:LMStudio:Model";
+        
+        private const string PROVIDER = "Translation:Provider";
+        
+        private const string ENDPOINT = "Translation:LMStudio:Endpoint";
+
+        #endregion
+
+        #region Fields
+
         private readonly HttpClient _httpClient = httpClientFactory.CreateClient();
 
-        private readonly string _modelName = configuration["Translation:LMStudio:Model"];
+        private readonly string _modelName = configuration[MODEL_NAME];
 
-        private string _provider = configuration["Translation:Provider"]?.Trim();
+        private string _provider = configuration[PROVIDER]?.Trim();
         
-        private string _endpoint = configuration["Translation:LMStudio:Endpoint"]?.Trim();
+        private string _endpoint = configuration[ENDPOINT]?.Trim();
 
+        #endregion
 
-        public async Task<string> TranslateAsync(string sourceText, Languages targetLanguage)
+        #region Implementation of ITextTranslator
+
+               public async Task<string> TranslateAsync(string sourceText, Languages targetLanguage)
         {
             if (string.IsNullOrWhiteSpace(sourceText))
             {
@@ -97,7 +113,15 @@ namespace BookTracker.DAL.Services
             string finalTranslation = await SendPostRequestAsync(step2Body);
             return finalTranslation.Trim();
         }
-        
+
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Sends POST request
+        /// </summary>
+        /// <param name="body">Body to send</param>
+        /// <returns>Result of sending</returns>
         private async Task<string> SendPostRequestAsync(object body)
         {
             var jsonPayload = JsonSerializer.Serialize(body);
@@ -113,10 +137,17 @@ namespace BookTracker.DAL.Services
             return root.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString() ?? "";
         }
         
+        /// <summary>
+        /// Extracts translation
+        /// </summary>
+        /// <param name="input">Input to extract</param>
+        /// <returns>Translation</returns>
         private string ExtractTranslation(string input)
         {
             var match = Regex.Match(input, @"<translation>(.*?)</translation>", RegexOptions.Singleline);
             return match.Success ? match.Groups[1].Value.Trim() : "";
         }
+
+        #endregion
     }
 }

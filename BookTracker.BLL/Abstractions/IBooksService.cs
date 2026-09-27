@@ -1,4 +1,5 @@
 ﻿using BookTracker.BLL.Models;
+using BookTracker.DAL.Entities.Enums;
 using BookTracker.DAL.Entities.Languages;
 
 namespace BookTracker.BLL.Abstractions
