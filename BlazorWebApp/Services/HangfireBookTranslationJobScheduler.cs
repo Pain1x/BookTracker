@@ -7,6 +7,7 @@ namespace BlazorWebApp.Services
 {
 	public class HangfireBookTranslationJobScheduler(IBackgroundJobClient backgroundJobClient) : IBookTranslationJobScheduler
 	{
+		///<inhericdoc/>
 		public void Enqueue(BookTranslationJob job)
 		{
 			backgroundJobClient.Enqueue<IBookTranslationProcessor>(

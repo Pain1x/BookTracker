@@ -6,73 +6,42 @@ namespace BookTracker.DAL.Abstractions
 {
 	public interface IBookDbManager
 	{
-		/// <summary>
-		/// Adds the book.
-		/// </summary>
-		/// <param name="book">The book.</param>
-		/// <returns></returns>
-		public Task AddBook(Book book, Languages targetLanguage);
+		 /// <summary>
+        /// Adds the book.
+        /// </summary>
+        /// <param name="book">The book.</param>
+        /// <param name="targetLanguage">The target language.</param>
+        /// <returns></returns>
+        public Task AddBook(Book book, Languages targetLanguage);
 
-		/// <summary>
-		/// Edits the book.
-		/// </summary>
-		/// <param name="updatedBook">The updated book.</param>
-		/// <returns></returns>
-		public Task UpdateBook(Book updatedBook, Languages targetLanguage);
+        /// <summary>
+        /// Edits the book.
+        /// </summary>
+        /// <param name="updatedBook">The updated book.</param>
+        /// <param name="targetLanguage">The target language.</param>
+        /// <returns></returns>
+        public Task UpdateBook(Book updatedBook, Languages targetLanguage);
 
-		/// <summary>
-		/// Deletes the book.
-		/// </summary>
-		/// <param name="bookPk">The book pk.</param>
-		/// <returns></returns>
-		public Task DeleteBook(Guid bookPk);
+        /// <summary>
+        /// Gets all books localized by language.
+        /// </summary>
+        /// <param name="languagePk">Language identifier.</param>
+        /// <returns></returns>
+        public Task<List<Book>> GetAllBooksLocalized(byte languagePk);
 
-		/// <summary>
-		/// Gets all books.
-		/// </summary>
-		/// <returns></returns>
-		public Task<List<Book>> GetAllBooks();
+        /// <summary>
+        /// Finds the book by identifier with localized data.
+        /// </summary>
+        /// <param name="bookPk">The book pk.</param>
+        /// <param name="languagePk">Language identifier.</param>
+        /// <returns></returns>
+        public Task<Book?> FindBookByPkLocalized(Guid bookPk, byte languagePk);
+		
+        /// <summary>
+        /// Returns books read grouped by years
+        /// </summary>
+        /// <returns>Quantity of books read by years</returns>
+        public Task<Dictionary<int, int>> CountBooksByYears();
 
-		/// <summary>
-		/// Gets all books localized by language.
-		/// </summary>
-		/// <param name="languagePk">Language identifier.</param>
-		/// <returns></returns>
-		public Task<List<Book>> GetAllBooksLocalized(byte languagePk);
-
-		/// <summary>
-		/// Finds the book by identifier.
-		/// </summary>
-		/// <param name="bookPk">The book pk.</param>
-		/// <returns></returns>
-		public Task<Book?> FindBookByPk(Guid bookPk);
-
-		/// <summary>
-		/// Finds the book by identifier with localized data.
-		/// </summary>
-		/// <param name="bookPk">The book pk.</param>
-		/// <param name="languagePk">Language identifier.</param>
-		/// <returns></returns>
-		public Task<Book?> FindBookByPkLocalized(Guid bookPk, byte languagePk);
-
-		/// <summary>
-		/// Counts the books by author.
-		/// </summary>
-		/// <param name="authorName">Name of the author.</param>
-		/// <returns></returns>
-		public Task<int> CountBooksByAuthor(string authorName);
-
-		/// <summary>
-		/// Counts the books by genre.
-		/// </summary>
-		/// <param name="genreName">Name of the genre.</param>
-		/// <returns></returns>
-		public Task<int> CountBooksByGenre(string genreName);
-
-		/// <summary>
-		/// Gets the count of books by years.
-		/// </summary>
-		/// <returns></returns>
-		Task<Dictionary<int, int>> CountBooksByYears();
 	}
 }

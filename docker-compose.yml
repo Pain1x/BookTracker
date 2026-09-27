@@ -11,36 +11,14 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  ollama:
-    image: ollama/ollama:latest
-    restart: always
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama:/root/.ollama
-
-  ollama-pull:
-    image: ollama/ollama:latest
-    depends_on:
-      - ollama
-    entrypoint: ["ollama", "pull", "mistral"]
-    environment:
-      OLLAMA_HOST: http://ollama:11434
-    profiles:
-      - init
-
   blazorwebapp:
     build:
       context: .
       dockerfile: /BlazorWebApp/Dockerfile
     depends_on:
       - db
-      - ollama
     environment:
       ConnectionStrings__BooksConnection: Host=db;Port=5432;Database=Books;Username=postgres;Password=admin1;IncludeErrorDetail=true
-      Translation__Provider: ollama
-      Translation__Ollama__Endpoint: http://ollama:11434
-      Translation__Ollama__Model: mistral
       Hangfire__Dashboard__Username: admin
       Hangfire__Dashboard__Password: change-me
     ports:
@@ -48,4 +26,3 @@ services:
 
 volumes:
   pgdata:
-  ollama:
