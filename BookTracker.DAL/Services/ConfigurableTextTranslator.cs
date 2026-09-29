@@ -4,7 +4,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using BookTracker.DAL.Entities.Enums;
-using BookTracker.DAL.Entities.Languages;
 
 namespace BookTracker.DAL.Services
 {
@@ -14,9 +13,9 @@ namespace BookTracker.DAL.Services
         #region Constants
 
         private const string MODEL_NAME = "Translation:LMStudio:Model";
-        
+
         private const string PROVIDER = "Translation:Provider";
-        
+
         private const string ENDPOINT = "Translation:LMStudio:Endpoint";
 
         #endregion
@@ -28,19 +27,21 @@ namespace BookTracker.DAL.Services
         private readonly string _modelName = configuration[MODEL_NAME];
 
         private string _provider = configuration[PROVIDER]?.Trim();
-        
+
         private string _endpoint = configuration[ENDPOINT]?.Trim();
 
         #endregion
 
         #region Implementation of ITextTranslator
 
-               public async Task<string> TranslateAsync(string sourceText, Languages targetLanguage)
+        ///<inheritdoc/>
+        public async Task<string> TranslateAsync(string sourceText, Languages targetLanguage)
         {
             if (string.IsNullOrWhiteSpace(sourceText))
             {
                 return sourceText;
             }
+
             if (string.IsNullOrEmpty(_provider))
             {
                 // No translation provider configured, return original text.
@@ -54,10 +55,20 @@ namespace BookTracker.DAL.Services
             };
         }
 
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Translates text and verifies the translation
+        /// </summary>
+        /// <param name="textToTranslate">Text to translate</param>
+        /// <param name="targetLanguage">Language to translate from</param>
+        /// <returns>Translated text</returns>
         private async Task<string> TranslateWithEvaluationAsync(string textToTranslate, Languages targetLanguage)
         {
-            var languageToTranslate = targetLanguage == Languages.Ukrainian 
-                ? Languages.English 
+            var languageToTranslate = targetLanguage == Languages.Ukrainian
+                ? Languages.English
                 : Languages.Ukrainian;
 
             var step1SystemPrompt =
@@ -82,12 +93,12 @@ namespace BookTracker.DAL.Services
 
             string firstResponse = await SendPostRequestAsync(step1Body);
             string intermediateTranslation = ExtractTranslation(firstResponse);
-            
+
             if (string.IsNullOrEmpty(intermediateTranslation))
             {
                 intermediateTranslation = firstResponse;
             }
-            
+
             var step2SystemPrompt = "You are a senior editor and quality assurance assistant for translations.\n\n" +
                                     "Your task is to evaluate the provided translation based on the original English text using these criteria:\n" +
                                     "- Accuracy\n- Naturalness\n- Terminology\n\n" +
@@ -114,9 +125,6 @@ namespace BookTracker.DAL.Services
             return finalTranslation.Trim();
         }
 
-        #endregion
-
-        #region Private Methods
         /// <summary>
         /// Sends POST request
         /// </summary>
@@ -131,12 +139,12 @@ namespace BookTracker.DAL.Services
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();
-            
+
             using var jsonDoc = JsonDocument.Parse(responseString);
             var root = jsonDoc.RootElement;
             return root.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString() ?? "";
         }
-        
+
         /// <summary>
         /// Extracts translation
         /// </summary>

@@ -1,11 +1,10 @@
-using BookTracker.DAL.Entities.Enums;
 using BookTracker.DAL.Entities.Languages;
 
 namespace BookTracker.DAL.Abstractions;
 
-public interface ITranslationEntity
+public abstract class TranslationEntity
 {
     public byte LanguagePk { get; set; }
     
-    public Language Language { get; set; } 
+    public Language Language { get; set; }
 }

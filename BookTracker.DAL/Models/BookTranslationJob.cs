@@ -1,5 +1,4 @@
 using BookTracker.DAL.Entities.Enums;
-using BookTracker.DAL.Entities.Languages;
 
 namespace BookTracker.DAL.Models
 {
@@ -17,6 +16,6 @@ namespace BookTracker.DAL.Models
 
 		public string Genre { get; init; } = "";
 
-		public Languages TargetLanguage { get; init; } = Languages.Ukrainian;
+		public Languages TargetLanguage { get; init; }
 	}
 }

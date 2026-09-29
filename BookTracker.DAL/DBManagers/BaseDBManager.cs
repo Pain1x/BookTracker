@@ -8,15 +8,15 @@ namespace BookTracker.DAL.DBManagers
         /// <summary>
         /// The books database context
         /// </summary>
-        internal readonly BooksDbContext BooksDbContext;
+        internal readonly IDbContextFactory<BooksDbContext> BooksDbContextFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseDbManager"/> class.
         /// </summary>
-        /// <param name="contextFactory">The books database context.</param>
+        /// <param name="contextFactory">The books database context factory.</param>
         internal BaseDbManager(IDbContextFactory<BooksDbContext> contextFactory)
         {
-            BooksDbContext = contextFactory.CreateDbContext();
+            BooksDbContextFactory = contextFactory;
         }
     }
 }

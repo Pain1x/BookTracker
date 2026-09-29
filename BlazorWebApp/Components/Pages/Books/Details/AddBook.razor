@@ -3,8 +3,8 @@
 @using System.Globalization
 @using BookTracker.BLL.Abstractions
 @using BookTracker.BLL.Models
+@using BookTracker.BLL.Models.Enums
 @using BookTracker.DAL.Entities.Enums
-@using BookTracker.DAL.Entities.Languages
 @using BookTracker.Resources
 @using Microsoft.Extensions.Localization
 @inject IBooksService BooksService
@@ -19,7 +19,7 @@
 	</button>
 </div>
 
-<EditForm Model="@_newBook" OnValidSubmit="HandleValidSubmit" class="addbook-violet">
+<EditForm FormName="AddBookForm" Model="@_newBook" OnValidSubmit="HandleValidSubmit" class="addbook-violet">
 	<DataAnnotationsValidator />
 	<ValidationSummary />
 
@@ -60,21 +60,21 @@
 		return cultureName switch
 		{
 			"uk-UA" => 2,
-			"en-US" => 1,
 			_ => 1
 		};
 	}
 	
-	private readonly BookModel _newBook = new()
+	[SupplyParameterFromForm(FormName = "AddBookForm")]
+	public BookModel _newBook { get; set; } = new()
 	{
 		Author = new AuthorModel(),
 		Genre = new GenreModel(),
 		DateRead = DateTimeOffset.UtcNow
 	};
-
+	
 	private async Task HandleValidSubmit()
 	{
-		await BooksService.AddBook(_newBook, (Languages)GetLanguagePk());
+		await BooksService.AddBook(_newBook, (LanguageModel)GetLanguagePk());
 		Navigation.NavigateTo("/");
 	}
 

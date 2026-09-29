@@ -1,6 +1,4 @@
 ﻿using BookTracker.DAL.Entities.Books;
-using BookTracker.DAL.Entities.Enums;
-using BookTracker.DAL.Entities.Languages;
 
 
 namespace BookTracker.DAL.Abstractions
@@ -11,17 +9,15 @@ namespace BookTracker.DAL.Abstractions
         /// Adds the book.
         /// </summary>
         /// <param name="book">The book.</param>
-        /// <param name="targetLanguage">The target language.</param>
         /// <returns></returns>
-        public Task AddBook(Book book, Languages targetLanguage);
+        public Task<Book> AddBook(Book book);
 
         /// <summary>
         /// Edits the book.
         /// </summary>
         /// <param name="updatedBook">The updated book.</param>
-        /// <param name="targetLanguage">The target language.</param>
         /// <returns></returns>
-        public Task UpdateBook(Book updatedBook, Languages targetLanguage);
+        public Task UpdateBook(Book updatedBook);
 
         /// <summary>
         /// Gets all books localized by language.
