@@ -5,7 +5,6 @@ using BookTracker.BLL.Models;
 using BookTracker.DAL.Abstractions;
 using BookTracker.DAL.Entities.Books;
 using BookTracker.DAL.Entities.Enums;
-using BookTracker.DAL.Entities.Languages;
 using BookTracker.DAL.Models;
 
 namespace BookTracker.BLL.Services
@@ -36,7 +35,7 @@ namespace BookTracker.BLL.Services
 		///<inheritdoc/>
 		public async Task AddBook(BookModel book, Languages targetLanguage)
 		{
-			await _booksDbManager.AddBook(_mapper.Map<BookModel, Book>(book), targetLanguage);
+			await _booksDbManager.AddBook(_mapper.Map<BookModel, Book>(book));
 			
 			_scheduler.Enqueue(new BookTranslationJob
 			{
@@ -51,8 +50,8 @@ namespace BookTracker.BLL.Services
 		}
 		
 		///<inheritdoc/>
-		public Task UpdateBook(BookModel updatedBook, Languages targetLanguage) =>
-			_booksDbManager.UpdateBook(_mapper.Map<BookModel, Book>(updatedBook), targetLanguage);
+		public Task UpdateBook(BookModel updatedBook) =>
+			_booksDbManager.UpdateBook(_mapper.Map<BookModel, Book>(updatedBook));
 
 		///<inheritdoc/>
 		public async Task<List<BookModel>> GetAllBooksLocalized(byte languagePk) =>

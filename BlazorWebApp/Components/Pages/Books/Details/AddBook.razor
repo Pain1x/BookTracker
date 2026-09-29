@@ -3,7 +3,6 @@
 @using System.Globalization
 @using BookTracker.BLL.Abstractions
 @using BookTracker.BLL.Models
-@using BookTracker.BLL.Models.Enums
 @using BookTracker.DAL.Entities.Enums
 @using BookTracker.Resources
 @using Microsoft.Extensions.Localization
@@ -74,7 +73,7 @@
 	
 	private async Task HandleValidSubmit()
 	{
-		await BooksService.AddBook(_newBook, (LanguageModel)GetLanguagePk());
+		await BooksService.AddBook(_newBook, (Languages)GetLanguagePk());
 		Navigation.NavigateTo("/");
 	}
 

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 using BookTracker.BLL.Services;
 using BookTracker.DAL.Abstractions;
 
 using BlazorWebApp.Services;
+using BookTracker.BLL.Abstractions;
 
 namespace BlazorWebApp.Configurations
 {
