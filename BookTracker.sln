@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Common", "BookT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Automapper", "BookTracker.Automapper\BookTracker.Automapper.csproj", "{80BDA07B-F6BE-47D7-AD06-0FB1CEC52A28}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Tests", "BookTracker.Tests\BookTracker.Tests.csproj", "{AC0EF4A8-A39A-470D-852D-F4B1D6AB00F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{80BDA07B-F6BE-47D7-AD06-0FB1CEC52A28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80BDA07B-F6BE-47D7-AD06-0FB1CEC52A28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80BDA07B-F6BE-47D7-AD06-0FB1CEC52A28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC0EF4A8-A39A-470D-852D-F4B1D6AB00F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC0EF4A8-A39A-470D-852D-F4B1D6AB00F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC0EF4A8-A39A-470D-852D-F4B1D6AB00F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC0EF4A8-A39A-470D-852D-F4B1D6AB00F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
