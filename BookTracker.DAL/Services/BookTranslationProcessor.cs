@@ -3,129 +3,127 @@ using BookTracker.DAL.DBContexts;
 using BookTracker.DAL.Entities.Languages;
 using BookTracker.DAL.Entities.Translations;
 using BookTracker.DAL.Models;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace BookTracker.DAL.Services
 {
-	public class BookTranslationProcessor(
-		IDbContextFactory<BooksDbContext> contextFactory,
-		ITextTranslator textTranslator) : IBookTranslationProcessor
-	{
-		private const string UkrainianLanguageName = "Ukrainian";
+    /// <summary>
+    /// Processes and ensures translations exist for various book entities (Book, Author, Genre) in the database.
+    /// </summary>
+    public class BookTranslationProcessor(
+        IDbContextFactory<BooksDbContext> contextFactory,
+        ITextTranslator textTranslator) : IBookTranslationProcessor
+    {
+        /// <inheritdoc/>
+        public async Task ProcessTranslationAsync(BookTranslationJob job)
+        {
+            var translatedTitleTask = textTranslator.TranslateAsync(job.Title, job.TargetLanguage);
+            var translatedAuthorNameTask = textTranslator.TranslateAsync(job.AuthorName, job.TargetLanguage);
+            var translatedGenreNameTask = textTranslator.TranslateAsync(job.Genre, job.TargetLanguage);
 
-		public async Task ProcessUkrainianTranslationAsync(BookTranslationJob job)
-		{
-			var translatedTitle = await textTranslator.TranslateToUkrainianAsync(job.Title);
-			var translatedAuthorName = await textTranslator.TranslateToUkrainianAsync(job.AuthorName);
-			var translatedGenreName = await textTranslator.TranslateToUkrainianAsync(job.GenreName);
+            await Task.WhenAll(translatedTitleTask, translatedAuthorNameTask, translatedGenreNameTask);
 
-			for (var attempt = 1; attempt <= 2; attempt++)
-			{
-				await using var context = await contextFactory.CreateDbContextAsync();
-				var ukrainianLanguage = await GetOrCreateUkrainianLanguageAsync(context);
+            await using var context = await contextFactory.CreateDbContextAsync();
 
-				await EnsureBookTranslationAsync(context, job.BookPk, ukrainianLanguage.LanguagePk, translatedTitle);
-				await EnsureAuthorTranslationAsync(context, job.AuthorPk, ukrainianLanguage.LanguagePk, translatedAuthorName);
-				await EnsureGenreTranslationAsync(context, job.GenrePk, ukrainianLanguage.LanguagePk, translatedGenreName);
+            var bookTranslationTask = EnsureTranslationAsync(
+                context,
+                new BookTranslation
+                {
+                    BookPk = job.BookPk,
+                    Title = await translatedTitleTask,
+                    Language = new Language
+                    {
+                        LanguagePk = (byte)job.TargetLanguage
+                    }
+                }
+            );
+            
+            var authorTranslationTask = EnsureTranslationAsync(
+                context,
+                new AuthorTranslation
+                {
+                    AuthorPk = job.AuthorPk,
+                    Name = await translatedAuthorNameTask,
+                    Language = new Language
+                    {
+                        LanguagePk = (byte)job.TargetLanguage
+                    }
+                }
+            );
+            
+            var genreTranslationTask = EnsureTranslationAsync(
+                context,
+                new GenreTranslation
+                {
+                    GenrePk = job.GenrePk,
+                    Name = await translatedGenreNameTask,
+                    Language = new Language
+                    {
+                        LanguagePk = (byte)job.TargetLanguage
+                    }
+                }
+            );
 
-				await context.SaveChangesAsync();
-			}
-		}
+            await Task.WhenAll(bookTranslationTask, authorTranslationTask , genreTranslationTask);
+            
+            await context.SaveChangesAsync();
+        }
 
-		private static async Task<Language> GetOrCreateUkrainianLanguageAsync(BooksDbContext context)
-		{
-			var language = await context.Languages
-				.FirstOrDefaultAsync(l => l.LanguageName.ToLower() == UkrainianLanguageName.ToLower());
+        /// <summary>
+        /// Ensures a translation record exists for the given entity and language.
+        /// </summary>
+        /// <param name="context">The current database context.</param>
+        /// <param name="translationEntity">Entity to translate.</param>
+        private async Task EnsureTranslationAsync(
+            BooksDbContext context,
+            TranslationEntity translationEntity)
+        {
+            switch (translationEntity)
+            {
+                case BookTranslation bookTranslation:
+                    var existingBookTranslation = await context.Set<BookTranslation>()
+                        .FirstOrDefaultAsync(t =>
+                            t.BookPk == bookTranslation.BookPk && t.LanguagePk == bookTranslation.Language.LanguagePk);
 
-			if (language != null)
-			{
-				return language;
-			}
+                    if (existingBookTranslation != null)
+                    {
+                        return;
+                    }
 
-			var maxLanguagePk = await context.Languages
-				.Select(l => (byte?)l.LanguagePk)
-				.MaxAsync() ?? 0;
+                    await context.BookTranslations.AddAsync(bookTranslation);
+                    break;
 
-			language = new Language
-			{
-				LanguagePk = (byte)(maxLanguagePk + 1),
-				LanguageName = UkrainianLanguageName
-			};
+                case AuthorTranslation authorTranslation:
+                    var existingAuthorTranslation = await context.Set<AuthorTranslation>()
+                        .FirstOrDefaultAsync(t =>
+                            t.AuthorPk == authorTranslation.AuthorPk &&
+                            t.LanguagePk == authorTranslation.Language.LanguagePk);
 
-			await context.Languages.AddAsync(language);
-			await context.SaveChangesAsync();
+                    if (existingAuthorTranslation != null)
+                    {
+                        return;
+                    }
 
-			return language;
-		}
+                    await context.AuthorTranslations.AddAsync(authorTranslation);
+                    break;
 
-		private static async Task EnsureBookTranslationAsync(
-			BooksDbContext context,
-			Guid bookPk,
-			byte languagePk,
-			string translatedTitle)
-		{
-			var existingTranslation = await context.BookTranslations
-				.FirstOrDefaultAsync(t => t.BookPk == bookPk && t.LanguagePk == languagePk);
+                case GenreTranslation genreTranslation:
+                    var existingGenreTranslation = await context.Set<GenreTranslation>()
+                        .FirstOrDefaultAsync(t =>
+                            t.GenrePk == genreTranslation.GenrePk &&
+                            t.LanguagePk == genreTranslation.Language.LanguagePk);
 
-			if (existingTranslation != null)
-			{
-				existingTranslation.Title = translatedTitle;
-				return;
-			}
+                    if (existingGenreTranslation != null)
+                    {
+                        return;
+                    }
 
-			await context.BookTranslations.AddAsync(new BookTranslation
-			{
-				BookPk = bookPk,
-				LanguagePk = languagePk,
-				Title = translatedTitle
-			});
-		}
+                    await context.GenreTranslations.AddAsync(genreTranslation);
+                    break;
 
-		private static async Task EnsureAuthorTranslationAsync(
-			BooksDbContext context,
-			Guid authorPk,
-			byte languagePk,
-			string translatedName)
-		{
-			var existingTranslation = await context.AuthorTranslations
-				.FirstOrDefaultAsync(t => t.AuthorPk == authorPk && t.LanguagePk == languagePk);
-
-			if (existingTranslation != null)
-			{
-				existingTranslation.Name = translatedName;
-				return;
-			}
-
-			await context.AuthorTranslations.AddAsync(new AuthorTranslation
-			{
-				AuthorPk = authorPk,
-				LanguagePk = languagePk,
-				Name = translatedName
-			});
-		}
-
-		private static async Task EnsureGenreTranslationAsync(
-			BooksDbContext context,
-			Guid genrePk,
-			byte languagePk,
-			string translatedName)
-		{
-			var existingTranslation = await context.GenreTranslations
-				.FirstOrDefaultAsync(t => t.GenrePk == genrePk && t.LanguagePk == languagePk);
-
-			if (existingTranslation != null)
-			{
-				existingTranslation.Name = translatedName;
-				return;
-			}
-
-			await context.GenreTranslations.AddAsync(new GenreTranslation
-			{
-				GenrePk = genrePk,
-				LanguagePk = languagePk,
-				Name = translatedName
-			});
-		}
-	}
+                default:
+                    return;
+            }
+        }
+    }
 }

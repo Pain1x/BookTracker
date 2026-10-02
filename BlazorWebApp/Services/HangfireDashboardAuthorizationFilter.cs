@@ -1,3 +1,5 @@
+using System;
+using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;

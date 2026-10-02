@@ -1,7 +1,15 @@
+using BookTracker.DAL.Entities.Enums;
+
 namespace BookTracker.DAL.Abstractions
 {
 	public interface ITextTranslator
 	{
-		Task<string> TranslateToUkrainianAsync(string sourceText, CancellationToken cancellationToken = default);
+		/// <summary>
+		/// Translates given text into from target language.
+		/// </summary>
+		/// <param name="sourceText">The text to translate.</param>
+		/// <param name="targetLanguage">The language to translate from.</param>
+		/// <returns></returns>
+		Task<string> TranslateAsync(string sourceText, Languages targetLanguage);
 	}
 }

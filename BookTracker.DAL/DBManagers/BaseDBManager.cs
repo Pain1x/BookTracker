@@ -1,4 +1,5 @@
 ﻿using BookTracker.DAL.DBContexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookTracker.DAL.DBManagers
 {
@@ -7,15 +8,15 @@ namespace BookTracker.DAL.DBManagers
         /// <summary>
         /// The books database context
         /// </summary>
-        internal BooksDbContext BooksDbContext;
+        internal readonly IDbContextFactory<BooksDbContext> BooksDbContextFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseDbManager"/> class.
         /// </summary>
-        /// <param name="booksDbContext">The books database context.</param>
-        internal BaseDbManager(BooksDbContext booksDbContext)
+        /// <param name="contextFactory">The books database context factory.</param>
+        internal BaseDbManager(IDbContextFactory<BooksDbContext> contextFactory)
         {
-            BooksDbContext = booksDbContext;
+            BooksDbContextFactory = contextFactory;
         }
     }
 }

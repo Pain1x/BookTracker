@@ -4,6 +4,11 @@ namespace BookTracker.DAL.Abstractions
 {
 	public interface IBookTranslationProcessor
 	{
-		Task ProcessUkrainianTranslationAsync(BookTranslationJob job);
+		/// <summary>
+		/// Processes the translation of the book.
+		/// </summary>
+		/// <param name="job">The job with params.</param>
+		/// <returns></returns>
+		Task ProcessTranslationAsync(BookTranslationJob job);
 	}
 }

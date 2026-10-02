@@ -81,6 +81,9 @@ namespace BookTracker.DAL.Entities.Books
 		/// </value>
 		public Guid GenrePk { get; set; }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public ICollection<BookTranslation> Translations { get; set; } = new List<BookTranslation>();
 	}
 }

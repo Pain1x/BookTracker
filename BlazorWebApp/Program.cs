@@ -7,9 +7,12 @@ using BookTracker.DAL.DBContexts;
 
 using Hangfire;
 using Hangfire.PostgreSql;
-
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace BlazorWebApp
 {
