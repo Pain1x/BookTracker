@@ -50,7 +50,7 @@ namespace BookTracker.Tests
             _mockContextMock.Setup(c => c.Authors.FindAsync(It.IsAny<Guid>())).ReturnsAsync(authorEntity);
             _mockContextMock.Setup(c => c.Genres.FindAsync(It.IsAny<Guid>())).ReturnsAsync(genreEntity);
 
-            var bookToSave = new Book { Title = "New Test Book", Author = new Author { AuthorPk = authorEntity.AuthorPk}, Genre = new Genre { GenrePk = genreEntity.GenrePk } };
+            var bookToSave = new Book { Title = "New Test Book", Author = new Author { AuthorPk = authorEntity.AuthorPk, Genre = new Genre() }, Genre = new Genre { GenrePk = genreEntity.GenrePk } };
 
             // Act
             var resultBook = await _bookDbManager.AddBook(bookToSave);
@@ -94,7 +94,7 @@ namespace BookTracker.Tests
             _mockContextMock.Setup(c => c.Genres.FindAsync(It.IsAny<Guid>())).ReturnsAsync(genreEntity);
 
             // Book with an empty title
-            var bookToSave = new Book { Title = "", Author = new Author { AuthorPk = authorEntity.AuthorPk, Genre = new Genre() }, Genre = new Genre { GenrePk = genreEntity.GenrePk } };
+            var bookToSave = new Book { Title = "", Author = new Author { AuthorPk = authorEntity.AuthorPk}, Genre = new Genre { GenrePk = genreEntity.GenrePk } };
 
             // Act
             var resultBook = await _bookDbManager.AddBook(bookToSave);
@@ -116,7 +116,7 @@ namespace BookTracker.Tests
             _mockContextMock.Setup(c => c.Authors.FindAsync(It.IsAny<Guid>())).ReturnsAsync(authorEntity);
             _mockContextMock.Setup(c => c.Genres.FindAsync(It.IsAny<Guid>())).ReturnsAsync(genreEntity);
 
-            var bookToSave = new Book { Title = "Failing Test Book", Author = new Author { AuthorPk = authorEntity.AuthorPk, Genre = new Genre() }, Genre = new Genre { GenrePk = genreEntity.GenrePk } };
+            var bookToSave = new Book { Title = "Failing Test Book", Author = new Author { AuthorPk = authorEntity.AuthorPk}, Genre = new Genre { GenrePk = genreEntity.GenrePk } };
 
             // Setup SaveChangesAsync to throw an exception
             _mockContextMock.Setup(c => c.SaveChangesAsync()).ThrowsAsync(new DbUpdateException("Database connection failed"));
