@@ -17,7 +17,7 @@ namespace BookTracker.DAL.DBManagers
         {
             Book bookToSave;
             
-            await using (var context = BooksDbContextFactory.CreateDbContext())
+            await using (var context = await BooksDbContextFactory.CreateDbContextAsync())
             {
                 var author = await context.Authors.FindAsync(book.Author.AuthorPk);
 
@@ -66,7 +66,7 @@ namespace BookTracker.DAL.DBManagers
         ///<inheritdoc/>
         public async Task UpdateBook(Book updatedBook)
         {
-            await using (var context = BooksDbContextFactory.CreateDbContext())
+            await using (var context = await BooksDbContextFactory.CreateDbContextAsync())
             {
                 var existing = await context.Books.FindAsync(updatedBook.BookPk);
 
@@ -83,7 +83,7 @@ namespace BookTracker.DAL.DBManagers
         {
             List<Book> books;
 
-            await using (var context = BooksDbContextFactory.CreateDbContext())
+            await using (var context = await BooksDbContextFactory.CreateDbContextAsync())
             {
                 books = await context.Books
                     .Select(b => new Book
@@ -124,7 +124,7 @@ namespace BookTracker.DAL.DBManagers
         {
             Book? book;
 
-            await using (var context = BooksDbContextFactory.CreateDbContext())
+            await using (var context = await BooksDbContextFactory.CreateDbContextAsync())
             {
                 book = await context.Books
                     .Where(b => b.BookPk == bookPk)
@@ -166,7 +166,7 @@ namespace BookTracker.DAL.DBManagers
         {
             Dictionary<int, int> result;
 
-            await using (var context = BooksDbContextFactory.CreateDbContext())
+            await using (var context = await BooksDbContextFactory.CreateDbContextAsync())
             {
                 var currentYear = DateTime.UtcNow.Year;
                 var years = Enumerable.Range(currentYear - 4, 5).Reverse().ToList();

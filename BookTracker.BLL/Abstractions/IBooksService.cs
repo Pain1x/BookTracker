@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using BookTracker.BLL.Models;
-using BookTracker.DAL.Entities.Enums;
+using BookTracker.Common.Enums;
 
 namespace BookTracker.BLL.Abstractions
 {
@@ -39,6 +42,6 @@ namespace BookTracker.BLL.Abstractions
 		/// Gets the count of books read for each year in the provided list of years.
 		/// </summary>
 		/// <returns></returns>
-		Task<Dictionary<int, int>> CountBooksByYears();
+		public Task<List<BookCountSummaryModel>> CountBooksByYears();
 	}
 }

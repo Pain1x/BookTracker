@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BookTracker.Common\BookTracker.Common.csproj" />
     <ProjectReference Include="..\BookTracker.DAL\BookTracker.DAL.csproj" />
   </ItemGroup>
 

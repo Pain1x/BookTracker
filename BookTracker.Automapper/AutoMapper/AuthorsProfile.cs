@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-
 using BookTracker.BLL.Models;
 using BookTracker.DAL.Entities.Authors;
 
-namespace BlazorWebApp.AutoMapper
+namespace BookTracker.Automapper.AutoMapper
 {
     public class AuthorsProfile : Profile
     {

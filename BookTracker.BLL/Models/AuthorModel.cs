@@ -1,21 +1,16 @@
-﻿namespace BookTracker.BLL.Models
-{
-    public class AuthorModel
-    {
-        /// <summary>
-        /// Gets or sets the identifier.
-        /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
-        public Guid AuthorPk { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        public string Name { get; set; } = "";
-    }
-}
+ using System;                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                   
+  namespace BookTracker.BLL.Models                                                                                                                                                                                                                                                                                 
+  {                                                                                                                                                                                                                                                                                                                
+      /// <summary>                                                                                                                                                                                                                                                                                                
+      /// Represents a basic Author domain model, decoupled from DAL entities.                                                                                                                                                                                                                                     
+      /// </summary>                                                                                                                                                                                                                                                                                               
+      public class AuthorModel                                                                                                                                                                                                                                                                                     
+      {                                                                                                                                                                                                                                                                                                            
+          /// <summary>Gets or sets the unique identifier for the author.</summary>                                                                                                                                                                                                                                
+          public Guid AuthorPk { get; set; }                                                                                                                                                                                                                                                                       
+                                                                                                                                                                                                                                                                                                                   
+          /// <summary>The name of the author.</summary>                                                                                                                                                                                                                                                           
+          public string Name { get; set; } = string.Empty;                                                                                                                                                                                                                                                         
+      }                                                                                                                                                                                                                                                                                                            
+  }

@@ -1,48 +1,74 @@
-# CLAUDE.md
+BookTracker
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Book tracking web app. C#, .NET 8, Blazor Server, EF Core with PostgreSQL (Npgsql), AutoMapper, built-in .NET DI.
 
-## 📚 Project Architecture Overview
+Structure and dependencies
+BookTracker/
+├── BlazorWebApp/          # Presentation layer (Blazor Server UI)
+│   ├── Components/         # Reusable UI components (e.g., PaginatedList, NavMenu)
+│   ├── Configurations/     # Service and database configuration extensions
+│   ├── Pages/              # Razor pages for specific views (e.g., Books.razor)
+│   └── wwwroot/            # Static assets (CSS, JS, images)
+├── BookTracker.BLL/       # Business logic layer
+│   ├── Abstractions/      # Service contract interfaces (e.g., IBooksService)
+│   ├── Models/             # Domain models (BookModel, AuthorModel)
+│   └── Services/           # Business logic implementations (BooksService)
+├── BookTracker.DAL/       # Data access layer
+│   ├── Abstractions/      # Data access interfaces (e.g., IBookDBManager)
+│   ├── DBContexts/         # EF Core DbContext setup
+│   ├── Entities/           # Database entities (Author, Book, Genre)
+│   └── DBManagers/         # Data access implementations (BookDBManager)
+├── BookTracker.Common/    # Shared library for common types and enums
+│   ├── Enums/              # Shared enumerations (e.g., StatusEnum)
+│   └── BookTracker.Common.csproj
+├── BookTraker.Automapper/  # Centralized AutoMapper profiles
+│   ├── AutoMapper/         # All mapping profile definitions
+│   └── BookTraker.Automapper.csproj
+├── BookTracker.Jobs/      # Background worker services and scheduled tasks
+│   ├── Models/             # Data models specific to job payloads (e.g., JobStatus)
+│   └── BookTracker.Jobs.csproj
+├── BlazorWebApp.sln       # Solution file
+└── CLAUDE.md               # This file
 
-The BookTracker application follows a standard layered architecture, separating concerns into three primary projects:
+Dependency flow: The application follows a layered architecture with specialized modules:
+1.  **Presentation:** `BlazorWebApp` $\rightarrow$ `BookTracker.BLL`. (References DAL only for DI registration).
+2.  **Business Logic:** `BookTracker.BLL` $\rightarrow$ (`BookTraker.Automapper`, `BookTracker.DAL`).
+3.  **Data Access:** `BookTracker.DAL` handles persistence via EF Core/PostgreSQL.
+4.  **Shared Components:** All layers reference `BookTracker.Common` for shared types and constants.
+5.  **Asynchronous Tasks:** `BookTracker.Jobs` $\rightarrow$ `BookTracker.BLL`. (Jobs execute business logic asynchronously).
 
-1.  **`BookTracker.DAL` (Data Access Layer):**
-    *   Handles all direct database interactions using an ORM (likely Entity Framework Core given the structure).
-    *   Contains `Entities/`, `Models/`, and `Migrations/`.
-    *   Interaction is managed through abstract interfaces in `Abstractions/` and concrete implementations in `DBContexts/` and `Services/`.
-    *   **Key components:** Database context setup and raw data retrieval logic.
+UI code (pages, components) must not use the DbContext or DAL types directly; go through BLL services.
+Mapping between DAL entities and BLL models is done via profiles defined in `BookTraker.Automapper`.
+The DbContext is used through IDbContextFactory<T>. In DAL code, create a short-lived context per operation (await using var context = await factory.CreateDbContextAsync();). Never inject or store a DbContext directly, and never share one across operations or components.
 
-2.  **`BookTracker.BLL` (Business Logic Layer):**
-    *   Contains the core business rules, use cases, and workflows that orchestrate data flow between the UI and the DAL.
-    *   It depends on `BookTracker.DAL`'s abstractions.
-    *   Logic is often segmented into `Services/` and complex background tasks in `BackgroundJobs/`.
+Never edit migrations by hand or touch bin/ and obj/.
+Commands
 
-3.  **`BlazorWebApp` (Presentation Layer):**
-    *   The main application entry point, built using Blazor.
-    *   This layer consumes the services exposed by `BookTracker.BLL` to render UI components (`Components/`) and handle user input.
-    *   API communication is managed via `Controllers/`.
+The solution is ./BookTracker.sln.
 
-**Data Flow:** Client $\rightarrow$ `BlazorWebApp` Controllers $\rightarrow$ `BookTracker.BLL` Services $\rightarrow$ `BookTracker.DAL` Contexts $\rightarrow$ Database.
+Build: dotnet build BookTracker.sln
+Run: dotnet run --project BlazorWebApp/BlazorWebApp.csproj
+Test: dotnet test BookTracker.sln (currently there is no test project)
+Clean: dotnet clean BookTracker.sln
+Add migration: dotnet ef migrations add <MigrationName> --project BookTracker.DAL --startup-project BlazorWebApp
+Apply migrations: dotnet ef database update --project BookTracker.DAL --startup-project BlazorWebApp
 
-## 🛠️ Development Commands and Workflow
+Working with files
+Before editing an existing file, read it with Read in this session.
+Use Edit for changes. old_string must be short, unique in the file, and match character for character (indentation, tabs, line endings). Do not copy line numbers from Read output.
+If Edit fails, re-read the file and retry with a more specific old_string. Do not rewrite a whole file unless it is very small.
+If `Edit` fails twice on the same file, do not keep guessing. Re-read the file and use a single-line `old_string`. For small files (like this one), use `Write` for a full rewrite and verify with `git diff`.
+Create new files with Write, using a path relative to the repository root. Check with ls first that the directory exists and the file does not.
+Do not modify files through shell commands (sed, >, heredocs) when Edit/Write are available.
+SDK-style .csproj files include new .cs files automatically; do not edit a .csproj just to add a file.
 
-The primary commands for developing, testing, and running the application are typically found via the IDE's context menus or dedicated CLI scripts (which should be reviewed in the project root).
+Error Handling: All exceptions originating in `BookTracker.DAL` must be caught and translated by the `BookTracker.BLL` layer into custom, domain-specific exception types before being exposed to the UI or other services. This prevents leaking database implementation details.
 
-### Build & Run
-*   **To build the solution:** Use the standard Build/Run button provided by the IDE on `BookTracker.sln`.
-*   **To run the application (Development):** Right-click on `Program.cs` within `BlazorWebApp` and select 'Run' or use the configured launch profile. This will start the Blazor WebAssembly/Server hosting environment.
+Follow .editorconfig for line endings and encoding.
+Make one logical change at a time, then check it with git diff --stat.
+After code changes, run dotnet build (and dotnet test once tests exist). The task is not done until the build passes.
 
-### Testing
-*   **General Test Execution:** Run tests by selecting a test method in the project or file (e.g., in `BookTracker.BLL`) and invoking the 'Test' command from the IDE.
-*   **Running a Single Test:** Right-click on a specific test method body/signature within a test class and select 'Run Test'. This provides focused feedback without running the whole test suite.
-
-### Linting & Code Quality
-*   **Linting:** Run code analysis (linting) across multiple files using the IDE's dedicated "Analyze" or "Inspect Code" functionality on selected file paths (`*.cs` files). For a batch of changes, consider leveraging `mcp_rider_lint_files`.
-
-## 💡 Development Practices and Conventions
-*   **Dependency Flow:** Dependencies must flow *inward*: `BlazorWebApp` $\rightarrow$ `BookTracker.BLL` $\rightarrow$ `BookTracker.DAL`. Components should never reference layers outside of their direct dependency scope (e.g., DAL should not know about Blazor types).
-*   **Abstraction:** Always interact with services and data access via interfaces defined in the `Abstractions/` folders to ensure testability and loose coupling.
-
-## 📁 Important Directories
-*   `.gitignore`: Contains patterns for files/folders that Git should ignore (e.g., binaries, build outputs).
-*   `docker-compose.yml`: Defines the service dependencies for local development environment setup (database services, API containers, etc.).
+Git
+Branch names: feature/<short-name>, fix/<short-name>.
+Commit messages: short, imperative, English.
+Commit when a task is complete; run git push only when asked.

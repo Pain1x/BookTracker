@@ -1,6 +1,6 @@
-using BookTracker.DAL.Entities.Enums;
+using BookTracker.Common.Enums;
 
-namespace BookTracker.DAL.Models
+namespace BookTracker.Jobs.Models
 {
 	public class BookTranslationJob
 	{

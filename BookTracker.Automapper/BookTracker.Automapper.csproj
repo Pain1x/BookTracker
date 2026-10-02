@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>BookTracker.Automapper</AssemblyName>
+        <RootNamespace>BookTracker.Automapper</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="16.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BookTracker.BLL\BookTracker.BLL.csproj" />
+      <ProjectReference Include="..\BookTracker.DAL\BookTracker.DAL.csproj" />
+    </ItemGroup>
+
+</Project>

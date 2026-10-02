@@ -1,4 +1,4 @@
-using BookTracker.DAL.Entities.Enums;
+using BookTracker.Common.Enums;
 
 namespace BookTracker.DAL.Abstractions
 {
