@@ -1,6 +1,6 @@
-using BookTracker.DAL.Models;
+using BookTracker.Jobs.Models;
 
-namespace BookTracker.DAL.Abstractions
+namespace BookTracker.Jobs.Abstractions
 {
 	public interface IBookTranslationProcessor
 	{

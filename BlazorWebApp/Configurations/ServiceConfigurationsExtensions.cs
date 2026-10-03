@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using BookTracker.BLL.Services;
-using BookTracker.DAL.Abstractions;
-
-using BlazorWebApp.Services;
 using BookTracker.BLL.Abstractions;
+using BookTracker.Jobs.Abstractions;
+using BookTracker.Jobs.JobSchedulers;
 
 namespace BlazorWebApp.Configurations
 {

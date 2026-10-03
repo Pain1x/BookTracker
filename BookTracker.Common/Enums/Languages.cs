@@ -1,4 +1,4 @@
-namespace BookTracker.DAL.Entities.Enums;
+namespace BookTracker.Common.Enums;
 
 public enum Languages : byte
 {

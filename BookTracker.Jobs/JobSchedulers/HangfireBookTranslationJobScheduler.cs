@@ -1,9 +1,8 @@
-using BookTracker.DAL.Abstractions;
-using BookTracker.DAL.Models;
-
+using BookTracker.Jobs.Abstractions;
+using BookTracker.Jobs.Models;
 using Hangfire;
 
-namespace BlazorWebApp.Services
+namespace BookTracker.Jobs.JobSchedulers
 {
 	public class HangfireBookTranslationJobScheduler(IBackgroundJobClient backgroundJobClient) : IBookTranslationJobScheduler
 	{

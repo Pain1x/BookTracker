@@ -1,11 +1,14 @@
-using BookTracker.DAL.Abstractions;
-using Microsoft.Extensions.Configuration;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using BookTracker.DAL.Entities.Enums;
+using System.Threading.Tasks;
+using BookTracker.Common.Enums;
+using BookTracker.Common.Extensions;
+using BookTracker.DAL.Abstractions;
+using Microsoft.Extensions.Configuration;
 
-namespace BookTracker.DAL.Services
+namespace BookTracker.BLL.Services
 {
     public class ConfigurableTextTranslator(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         : ITextTranslator
@@ -67,13 +70,9 @@ namespace BookTracker.DAL.Services
         /// <returns>Translated text</returns>
         private async Task<string> TranslateWithEvaluationAsync(string textToTranslate, Languages targetLanguage)
         {
-            var languageToTranslate = targetLanguage == Languages.Ukrainian
-                ? Languages.English
-                : Languages.Ukrainian;
-
             var step1SystemPrompt =
                 $"You are an expert, professional translator specializing in high-fidelity localization. " +
-                $"Your task is to translate the text to {languageToTranslate}.\n\n" +
+                $"Your task is to translate the text to {targetLanguage.InvertLanguage()}.\n\n" +
                 $"Follow these graduation steps to ensure quality:\n" +
                 $"1. ANALYSIS: Identify the tone, idioms, and technical terms.\n" +
                 $"2. TRANSLATION: Translate accurately, preserving meaning.\n" +

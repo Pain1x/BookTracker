@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-
 using BookTracker.BLL.Models;
 using BookTracker.DAL.Entities.Genres;
 
-namespace BlazorWebApp.AutoMapper
+namespace BookTracker.Automapper.AutoMapper
 {
     public class GenresProfile : Profile
     {
