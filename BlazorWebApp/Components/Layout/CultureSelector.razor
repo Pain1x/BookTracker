@@ -1,0 +1,58 @@
+﻿@using System.Globalization
+@using BookTracker.Resources
+@using Microsoft.Extensions.Localization
+@inject NavigationManager Navigation
+@inject IStringLocalizer<ApplicationResources> Localizer
+
+<p class="culture-selector">
+	<label class="culture-label">
+		<span class="culture-text">@Localizer[ApplicationResources.SelectYourLanguage]:</span>
+		<select class="culture-select" aria-label="Select your locale"
+				@bind="SelectedCultureName"
+				@bind:after="ApplySelectedCulture">
+			@foreach (var option in cultureOptions)
+			{
+				<option value="@option.CultureName">@option.DisplayName</option>
+			}
+		</select>
+	</label>
+</p>
+
+@code
+{
+	// Map your custom display names to actual culture names
+	private sealed record CultureOption(string DisplayName, string CultureName, byte CultutePK);
+
+	private readonly CultureOption[] cultureOptions =
+	[
+		new("English", "en-US", 1),
+		new("Українська", "uk-UA", 2),
+	];
+
+	public string? SelectedCultureName { get; private set; }
+
+	protected override void OnInitialized()
+	{
+		SelectedCultureName = cultureOptions.Any(c => c.CultureName.Equals(CultureInfo.CurrentCulture.Name, StringComparison.OrdinalIgnoreCase)) ?
+			CultureInfo.CurrentCulture.Name : "en-US";
+	}
+
+	private Task ApplySelectedCulture()
+	{
+		if (!string.IsNullOrEmpty(SelectedCultureName) &&
+			!string.Equals(CultureInfo.CurrentCulture.Name, SelectedCultureName, StringComparison.OrdinalIgnoreCase))
+		{
+			var uri = new Uri(Navigation.Uri)
+				.GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+
+			var cultureEscaped = Uri.EscapeDataString(SelectedCultureName);
+			var uriEscaped = Uri.EscapeDataString(uri);
+
+			Navigation.NavigateTo(
+				$"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}",
+				forceLoad: true);
+		}
+
+		return Task.CompletedTask;
+	}
+}

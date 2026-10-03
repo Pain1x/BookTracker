@@ -2,13 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\culture-selector.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.20.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BookTracker.Automapper\BookTracker.Automapper.csproj" />
     <ProjectReference Include="..\BookTracker.BLL\BookTracker.BLL.csproj" />
     <ProjectReference Include="..\BookTracker.DAL\BookTracker.DAL.csproj" />
+    <ProjectReference Include="..\Resources\BookTracker.Resources.csproj" />
   </ItemGroup>
 
 </Project>

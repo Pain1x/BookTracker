@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BookTracker.Common\BookTracker.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Hangfire.Core">
+        <HintPath>..\..\..\.nuget\packages\hangfire.core\1.8.14\lib\netstandard2.0\Hangfire.Core.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>

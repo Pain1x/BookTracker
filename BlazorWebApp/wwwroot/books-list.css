@@ -1,0 +1,142 @@
+body, html, .page, .content, .form-control, .btn, .badge, .card, h1, h2, h3, h4, h5, h6, p, label, table, th, td {
+	font-family: 'Cascadia Code', 'Consolas', 'Menlo', 'Monaco', monospace;
+}
+
+.statbadge-violet {
+	background-color: #8e24aa;
+	color: #fff;
+	border-radius: 0.75rem;
+	font-weight: 1000;
+	padding: 0.5rem 1.25rem;
+	margin-bottom: 0.5rem;
+	display: inline-block;
+	font-size: 1.25rem;
+}
+
+.btn-violet {
+	background-color: #6a1b9a;
+	color: #fff;
+	border: none;
+	border-radius: 0.5rem;
+	font-weight: 500;
+	padding: 0.5rem 1.25rem;
+	transition: background 0.2s;
+}
+
+.btn-violet:hover, .btn-violet:focus {
+	background-color: #9c27b0;
+	color: #fff;
+}
+
+.addbook-violet {
+	background-color: #ede7f6;
+	border-radius: 1rem;
+	box-shadow: 0 2px 8px rgba(140, 60, 180, 0.08);
+	padding: 2rem;
+	max-width: 500px;
+	margin: 2rem auto;
+	border: 1px solid #8e24aa;
+}
+
+.addbook-violet .form-label {
+	color: #6a1b9a;
+	font-weight: 600;
+}
+
+.addbook-violet .form-control {
+	border: 1px solid #8e24aa;
+	background-color: #f3e5f5;
+	color: #222;
+}
+
+.addbook-violet .btn-violet {
+	width: 100%;
+	margin-top: 1rem;
+}
+
+.bookdetails-violet {
+	background-color: #f3e5f5;
+	border-radius: 1rem;
+	box-shadow: 0 2px 8px rgba(140, 60, 180, 0.10);
+	padding: 2rem;
+	max-width: 500px;
+	margin: 2rem auto;
+	border: 1px solid #8e24aa;
+}
+
+.bookdetails-violet h4 {
+	color: #6a1b9a;
+	font-weight: 700;
+	margin-bottom: 1.5rem;
+}
+
+.bookdetails-violet p {
+	font-size: 1.15rem;
+	margin-bottom: 0.75rem;
+}
+
+.btn-back-violet {
+	background-color: #8e24aa;
+	color: #fff;
+	border: none;
+	border-radius: 0.5rem;
+	font-weight: 500;
+	padding: 0.5rem 1.25rem;
+	transition: background 0.2s;
+	display: block;
+	width: 100%;
+	max-width: 200px;
+}
+.btn-back-violet:hover, .btn-back-violet:focus {
+	background-color: #6a1b9a;
+	color: #fff;
+}
+
+.bookdetails-heading {
+	color: #6a1b9a;
+	font-size: 2rem;
+	font-weight: 700;
+	margin-bottom: 1.5rem;
+	font-family: 'Cascadia Code', 'Consolas', 'Menlo', 'Monaco', monospace;
+}
+
+.flex-row-buttons {
+	display: flex;
+	gap: 0.75rem;
+	margin-bottom: 1rem;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.violet-table tbody tr:nth-child(odd) {
+	background-color: #b282fa; /* medium violet */
+}
+.violet-table tbody tr:nth-child(even) {
+	background-color: #7c4dff; /* dark violet */
+	color: #fff;
+}
+.violet-table tbody tr:hover {
+	background-color: #b39ddb !important; /* hover effect */
+	color: #222 !important;
+}
+
+.btn-violet-paging {
+	background-color: #8e24aa;
+	color: #fff;
+	border: none;
+	border-radius: 0.5rem;
+	font-weight: 500;
+	padding: 0.5rem 1.25rem;
+	margin: 0 0.25rem;
+	transition: background 0.2s;
+}
+.btn-violet-paging:disabled {
+	background-color: #d1c4e9;
+	color: #fff;
+	opacity: 0.7;
+}
+.btn-violet-paging:hover:not(:disabled),
+.btn-violet-paging:focus:not(:disabled) {
+	background-color: #6a1b9a;
+	color: #fff;
+}

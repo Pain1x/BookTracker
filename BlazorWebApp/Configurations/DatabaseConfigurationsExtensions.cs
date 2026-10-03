@@ -1,7 +1,12 @@
-﻿using BookTracker.DAL.Abstractions;
+﻿using BookTracker.BLL.Abstractions;
+using BookTracker.BLL.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using BookTracker.DAL.Abstractions;
 using BookTracker.DAL.DBContexts;
 using BookTracker.DAL.DBManagers;
-
+using BookTracker.DAL.Services;
+using BookTracker.Jobs.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazorWebApp.Configurations
@@ -10,8 +15,12 @@ namespace BlazorWebApp.Configurations
 	{
 		public static IServiceCollection RegisterDatabase(this IServiceCollection services, IConfiguration configuration)
 		{
-			services.AddDbContext<BooksDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("BooksConnection")));
+			services.AddDbContextFactory<BooksDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("BooksConnection")));
 			services.AddScoped<IBookDbManager, BookDbManager>();
+			services.AddScoped<ITranslationsDbManager, TranslationsDbManager>();
+			services.AddScoped<IBookTranslationProcessor, BookTranslationProcessor>();
+			services.AddScoped<ITextTranslator, ConfigurableTextTranslator>();
+			services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 
 			return services;
 		}

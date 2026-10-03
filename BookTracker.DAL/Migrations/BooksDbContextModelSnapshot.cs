@@ -22,9 +22,9 @@ namespace BookTracker.DAL.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BookTracker.DAL.Entities.Author", b =>
+            modelBuilder.Entity("BookTracker.DAL.Entities.Authors.Author", b =>
                 {
-                    b.Property<Guid>("AuthorPK")
+                    b.Property<Guid>("AuthorPk")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -32,7 +32,7 @@ namespace BookTracker.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("AuthorPK");
+                    b.HasKey("AuthorPk");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -40,19 +40,19 @@ namespace BookTracker.DAL.Migrations
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("BookTracker.DAL.Entities.Book", b =>
+            modelBuilder.Entity("BookTracker.DAL.Entities.Books.Book", b =>
                 {
-                    b.Property<Guid>("BookPK")
+                    b.Property<Guid>("BookPk")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("AuthorPK")
+                    b.Property<Guid>("AuthorPk")
                         .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset?>("DateRead")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamptz");
 
-                    b.Property<Guid>("GenrePK")
+                    b.Property<Guid>("GenrePk")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Notes")
@@ -66,18 +66,18 @@ namespace BookTracker.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("BookPK");
+                    b.HasKey("BookPk");
 
-                    b.HasIndex("AuthorPK");
+                    b.HasIndex("AuthorPk");
 
-                    b.HasIndex("GenrePK");
+                    b.HasIndex("GenrePk");
 
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("BookTracker.DAL.Entities.Genre", b =>
+            modelBuilder.Entity("BookTracker.DAL.Entities.Genres.Genre", b =>
                 {
-                    b.Property<Guid>("GenrePK")
+                    b.Property<Guid>("GenrePk")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -85,7 +85,7 @@ namespace BookTracker.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("GenrePK");
+                    b.HasKey("GenrePk");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -93,23 +93,193 @@ namespace BookTracker.DAL.Migrations
                     b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("BookTracker.DAL.Entities.Book", b =>
+            modelBuilder.Entity("BookTracker.DAL.Entities.Languages.Language", b =>
                 {
-                    b.HasOne("BookTracker.DAL.Entities.Author", "Author")
+                    b.Property<byte>("LanguagePk")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("LanguageName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("LanguagePk");
+
+                    b.ToTable("Languages");
+                });
+
+            modelBuilder.Entity("BookTracker.DAL.Entities.Translations.AuthorTranslation", b =>
+                {
+                    b.Property<int>("AuthorTranslationPk")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AuthorTranslationPk"));
+
+                    b.Property<Guid>("AuthorPk")
+                        .HasColumnType("uuid");
+
+                    b.Property<byte>("LanguagePk")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("AuthorTranslationPk");
+
+                    b.HasIndex("LanguagePk");
+
+                    b.HasIndex("AuthorPk", "LanguagePk")
+                        .IsUnique();
+
+                    b.ToTable("AuthorTranslations");
+                });
+
+            modelBuilder.Entity("BookTracker.DAL.Entities.Translations.BookTranslation", b =>
+                {
+                    b.Property<int>("BookTranslationPk")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BookTranslationPk"));
+
+                    b.Property<Guid>("BookPk")
+                        .HasColumnType("uuid");
+
+                    b.Property<byte>("LanguagePk")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("BookTranslationPk");
+
+                    b.HasIndex("LanguagePk");
+
+                    b.HasIndex("BookPk", "LanguagePk")
+                        .IsUnique();
+
+                    b.ToTable("BookTranslations");
+                });
+
+            modelBuilder.Entity("BookTracker.DAL.Entities.Translations.GenreTranslation", b =>
+                {
+                    b.Property<int>("GenreTranslationPk")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("GenreTranslationPk"));
+
+                    b.Property<Guid>("GenrePk")
+                        .HasColumnType("uuid");
+
+                    b.Property<byte>("LanguagePk")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("GenreTranslationPk");
+
+                    b.HasIndex("LanguagePk");
+
+                    b.HasIndex("GenrePk", "LanguagePk")
+                        .IsUnique();
+
+                    b.ToTable("GenreTranslations");
+                });
+
+            modelBuilder.Entity("BookTracker.DAL.Entities.Books.Book", b =>
+                {
+                    b.HasOne("BookTracker.DAL.Entities.Authors.Author", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorPK")
+                        .HasForeignKey("AuthorPk")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("BookTracker.DAL.Entities.Genre", "Genre")
+                    b.HasOne("BookTracker.DAL.Entities.Genres.Genre", "Genre")
                         .WithMany()
-                        .HasForeignKey("GenrePK")
+                        .HasForeignKey("GenrePk")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Author");
 
                     b.Navigation("Genre");
+                });
+
+            modelBuilder.Entity("BookTracker.DAL.Entities.Translations.AuthorTranslation", b =>
+                {
+                    b.HasOne("BookTracker.DAL.Entities.Authors.Author", "Author")
+                        .WithMany("Translations")
+                        .HasForeignKey("AuthorPk")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookTracker.DAL.Entities.Languages.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguagePk")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Language");
+                });
+
+            modelBuilder.Entity("BookTracker.DAL.Entities.Translations.BookTranslation", b =>
+                {
+                    b.HasOne("BookTracker.DAL.Entities.Books.Book", "Book")
+                        .WithMany("Translations")
+                        .HasForeignKey("BookPk")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookTracker.DAL.Entities.Languages.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguagePk")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Language");
+                });
+
+            modelBuilder.Entity("BookTracker.DAL.Entities.Translations.GenreTranslation", b =>
+                {
+                    b.HasOne("BookTracker.DAL.Entities.Genres.Genre", "Genre")
+                        .WithMany("Translations")
+                        .HasForeignKey("GenrePk")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookTracker.DAL.Entities.Languages.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguagePk")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Genre");
+
+                    b.Navigation("Language");
+                });
+
+            modelBuilder.Entity("BookTracker.DAL.Entities.Authors.Author", b =>
+                {
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("BookTracker.DAL.Entities.Books.Book", b =>
+                {
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("BookTracker.DAL.Entities.Genres.Genre", b =>
+                {
+                    b.Navigation("Translations");
                 });
 #pragma warning restore 612, 618
         }

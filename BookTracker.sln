@@ -9,6 +9,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.BLL", "BookTrac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebApp", "BlazorWebApp\BlazorWebApp.csproj", "{04192025-A989-4E19-8DF4-E47475C9A175}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Resources", "Resources\BookTracker.Resources.csproj", "{4BA870C2-0536-4B51-B594-FB9273C4E37B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Jobs", "BookTracker.Jobs\BookTracker.Jobs.csproj", "{00D558DB-26F4-492D-AC1B-6DFED96C8C78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Common", "BookTracker.Common\BookTracker.Common.csproj", "{FE36D032-A651-41F6-91B5-DD7A62ABE1CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Automapper", "BookTracker.Automapper\BookTracker.Automapper.csproj", "{80BDA07B-F6BE-47D7-AD06-0FB1CEC52A28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Tests", "BookTracker.Tests\BookTracker.Tests.csproj", "{AC0EF4A8-A39A-470D-852D-F4B1D6AB00F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +37,26 @@ Global
 		{04192025-A989-4E19-8DF4-E47475C9A175}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04192025-A989-4E19-8DF4-E47475C9A175}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04192025-A989-4E19-8DF4-E47475C9A175}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BA870C2-0536-4B51-B594-FB9273C4E37B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BA870C2-0536-4B51-B594-FB9273C4E37B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BA870C2-0536-4B51-B594-FB9273C4E37B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BA870C2-0536-4B51-B594-FB9273C4E37B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00D558DB-26F4-492D-AC1B-6DFED96C8C78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00D558DB-26F4-492D-AC1B-6DFED96C8C78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00D558DB-26F4-492D-AC1B-6DFED96C8C78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00D558DB-26F4-492D-AC1B-6DFED96C8C78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE36D032-A651-41F6-91B5-DD7A62ABE1CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE36D032-A651-41F6-91B5-DD7A62ABE1CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE36D032-A651-41F6-91B5-DD7A62ABE1CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE36D032-A651-41F6-91B5-DD7A62ABE1CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80BDA07B-F6BE-47D7-AD06-0FB1CEC52A28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80BDA07B-F6BE-47D7-AD06-0FB1CEC52A28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80BDA07B-F6BE-47D7-AD06-0FB1CEC52A28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80BDA07B-F6BE-47D7-AD06-0FB1CEC52A28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC0EF4A8-A39A-470D-852D-F4B1D6AB00F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC0EF4A8-A39A-470D-852D-F4B1D6AB00F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC0EF4A8-A39A-470D-852D-F4B1D6AB00F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC0EF4A8-A39A-470D-852D-F4B1D6AB00F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
