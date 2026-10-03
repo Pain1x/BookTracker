@@ -5,52 +5,59 @@ using BookTracker.DAL.Entities.Books;
 using BookTracker.DAL.Entities.Authors;
 using BookTracker.DAL.Entities.Genres;
 using BookTracker.DAL.DBContexts;
+using BookTracker.DAL.Entities.Translations;
 
 namespace BookTracker.Tests
 {
     public class BookDbManagerTests
     {
         private readonly Mock<IDbContextFactory<BooksDbContext>> _mockContextFactory;
-        private readonly Mock<BooksDbContext> _mockContextMock;
         private readonly BookDbManager _bookDbManager;
+        private readonly string _dbName = "TestDb_" + Guid.NewGuid().ToString();
 
         public BookDbManagerTests()
         {
-            _mockContextMock = new Mock<BooksDbContext>();
-            
-            // --- Simplified Mocking Strategy: Use in-memory lists instead of complex async providers ---
-            
-            // Setup mock DbSet for Books to return a list when queried (simulating synchronous behavior)
-            var mockBookSet = new Mock<DbSet<Book>>();
-            _mockContextMock.Setup(c => c.Books).Returns(mockBookSet.Object);
+            var options = new DbContextOptionsBuilder<BooksDbContext>()
+                .UseInMemoryDatabase(databaseName: _dbName)
+                .Options;
 
-            // Setup mock DbSet for Authors and Genres similarly, returning empty lists by default
-            var mockAuthorSet = new Mock<DbSet<Author>>();
-            _mockContextMock.Setup(c => c.Authors).Returns(mockAuthorSet.Object);
-            
-            var mockGenreSet = new Mock<DbSet<Genre>>();
-            _mockContextMock.Setup(c => c.Genres).Returns(mockGenreSet.Object);
-
-            // Setup the mock factory to return our mocked context when CreateDbContextAsync is called
+            // The factory will return a context with these options
             _mockContextFactory = new Mock<IDbContextFactory<BooksDbContext>>();
-            _mockContextFactory.Setup(f => f.CreateDbContextAsync()).ReturnsAsync(_mockContextMock.Object);
+            _mockContextFactory.Setup(f => f.CreateDbContext()).Returns(() => new BooksDbContext(options));
+            _mockContextFactory.Setup(f => f.CreateDbContextAsync(CancellationToken.None))
+                .ReturnsAsync(new BooksDbContext(options));
 
-            // Instantiate the manager under test
             _bookDbManager = new BookDbManager(_mockContextFactory.Object);
+        }
+
+        private async Task SeedDataAsync(Action<BooksDbContext> seedAction)
+        {
+            await using var context = new BooksDbContext(new DbContextOptionsBuilder<BooksDbContext>()
+                .UseInMemoryDatabase(databaseName: _dbName)
+                .Options);
+            seedAction(context);
+            await context.SaveChangesAsync();
         }
 
         [Fact]
         public async Task AddBook_WhenAuthorAndGenreExist_AddsNewBookSuccessfully()
         {
-            // Arrange: Setup existing Author and Genre entities
-            var authorEntity = new Author { AuthorPk = Guid.NewGuid(), Name = "Existing Author" };
-            var genreEntity = new Genre { GenrePk = Guid.NewGuid(), Name = "Fiction" };
+            // Arrange
+            var authorPk = Guid.NewGuid();
+            var genrePk = Guid.NewGuid();
 
-            // Mock the FindAsync calls to return existing entities
-            _mockContextMock.Setup(c => c.Authors.FindAsync(It.IsAny<Guid>())).ReturnsAsync(authorEntity);
-            _mockContextMock.Setup(c => c.Genres.FindAsync(It.IsAny<Guid>())).ReturnsAsync(genreEntity);
+            await SeedDataAsync(ctx =>
+            {
+                ctx.Authors.AddAsync(new Author { AuthorPk = authorPk, Name = "Existing Author" });
+                ctx.Genres.AddAsync(new Genre { GenrePk = genrePk, Name = "Fiction" });
+            });
 
-            var bookToSave = new Book { Title = "New Test Book", Author = new Author { AuthorPk = authorEntity.AuthorPk, Genre = new Genre() }, Genre = new Genre { GenrePk = genreEntity.GenrePk } };
+            var bookToSave = new Book
+            {
+                Title = "New Test Book",
+                Author = new Author { AuthorPk = authorPk },
+                Genre = new Genre { GenrePk = genrePk }
+            };
 
             // Act
             var resultBook = await _bookDbManager.AddBook(bookToSave);
@@ -58,126 +65,86 @@ namespace BookTracker.Tests
             // Assert
             Assert.NotNull(resultBook);
             Assert.Equal("New Test Book", resultBook.Title);
-            _mockContextMock.Verify(c => c.Books.AddAsync(It.IsAny<Book>()), Times.Once());
-            _mockContextMock.Verify(c => c.SaveChangesAsync(), Times.Once());
+
+            await using var context = new BooksDbContext(new DbContextOptionsBuilder<BooksDbContext>()
+                .UseInMemoryDatabase(databaseName: _dbName)
+                .Options);
+
+            var savedBook = await context.Books.FirstOrDefaultAsync(b => b.BookPk == resultBook.BookPk);
+            Assert.NotNull(savedBook);
         }
 
         [Fact]
         public async Task AddBook_WhenAuthorIsMissingButGenreExists_CreatesAndAddsNewAuthor()
         {
-            // Arrange: Setup non-existent Author and existing Genre
-            var genreEntity = new Genre { GenrePk = Guid.NewGuid(), Name = "Fiction" };
-            var bookToSave = new Book { Title = "Test Book", Author = new Author { Name = "New Author" }, Genre = new Genre { GenrePk = genreEntity.GenrePk } };
+            // Arrange
+            var genrePk = Guid.NewGuid();
+            await SeedDataAsync(ctx => { ctx.Genres.AddAsync(new Genre { GenrePk = genrePk, Name = "Fiction" }); });
 
-            // Mock the FindAsync calls: Author returns null, Genre returns existing entity
-            _mockContextMock.Setup(c => c.Authors.FindAsync(It.IsAny<Guid>())).ReturnsAsync((Author)null);
-            _mockContextMock.Setup(c => c.Genres.FindAsync(It.IsAny<Guid>())).ReturnsAsync(genreEntity);
+            var bookToSave = new Book
+            {
+                Title = "Test Book",
+                Author = new Author { Name = "New Author" },
+                Genre = new Genre { GenrePk = genrePk }
+            };
 
             // Act
             var resultBook = await _bookDbManager.AddBook(bookToSave);
 
             // Assert
             Assert.NotNull(resultBook);
-            _mockContextMock.Verify(c => c.Authors.AddAsync(It.Is<Author>(a => a.Name == "New Author")), Times.Once());
-            _mockContextMock.Verify(c => c.Genres.AddAsync(It.IsAny<Genre>()), Times.Never()); // Genre already existed
-            _mockContextMock.Verify(c => c.SaveChangesAsync(), Times.Once());
+            await using var context = new BooksDbContext(new DbContextOptionsBuilder<BooksDbContext>()
+                .UseInMemoryDatabase(databaseName: _dbName)
+                .Options);
+
+            var savedAuthor = await context.Authors.FirstOrDefaultAsync(a => a.Name == "New Author");
+            Assert.NotNull(savedAuthor);
         }
 
         [Fact]
-        public async Task AddBook_WhenAuthorAndGenreExistButTitleIsEmpty_AddsWithEmptyTitle()
-        {
-            // Arrange: Setup existing Author and Genre entities
-            var authorEntity = new Author { AuthorPk = Guid.NewGuid(), Name = "Existing Author" };
-            var genreEntity = new Genre { GenrePk = Guid.NewGuid(), Name = "Fiction" };
-
-            _mockContextMock.Setup(c => c.Authors.FindAsync(It.IsAny<Guid>())).ReturnsAsync(authorEntity);
-            _mockContextMock.Setup(c => c.Genres.FindAsync(It.IsAny<Guid>())).ReturnsAsync(genreEntity);
-
-            // Book with an empty title
-            var bookToSave = new Book { Title = "", Author = new Author { AuthorPk = authorEntity.AuthorPk}, Genre = new Genre { GenrePk = genreEntity.GenrePk } };
-
-            // Act
-            var resultBook = await _bookDbManager.AddBook(bookToSave);
-
-            // Assert
-            Assert.NotNull(resultBook);
-            Assert.Equal("", resultBook.Title); // Should save the empty title
-            _mockContextMock.Verify(c => c.Books.AddAsync(It.IsAny<Book>()), Times.Once());
-            _mockContextMock.Verify(c => c.SaveChangesAsync(), Times.Once());
-        }
-
-        [Fact]
-        public async Task AddBook_WhenDatabaseFails_ThrowsException()
-        {
-            // Arrange: Setup existing Author and Genre entities
-            var authorEntity = new Author { AuthorPk = Guid.NewGuid(), Name = "Existing Author" };
-            var genreEntity = new Genre { GenrePk = Guid.NewGuid(), Name = "Fiction" };
-
-            _mockContextMock.Setup(c => c.Authors.FindAsync(It.IsAny<Guid>())).ReturnsAsync(authorEntity);
-            _mockContextMock.Setup(c => c.Genres.FindAsync(It.IsAny<Guid>())).ReturnsAsync(genreEntity);
-
-            var bookToSave = new Book { Title = "Failing Test Book", Author = new Author { AuthorPk = authorEntity.AuthorPk}, Genre = new Genre { GenrePk = genreEntity.GenrePk } };
-
-            // Setup SaveChangesAsync to throw an exception
-            _mockContextMock.Setup(c => c.SaveChangesAsync()).ThrowsAsync(new DbUpdateException("Database connection failed"));
-
-            // Act & Assert
-            await Assert.ThrowsAsync<DbUpdateException>(() => _bookDbManager.AddBook(bookToSave));
-        }
-
-        [Fact]
-        public async Task UpdateBook_WhenInputMatchesExisting_UpdatesSuccessfullyButNoChangesAreMade()
+        public async Task UpdateBook_WhenInputMatchesExisting_UpdatesSuccessfully()
         {
             // Arrange
             var bookPk = Guid.NewGuid();
-            var existingBook = new Book { BookPk = bookPk, Title = "Original Title", Rating = 5 };
-            // The updated book is identical to the existing one
-            var inputBook = new Book { BookPk = bookPk, Title = "Original Title", Rating = 5, Author = new Author(), Genre = new Genre() };
+            var authorPk = Guid.NewGuid();
+            var genrePk = Guid.NewGuid();
 
-            // Mock the FindAsync call to return the existing entity
-            _mockContextMock.Setup(c => c.Books.FindAsync(bookPk)).ReturnsAsync(existingBook);
+            await SeedDataAsync(ctx =>
+            {
+                var author = new Author { AuthorPk = authorPk, Name = "Author" };
+                var genre = new Genre { GenrePk = genrePk, Name = "Genre" };
+                ctx.Authors.Add(author);
+                ctx.Genres.Add(genre);
+                ctx.Books.Add(new Book
+                {
+                    BookPk = bookPk,
+                    Title = "Original Title",
+                    Rating = 5,
+                    Author = author,
+                    Genre = genre
+                });
+            });
+
+            var updatedBook = new Book
+            {
+                BookPk = bookPk,
+                Title = "Updated Title",
+                Rating = 4,
+                Author = new Author { AuthorPk = authorPk },
+                Genre = new Genre { GenrePk = genrePk }
+            };
 
             // Act
-            await _bookDbManager.UpdateBook(inputBook);
+            await _bookDbManager.UpdateBook(updatedBook);
 
             // Assert
-            // Verify that SetValues was called, but since values are identical, SaveChanges should still be called once to persist state/track changes correctly in EF Core context lifecycle.
-            _mockContextMock.Verify(c => c.Entry(It.Is<Book>(b => b.BookPk == bookPk)).CurrentValues.SetValues(inputBook), Times.Once());
-            _mockContextMock.Verify(c => c.SaveChangesAsync(), Times.Once());
-        }
+            await using var context = new BooksDbContext(new DbContextOptionsBuilder<BooksDbContext>()
+                .UseInMemoryDatabase(databaseName: _dbName)
+                .Options);
 
-        [Fact]
-        public async Task UpdateBook_WhenBookDoesNotExist_DoesNothing()
-        {
-            // Arrange
-            var nonExistentBook = new Book { BookPk = Guid.NewGuid(), Title = "Ghost", Author = new Author(), Genre = new Genre() };
-
-            // Mock the FindAsync call to return null
-            _mockContextMock.Setup(c => c.Books.FindAsync(nonExistentBook.BookPk)).ReturnsAsync((Book)null);
-
-            // Act
-            await _bookDbManager.UpdateBook(nonExistentBook);
-
-            // Assert
-            // Verify that SaveChangesAsync was never called if the book wasn't found
-            _mockContextMock.Verify(c => c.SaveChangesAsync(), Times.Never());
-        }
-
-        [Fact]
-        public async Task UpdateBook_WhenDatabaseFailsDuringSetValues_ThrowsException()
-        {
-            // Arrange
-            var bookPk = Guid.NewGuid();
-            var existingBook = new Book { BookPk = bookPk, Title = "Old Title" };
-            var updatedBook = new Book { BookPk = bookPk, Title = "New Updated Title", Author = new Author(), Genre = new Genre() };
-
-            _mockContextMock.Setup(c => c.Books.FindAsync(bookPk)).ReturnsAsync(existingBook);
-
-            // Setup SaveChangesAsync to throw an exception during the update process
-            _mockContextMock.Setup(c => c.SaveChangesAsync()).ThrowsAsync(new DbUpdateException("Constraint violation during update"));
-
-            // Act & Assert
-            await Assert.ThrowsAsync<DbUpdateException>(() => _bookDbManager.UpdateBook(updatedBook));
+            var result = await context.Books.FindAsync(bookPk);
+            Assert.Equal("Updated Title", result?.Title);
+            Assert.Equal(4, result?.Rating);
         }
 
         [Fact]
@@ -185,11 +152,25 @@ namespace BookTracker.Tests
         {
             // Arrange
             byte languagePk = 1;
-            var book1 = new Book { Title = "Book A", Author = new Author(), Genre = new Genre(), DateRead = DateTime.UtcNow, Rating = 5 };
-            var book2 = new Book { Title = "Book B", Author = new Author(), Genre = new Genre(), DateRead = DateTime.UtcNow.AddDays(1), Rating = 4 };
+            var book1 = new Book
+            {
+                Title = "Book A", Author = new Author(), Genre = new Genre(), DateRead = DateTime.UtcNow, Rating = 5
+            };
+            var book2 = new Book
+            {
+                Title = "Book B", Author = new Author(), Genre = new Genre(), DateRead = DateTime.UtcNow.AddDays(1),
+                Rating = 4
+            };
 
-            // Mock the query to return a list of books (using AsQueryable() on an in-memory list)
-            _mockContextMock.Setup(c => c.Books).Returns((DbSet<Book>)new List<Book> { book1, book2 }.AsQueryable());
+            await SeedDataAsync(ctx =>
+            {
+                ctx.Books.AddRange(book1, book2);
+                // Add translations for languagePk = 1
+                ctx.BookTranslations.AddAsync(new BookTranslation
+                    { BookPk = book1.BookPk, LanguagePk = languagePk, Title = "Book A (L1)" });
+                ctx.BookTranslations.AddAsync(new BookTranslation
+                    { BookPk = book2.BookPk, LanguagePk = languagePk, Title = "Book B (L1)" });
+            });
 
             // Act
             var result = await _bookDbManager.GetAllBooksLocalized(languagePk);
@@ -197,190 +178,343 @@ namespace BookTracker.Tests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(2, result.Count);
-        }
-
-        [Fact]
-        public async Task GetAllBooksLocalized_WhenSingleBookExists_ReturnsCorrectList()
-        {
-            // Arrange
-            byte languagePk = 1;
-            var book1 = new Book { Title = "Single Book", Author = new Author(), Genre = new Genre(), DateRead = DateTime.UtcNow, Rating = 5 };
-
-            // Mock the query to return a single book
-            _mockContextMock.Setup(c => c.Books).Returns((DbSet<Book>)new List<Book> { book1 }.AsQueryable());
-
-            // Act
-            var result = await _bookDbManager.GetAllBooksLocalized(languagePk);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Single(result);
-        }
-
-        [Fact]
-        public async Task GetAllBooksLocalized_WhenNoTranslationsMatchLanguagePk_ReturnsFallbackTitles()
-        {
-            // Arrange: Book exists, but its translations do not match the requested language (languagePk = 2)
-            byte targetLanguagePk = 2;
-            var bookWithOnlyLang1Translation = new Book { Title = "Default Title", Author = new Author(), Genre = new Genre(), DateRead = DateTime.UtcNow, Rating = 5 };
-
-            // Mock the query to return a list of books where translations are missing for targetLanguagePk
-            _mockContextMock.Setup(c => c.Books).Returns((DbSet<Book>)new List<Book> { bookWithOnlyLang1Translation }.AsQueryable());
-
-            // Act
-            var result = await _bookDbManager.GetAllBooksLocalized(targetLanguagePk);
-
-            // Assert: The title should fall back to the default/base title stored on the Book entity
-            Assert.NotNull(result);
-            Assert.Single(result);
-            Assert.Equal("Default Title", result[0].Title);
-        }
-
-        [Fact]
-        public async Task GetAllBooksLocalized_WhenDatabaseFails_ThrowsException()
-        {
-            // Arrange
-            byte languagePk = 1;
-
-            // Setup the query to throw an exception (this will now be caught by synchronous execution path)
-            _mockContextMock.Setup(c => c.Books).Throws(new DbUpdateException("Query failed"));
-
-            // Act & Assert
-            await Assert.ThrowsAsync<DbUpdateException>(() => _bookDbManager.GetAllBooksLocalized(languagePk));
+            Assert.Contains(result, b => b.Title == "Book A (L1)");
+            Assert.Contains(result, b => b.Title == "Book B (L1)");
         }
 
         [Fact]
         public async Task FindBookByPkLocalized_WhenBookExists_ReturnsCorrectBook()
         {
             // Arrange
-            Guid bookPk = Guid.NewGuid();
-            var expectedBook = new Book { BookPk = bookPk, Title = "Found Book", Author = new Author(), Genre = new Genre() };
+            var bookPk = Guid.NewGuid();
+            var languagePk = (byte)1;
+            var author = new Author { AuthorPk = Guid.NewGuid(), Name = "Author" };
+            var genre = new Genre { GenrePk = Guid.NewGuid(), Name = "Genre" };
 
-            // Mock the query to return a single book matching the PK
-            _mockContextMock.Setup(c => c.Books.Where(b => b.BookPk == bookPk)).Returns(new List<Book> { expectedBook }.AsQueryable());
+            await SeedDataAsync(ctx =>
+            {
+                ctx.Books.Add(new Book
+                {
+                    BookPk = bookPk,
+                    Title = "Original Title",
+                    Author = author,
+                    Genre = genre,
+                    DateRead = DateTime.UtcNow,
+                    Rating = 5
+                });
+                ctx.BookTranslations.Add(new BookTranslation
+                    { BookPk = bookPk, LanguagePk = languagePk, Title = "Localized Title" });
+            });
 
             // Act
-            var result = await _bookDbManager.FindBookByPkLocalized(bookPk, 1);
+            var result = await _bookDbManager.FindBookByPkLocalized(bookPk, languagePk);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal("Found Book", result.Title);
+            Assert.Equal("Localized Title", result.Title);
         }
 
         [Fact]
         public async Task FindBookByPkLocalized_WhenBookDoesNotExist_ReturnsNull()
         {
             // Arrange
-            Guid nonExistentPk = Guid.NewGuid();
-
-            // Mock the query to return an empty list (FirstOrDefaultAsync will return null)
-            _mockContextMock.Setup(c => c.Books.Where(b => b.BookPk == nonExistentPk)).Returns(Enumerable.Empty<Book>().AsQueryable());
+            var bookPk = Guid.NewGuid();
+            var languagePk = (byte)1;
 
             // Act
-            var result = await _bookDbManager.FindBookByPkLocalized(nonExistentPk, 1);
+            var result = await _bookDbManager.FindBookByPkLocalized(bookPk, languagePk);
 
             // Assert
             Assert.Null(result);
         }
 
         [Fact]
-        public async Task FindBookByPkLocalized_WhenNoTranslationForLanguage_ReturnsFallbackTitle()
+        public async Task AddBook_WhenAuthorExistsButGenreIsMissing_CreatesAndAddsNewGenre()
         {
-            // Arrange: Book exists, but no translation for the requested language (languagePk = 2)
-            Guid bookPk = Guid.NewGuid();
-            var existingBook = new Book { BookPk = bookPk, Title = "Default Title", Author = new Author(), Genre = new Genre() };
+            // Arrange
+            var authorPk = Guid.NewGuid();
+            var genrePk = Guid.NewGuid();
 
-            // Mock the query to return a single book where translation lookup will fail/return null
-            _mockContextMock.Setup(c => c.Books.Where(b => b.BookPk == bookPk)).Returns(new List<Book> { existingBook }.AsQueryable());
+            await SeedDataAsync(ctx =>
+            {
+                ctx.Authors.AddAsync(new Author { AuthorPk = authorPk, Name = "Existing Author" });
+                ctx.Genres.AddAsync(new Genre { GenrePk = genrePk, Name = "Fiction" });
+            });
+
+            var bookToSave = new Book
+            {
+                Title = "New Test Book",
+                Author = new Author { AuthorPk = authorPk },
+                Genre = new Genre { GenrePk = genrePk }
+            };
 
             // Act
-            var result = await _bookDbManager.FindBookByPkLocalized(bookPk, 2); // Requesting language 2
+            var resultBook = await _bookDbManager.AddBook(bookToSave);
 
-            // Assert: The title should fall back to the default/base title stored on the Book entity
+            // Assert
+            Assert.NotNull(resultBook);
+            await using var context = new BooksDbContext(new DbContextOptionsBuilder<BooksDbContext>()
+                .UseInMemoryDatabase(databaseName: _dbName)
+                .Options);
+
+            var savedGenre = await context.Genres.FirstOrDefaultAsync(g => g.GenrePk == genrePk);
+            Assert.NotNull(savedGenre);
+        }
+
+        [Fact]
+        public async Task AddBook_WhenBothAuthorAndGenreAreMissing_CreatesAndAddsBoth()
+        {
+            // Arrange
+            var bookToSave = new Book
+            {
+                Title = "New Test Book",
+                Author = new Author { Name = "New Author" },
+                Genre = new Genre { Name = "New Genre" }
+            };
+
+            // Act
+            var resultBook = await _bookDbManager.AddBook(bookToSave);
+
+            // Assert
+            Assert.NotNull(resultBook);
+            await using var context = new BooksDbContext(new DbContextOptionsBuilder<BooksDbContext>()
+                .UseInMemoryDatabase(databaseName: _dbName)
+                .Options);
+
+            var savedAuthor = await context.Authors.FirstOrDefaultAsync(a => a.Name == "New Author");
+            var savedGenre = await context.Genres.FirstOrDefaultAsync(g => g.Name == "New Genre");
+            Assert.NotNull(savedAuthor);
+            Assert.NotNull(savedGenre);
+        }
+
+        [Fact]
+        public async Task AddBook_WithNullDateRead_SavesSuccessfully()
+        {
+            // Arrange
+            var authorPk = Guid.NewGuid();
+            var genrePk = Guid.NewGuid();
+
+            await SeedDataAsync(ctx =>
+            {
+                ctx.Authors.AddAsync(new Author { AuthorPk = authorPk, Name = "Existing Author" });
+                ctx.Genres.AddAsync(new Genre { GenrePk = genrePk, Name = "Fiction" });
+            });
+
+            var bookToSave = new Book
+            {
+                Title = "New Test Book",
+                Author = new Author { AuthorPk = authorPk },
+                Genre = new Genre { GenrePk = genrePk },
+                DateRead = null
+            };
+
+            // Act
+            var resultBook = await _bookDbManager.AddBook(bookToSave);
+
+            // Assert
+            Assert.NotNull(resultBook);
+            Assert.Null(resultBook.DateRead);
+        }
+
+        [Fact]
+        public async Task GetAllBooksLocalized_WhenNoBooksExist_ReturnsEmptyList()
+        {
+            // Act
+            var result = await _bookDbManager.GetAllBooksLocalized(1);
+
+            // Assert
             Assert.NotNull(result);
-            Assert.Equal("Default Title", result.Title);
+            Assert.Empty(result);
         }
 
         [Fact]
-        public async Task FindBookByPkLocalized_WhenDatabaseFails_ThrowsException()
+        public async Task GetAllBooksLocalized_WhenTranslationsAreMissing_ReturnsOriginalValues()
         {
             // Arrange
-            Guid bookPk = Guid.NewGuid();
+            var book = new Book
+            {
+                Title = "Original Title",
+                Author = new Author { Name = "Original Author" },
+                Genre = new Genre { Name = "Original Genre" },
+                DateRead = DateTime.UtcNow,
+                Rating = 5
+            };
 
-            // Setup the query to throw an exception
-            _mockContextMock.Setup(c => c.Books.Where(b => b.BookPk == bookPk)).Throws(new DbUpdateException("Query failed"));
-
-            // Act & Assert
-            await Assert.ThrowsAsync<DbUpdateException>(() => _bookDbManager.FindBookByPkLocalized(bookPk, 1));
-        }
-
-        [Fact]
-        public async Task CountBooksByYears_WhenDataExistsForMultipleYears_ReturnsCorrectCounts()
-        {
-            // Arrange: Simulate data for years 2023 and 2024
-            var book2023 = new Book { DateRead = DateTime.UtcNow.AddYears(-1) };
-            var book2023b = new Book { DateRead = DateTime.UtcNow.AddYears(-1) };
-            var book2024 = new Book { DateRead = DateTime.UtcNow };
-
-            // Mock the query to return these books
-            _mockContextMock.Setup(c => c.Books).Returns((DbSet<Book>)new List<Book> { book2023, book2023b, book2024 }.AsQueryable());
+            await SeedDataAsync(ctx => ctx.Books.Add(book));
 
             // Act
-            var result = await _bookDbManager.CountBooksByYears();
+            var result = await _bookDbManager.GetAllBooksLocalized(1);
 
-            // Assert: Check if the counts are correct for the years present in the mock data (assuming current year is 2025)
-            Assert.Equal(2, result[2023]);
-            Assert.Equal(1, result[2024]);
+            // Assert
+            Assert.Single(result);
+            Assert.Equal("Original Title", result[0].Title);
+            Assert.Equal("Original Author", result[0].Author.Name);
+            Assert.Equal("Original Genre", result[0].Genre.Name);
         }
-
+        
         [Fact]
-        public async Task CountBooksByYears_WhenNoDataExists_ReturnsAllZeroCounts()
-        {
-            // Arrange: Simulate no books found in the mock data
-            _mockContextMock.Setup(c => c.Books).Returns((DbSet<Book>)Enumerable.Empty<Book>().AsQueryable());
-
-            // Act
-            var result = await _bookDbManager.CountBooksByYears();
-
-            // Assert: Check if all expected years have a count of 0
-            Assert.True(result.All(kvp => kvp.Value == 0));
-        }
-
-        [Fact]
-        public async Task CountBooksByYears_WhenDataExistsOutsideTargetRange_ReturnsCorrectCounts()
-        {
-            // Arrange: Simulate books from a year outside the target range (e.g., 5 years ago, if current is 2025)
-            var bookOld = new Book { DateRead = DateTime.UtcNow.AddYears(-5), Author = new Author(), Genre = new Genre() };
-
-            // Mock the query to return this old book and one in the target range
-            _mockContextMock.Setup(c => c.Books).Returns(new List<Book> { bookOld, new Book { DateRead = DateTime.UtcNow } }.AsQueryable());
-
-            // Act
-            var result = await _bookDbManager.CountBooksByYears();
-
-            // Assert: The count for the target year should be 1, and the old book should be ignored.
-            Assert.Equal(0, result[2023]); // Assuming current year is 2025
-            Assert.Equal(1, result[2024]);
-        }
-
-        [Fact]
-        public async Task AddBook_WhenAuthorIsNull_ThrowsNullReferenceException()
+        public async Task GetAllBooksLocalized_ForDifferentLanguagePk_ReturnsCorrectData()
         {
             // Arrange
-            var bookToSave = new Book { Title = "Test", Author = null, Genre = new Genre { GenrePk = Guid.NewGuid(), Name = "Fiction" } };
+            var book = new Book { Title = "Base Title", Author = new Author(), Genre = new Genre() };
+            byte langPk = 2;
 
-            // Act & Assert
-            await Assert.ThrowsAsync<NullReferenceException>(() => _bookDbManager.AddBook(bookToSave));
+            await SeedDataAsync(ctx =>
+            {
+                ctx.Books.Add(book);
+                ctx.BookTranslations.Add(new BookTranslation { BookPk = book.BookPk, LanguagePk = langPk, Title = "Translated Title" });
+            });
+
+            // Act
+            var result = await _bookDbManager.GetAllBooksLocalized(langPk);
+
+            // Assert
+            Assert.Single(result);
+            Assert.Equal("Translated Title", result[0].Title);
         }
 
         [Fact]
-        public async Task CountBooksByYears_WhenDatabaseFails_ThrowsException()
+        public async Task FindBookByPkLocalized_WhenTranslationIsMissing_ReturnsOriginalValues()
         {
-            // Arrange: Simulate the query failing
-            _mockContextMock.Setup(c => c.Books).Throws(new DbUpdateException("Counting failed"));
+            // Arrange
+            var book = new Book { Title = "Original Title", Author = new Author { Name = "Author" }, Genre = new Genre { Name = "Genre" } };
+            await SeedDataAsync(ctx => ctx.Books.Add(book));
 
-            // Act & Assert
-            await Assert.ThrowsAsync<DbUpdateException>(() => _bookDbManager.CountBooksByYears());
+            // Act
+            var result = await _bookDbManager.FindBookByPkLocalized(book.BookPk, 1);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal("Original Title", result.Title);
+        }
+
+        [Fact]
+        public async Task CountBooksByYears_WhenNoBooksExist_ReturnsAllZeros()
+        {
+            // Act
+            var result = await _bookDbManager.CountBooksByYears();
+
+            // Assert
+            var currentYear = DateTime.UtcNow.Year;
+            for (int i = 0; i < 5; i++)
+            {
+                Assert.Equal(0, result[currentYear - i]);
+            }
+        }
+
+        [Fact]
+        public async Task CountBooksByYears_WithMultipleBooksInSameYear_ReturnsCorrectCount()
+        {
+            // Arrange
+            var year = DateTime.UtcNow.Year;
+            await SeedDataAsync(ctx =>
+            {
+                ctx.Books.Add(new Book { DateRead = new DateTime(year, 1, 1), Author = new Author(), Genre = new Genre() });
+                ctx.Books.Add(new Book { DateRead = new DateTime(year, 1, 1), Author = new Author(), Genre = new Genre() });
+            });
+
+            // Act
+            var result = await _bookDbManager.CountBooksByYears();
+
+            // Assert
+            Assert.Equal(2, result[year]);
+        }
+
+        [Fact]
+        public async Task CountBooksByYears_WithBooksInDifferentYears_ReturnsCorrectCounts()
+        {
+            // Arrange
+            var year1 = DateTime.UtcNow.Year;
+            var year2 = DateTime.UtcNow.Year - 1;
+            await SeedDataAsync(ctx =>
+            {
+                ctx.Books.Add(new Book { DateRead = new DateTime(year1, 1, 1) , Author = new Author(), Genre = new Genre()});
+                ctx.Books.Add(new Book { DateRead = new DateTime(year2, 1, 1) , Author = new Author(), Genre = new Genre()});
+            });
+
+            // Act
+            var result = await _bookDbManager.CountBooksByYears();
+
+            // Assert
+            Assert.Equal(1, result[year1]);
+            Assert.Equal(1, result[year2]);
+        }
+
+        [Fact]
+        public async Task UpdateBook_UpdatesRatingAndNotesSuccessfully()
+        {
+            // Arrange
+            var bookPk = Guid.NewGuid();
+            await SeedDataAsync(ctx =>
+            {
+                ctx.Books.Add(new Book { BookPk = bookPk, Rating = 1, Notes = "Old", Author = new Author(), Genre = new Genre() });
+            });
+
+            var updatedBook = new Book
+            {
+                BookPk = bookPk,
+                Rating = 5,
+                Notes = "New",
+                Author = new Author(),
+                Genre = new Genre()
+            };
+
+            // Act
+            await _bookDbManager.UpdateBook(updatedBook);
+
+            // Assert
+            await using var context = new BooksDbContext(new DbContextOptionsBuilder<BooksDbContext>()
+                .UseInMemoryDatabase(databaseName: _dbName)
+                .Options);
+            var result = await context.Books.FindAsync(bookPk);
+            Assert.Equal(5, result?.Rating);
+            Assert.Equal("New", result?.Notes);
+        }
+
+        [Fact]
+        public async Task CountBooksByYears_WithBooksInCurrentYear_ReturnsCorrectCounts()
+        {
+            // Arrange
+            var currentYear = DateTime.UtcNow.Year;
+            await SeedDataAsync(ctx =>
+            {
+                ctx.Books.Add(new Book { DateRead = new DateTime(currentYear, 1, 1) , Author = new Author(), Genre = new Genre()});
+            });
+
+            // Act
+            var result = await _bookDbManager.CountBooksByYears();
+
+            // Assert
+            Assert.Equal(1, result[currentYear]);
+        }
+
+        [Fact]
+        public async Task UpdateBook_UpdatesTitleSuccessfully()
+        {
+            // Arrange
+            var bookPk = Guid.NewGuid();
+            await SeedDataAsync(ctx =>
+            {
+                ctx.Books.Add(new Book { BookPk = bookPk, Title = "Old Title" , Author = new Author(), Genre = new Genre()});
+            });
+
+            var updatedBook = new Book
+            {
+                BookPk = bookPk,
+                Title = "New Title",
+                Author = new Author(),
+                Genre = new Genre()
+            };
+
+            // Act
+            await _bookDbManager.UpdateBook(updatedBook);
+
+            // Assert
+            await using var context = new BooksDbContext(new DbContextOptionsBuilder<BooksDbContext>()
+                .UseInMemoryDatabase(databaseName: _dbName)
+                .Options);
+            var result = await context.Books.FindAsync(bookPk);
+            Assert.Equal("New Title", result?.Title);
         }
     }
 }

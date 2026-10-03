@@ -28,7 +28,7 @@ BookTracker/
 │   ├── Models/             # Data models specific to job payloads (e.g., JobStatus)
 │   └── BookTracker.Jobs.csproj
 ├── BlazorWebApp.sln       # Solution file
-└── AGENTS.md               # This file
+└── CLAUDE.md               # This file
 
 Dependency flow: The application follows a layered architecture with specialized modules:
 1.  **Presentation:** `BlazorWebApp` $\rightarrow$ `BookTracker.BLL`. (References DAL only for DI registration).
