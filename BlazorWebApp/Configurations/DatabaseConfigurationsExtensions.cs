@@ -17,6 +17,8 @@ namespace BlazorWebApp.Configurations
 		{
 			services.AddDbContextFactory<BooksDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("BooksConnection")));
 			services.AddScoped<IBookDbManager, BookDbManager>();
+			services.AddScoped<IAuthorDbManager, AuthorDbManager>();
+			services.AddScoped<IGenreDbManager, GenreDbManager>();
 			services.AddScoped<ITranslationsDbManager, TranslationsDbManager>();
 			services.AddScoped<IBookTranslationProcessor, BookTranslationProcessor>();
 			services.AddScoped<ITextTranslator, ConfigurableTextTranslator>();

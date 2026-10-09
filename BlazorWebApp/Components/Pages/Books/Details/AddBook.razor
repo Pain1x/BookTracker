@@ -1,85 +1,85 @@
 @page "/add-book"
 @rendermode InteractiveServer
 @using System.Globalization
+@using BlazorWebApp.Components.Shared
 @using BookTracker.BLL.Abstractions
 @using BookTracker.BLL.Models
 @using BookTracker.Common.Enums
 @using BookTracker.Resources
 @using Microsoft.Extensions.Localization
 @inject IBooksService BooksService
+@inject IAuthorService AuthorService
+@inject IGenreService GenreService
 @inject NavigationManager Navigation
 @inject IStringLocalizer<ApplicationResources> Localizer
 
 <h3 class="text-xl font-semibold mb-4" style="color:#6a1b9a;">@Localizer[ApplicationResources.AddBook]</h3>
 
 <div class="flex-row-buttons">
-	<button class="btn-back-violet" @onclick="GoBack">
-		&#8592; @Localizer[ApplicationResources.BackToList]
-	</button>
+    <button class="btn-back-violet" @onclick="GoBack">
+        ← @Localizer[ApplicationResources.BackToList]
+    </button>
 </div>
 
 <EditForm FormName="AddBookForm" Model="@_newBook" OnValidSubmit="HandleValidSubmit" class="addbook-violet">
-	<DataAnnotationsValidator />
-	<ValidationSummary />
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
 
-	<div class="mb-3">
-		<label class="form-label">@Localizer[ApplicationResources.Title]:</label>
-		<InputText @bind-Value="_newBook.Title" class="form-control" />
-	</div>
+    <div class="mb-3">
+        <label class="form-label">@Localizer[ApplicationResources.Title]:</label>
+        <InputText @bind-Value="_newBook.Title" class="form-control"/>
+    </div>
 
-	<div class="mb-3">
-		<label class="form-label">@Localizer[ApplicationResources.Author]:</label>
-		<InputText @bind-Value="_newBook.Author.Name" class="form-control" />
-	</div>
+    <div class="mb-3">
+        <label class="form-label">@Localizer[ApplicationResources.Author]:</label>
+        <SearchableDropdown TItem="AuthorModel"
+                            @bind-Value="_newBook.Author"
+                            FetchDataAsync ="AuthorService.GetAuthorsForDropdownAsync"
+                            ValueSelector="x => x.Name" />
+    </div>
 
-	<div class="mb-3">
-		<label class="form-label">@Localizer[ApplicationResources.Genre]:</label>
-		<InputText @bind-Value="_newBook.Genre.Name" class="form-control" />
-	</div>
+    <div class="mb-3">
+        <label class="form-label">@Localizer[ApplicationResources.Genre]:</label>
+        <SearchableDropdown TItem="GenreModel"
+                            @bind-Value="_newBook.Genre"
+                            FetchDataAsync ="GenreService.GetGenresForDropdownAsync"
+                            ValueSelector="x => x.Name" />
+    </div>
 
-	<div class="mb-3">
-		<label class="form-label">@Localizer[ApplicationResources.DateRead]:</label>
-		<InputDate @bind-Value="_newBook.DateRead" class="form-control" />
-	</div>
+    <div class="mb-3">
+        <label class="form-label">@Localizer[ApplicationResources.DateRead]:</label>
+        <InputDate @bind-Value="_newBook.DateRead" class="form-control"/>
+    </div>
 
-	<div class="mb-3">
-		<label class="form-label">@Localizer[ApplicationResources.Rating]:</label>
-		<InputNumber @bind-Value="_newBook.Rating" class="form-control" />
-	</div>
+    <div class="mb-3">
+        <label class="form-label">@Localizer[ApplicationResources.Rating]:</label>
+        <InputNumber @bind-Value="_newBook.Rating" class="form-control"/>
+    </div>
 
-	<button type="submit" class="btn-violet">@Localizer[ApplicationResources.AddBook]</button>
+    <button type="submit" class="btn-violet">@Localizer[ApplicationResources.AddBook]</button>
 </EditForm>
 
 @code {
+    private BookModel _newBook = new()
+    {
+        Author = new AuthorModel(),
+        Genre = new GenreModel()
+    };
+    
+    private static byte GetLanguagePk()
+    {
+        return CultureInfo.CurrentUICulture.Name switch
+        {
+            "uk-UA" => 2,
+            _ => 1
+        };
+    }
 
-	private static byte GetLanguagePk()
-	{
-		var cultureName = CultureInfo.CurrentUICulture.Name;
+    private void GoBack() => Navigation.NavigateTo("/");
 
-		return cultureName switch
-		{
-			"uk-UA" => 2,
-			_ => 1
-		};
-	}
-
-	[SupplyParameterFromForm(FormName = "AddBookForm")]
-	public BookModel _newBook { get; set; } = new()
-	{
-		Author = new AuthorModel(),
-		Genre = new GenreModel(),
-		DateRead = DateTimeOffset.UtcNow
-	};
-
-	private async Task HandleValidSubmit()
-	{
-		// Fix: Using BllLanguages instead of DAL.Entities.Enums.Languages
-		await BooksService.AddBook(_newBook, (Languages)GetLanguagePk());
-		Navigation.NavigateTo("/");
-	}
-
-	private void GoBack()
-	{
-		Navigation.NavigateTo("/");
-	}
+    private async Task HandleValidSubmit()
+    {
+        await BooksService.AddBook(_newBook, (Languages)GetLanguagePk());
+        Navigation.NavigateTo("/");
+    }
 }

@@ -1,0 +1,114 @@
+@typeparam TItem
+@using BookTracker.Resources
+@using Microsoft.Extensions.Localization
+@implements IDisposable
+@inject IStringLocalizer<ApplicationResources> Localizer
+
+<div class="dropdown">
+    <input type="text"
+           class="form-control"
+           value="@(SearchTerm.Length > 0 ? SearchTerm : (Value != null ? ValueSelector(Value) : ""))"
+           @oninput="OnSearchInput"
+           @onfocus="OpenDropdown"
+           @onblur="OnInputBlur"
+           placeholder="@Placeholder"/>
+    
+    @if (_isOpen)
+    {
+        <ul class="list-group mt-1 w-100 position-absolute" 
+            style="max-height: 200px; overflow-y: auto; border: 1px solid #ccc; z-index: 1050; background: white;">
+            
+            @if (Items != null && Items.Any())
+            {
+                @foreach (var item in Items)
+                {
+                    <li class="list-group-item list-group-item-action"
+                        style="cursor: pointer;"
+                        @onmousedown="() => SelectItem(item)">
+                        @if (ItemTemplate != null)
+                        {
+                            @ItemTemplate(item)
+                        }
+                        else
+                        {
+                            @ValueSelector(item)
+                        }
+                    </li>
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(SearchTerm))
+            {
+                <li class="list-group-item text-muted">Нічого не знайдено</li>
+            }
+
+            <li class="list-group-item list-group-item-action" style="cursor: pointer; font-weight: bold; color: #6a1b9a;">
+                @Localizer[ApplicationResources.CreateNewInDropdown] "@SearchTerm"
+            </li>
+        </ul>
+    }
+</div>
+
+@code {
+    [Parameter] public TItem? Value { get; set; }
+    [Parameter] public EventCallback<TItem?> ValueChanged { get; set; }
+    [Parameter] public IEnumerable<TItem>? Items { get; set; }
+    [Parameter] public EventCallback<IEnumerable<TItem>?> ItemsChanged { get; set; }
+    [Parameter] public Func<string, Task<IEnumerable<TItem>>> FetchDataAsync { get; set; } = null!;
+    [Parameter] public Func<TItem, string> ValueSelector { get; set; } = null!;
+    [Parameter] public RenderFragment<TItem>? ItemTemplate { get; set; }
+    [Parameter] public string Placeholder { get; set; } = "Search...";
+
+    private string SearchTerm { get; set; } = "";
+    private bool _isOpen; 
+    private System.Threading.Timer? _debounceTimer;
+
+    private void OpenDropdown()
+    {
+        _isOpen = true;
+        if (Items == null || !Items.Any())
+        {
+            TriggerSearch();
+        }
+    }
+
+    private void OnInputBlur()
+    {
+        _isOpen = false;
+        SearchTerm = "";
+    }
+
+    private void OnSearchInput(ChangeEventArgs e)
+    {
+        SearchTerm = e.Value?.ToString() ?? "";
+        _isOpen = true; 
+
+        _debounceTimer?.Dispose();
+        _debounceTimer = new System.Threading.Timer(_ => TriggerSearch(), null, 300, System.Threading.Timeout.Infinite);
+    }
+
+    private void TriggerSearch()
+    {
+        if (FetchDataAsync != null)
+        {
+            InvokeAsync(async () =>
+            {
+                Items = await FetchDataAsync(SearchTerm);
+                await ItemsChanged.InvokeAsync(Items);
+                StateHasChanged();
+            });
+        }
+    }
+
+    private async Task SelectItem(TItem item)
+    {
+        Value = item;
+        await ValueChanged.InvokeAsync(Value);
+        SearchTerm = ""; 
+        _isOpen = false; 
+    }
+    
+    public void Dispose()
+    {
+        _debounceTimer?.Dispose();
+    }
+}

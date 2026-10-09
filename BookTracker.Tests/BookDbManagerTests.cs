@@ -13,7 +13,7 @@ namespace BookTracker.Tests
     {
         private readonly Mock<IDbContextFactory<BooksDbContext>> _mockContextFactory;
         private readonly BookDbManager _bookDbManager;
-        private readonly string _dbName = "TestDb_" + Guid.NewGuid().ToString();
+        private readonly string _dbName = "TestDb_" + Guid.NewGuid();
 
         public BookDbManagerTests()
         {
