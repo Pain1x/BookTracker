@@ -165,4 +165,7 @@
   <data name="SelectYourLanguage" xml:space="preserve">
     <value>Виберіть мову</value>
   </data>
+  <data name="CreateNewInDropdown" xml:space="preserve">
+    <value>Створити новий(у)</value>
+  </data>
 </root>
