@@ -34,11 +34,11 @@ namespace BookTracker.Tests.Features.AuthorDropdown
             {
                 context.Authors.AddRange(new List<Author>
                 {
-                    new() { Name = "Zebra"},
-                    new() { Name = "Apple"},
-                    new() { Name = "Banana"},
-                    new() { Name = "Author 1"},
-                    new() { Name = "Author 2",}
+                    new() { Name = "Zebra" },
+                    new() { Name = "Apple" },
+                    new() { Name = "Banana" },
+                    new() { Name = "Author 1" },
+                    new() { Name = "Author 2", }
                 });
                 context.SaveChanges();
             }
@@ -50,8 +50,8 @@ namespace BookTracker.Tests.Features.AuthorDropdown
             // Arrange
             var authors = new List<Author>
             {
-                new() { Name = "Zebra"},
-                new() { Name = "Apple"}
+                new() { Name = "Zebra" },
+                new() { Name = "Apple" }
             };
 
             // Act
@@ -96,6 +96,85 @@ namespace BookTracker.Tests.Features.AuthorDropdown
 
             // Assert
             Assert.Equal(DropdownConstants.InitialDisplayLimit, result.Count());
+        }
+
+        [Fact]
+        public async Task T04_GetAuthorsForSearchableDropdown_ReturnsEmptyWhenNoMatch()
+        {
+            // Arrange
+
+            // Act
+            var result = await _manager.GetAuthorsForSearchableDropdown("NonExistentAuthor");
+
+            // Assert
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task T05_GetAuthorsForSearchableDropdown_CaseSensitiveSearch()
+        {
+            // Arrange
+
+            // Act
+            var result = await _manager.GetAuthorsForSearchableDropdown("apple");
+
+            // Assert
+            Assert.Empty(result); // Search is case-sensitive
+        }
+
+        [Fact]
+        public async Task T06_GetAuthorsForSearchableDropdown_MatchesMultipleResults()
+        {
+            // Arrange
+
+            // Act
+            var result = await _manager.GetAuthorsForSearchableDropdown("Author");
+
+            // Assert
+            Assert.Equal(2, result.Count()); // Author 1, Author 2
+        }
+
+        [Fact]
+        public async Task T07_GetAuthorsForSearchableDropdown_WhitespacesNotTrimmed()
+        {
+            // Arrange
+
+            // Act
+            var result = await _manager.GetAuthorsForSearchableDropdown("  Apple  ");
+
+            // Assert
+            Assert.Empty(result); // Whitespace is not trimmed
+        }
+
+        [Fact]
+        public async Task T08_GetAuthorsForSearchableDropdown_EmptyStringTreatedAsNull()
+        {
+            // Arrange
+
+            // Act
+            var result = await _manager.GetAuthorsForSearchableDropdown("");
+
+            // Assert
+            Assert.Equal(5, result.Count()); // All authors should be returned
+        }
+
+        [Fact]
+        public async Task T10_GetAuthorsForSearchableDropdown_WithSpecialCharacters()
+        {
+            // Arrange
+            using (var context = new BooksDbContext(_options))
+            {
+                context.Authors.Add(new Author { Name = "Author O'Brien" });
+                context.Authors.Add(new Author { Name = "Author García" });
+                context.SaveChanges();
+            }
+
+            // Act
+            var result = await _manager.GetAuthorsForSearchableDropdown("O'Brien");
+
+            // Assert
+            Assert.Single(result);
+            Assert.Equal("Author O'Brien", result.First().Name);
         }
     }
 }

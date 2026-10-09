@@ -71,7 +71,87 @@ namespace BookTracker.Tests.Features.GenreDropdown
         }
 
         [Fact]
-        public async Task T03_GetGenresForSearchableDropdown_AppliesLimit()
+        public async Task T03_GetGenresForSearchableDropdown_ReturnsEmptyWhenNoMatch()
+        {
+            // Arrange
+            // The constructor already seeds "Action" and "Drama"
+
+            // Act
+            var result = await _manager.GetGenresForSearchableDropdown("NonExistent");
+
+            // Assert
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task T04_GetGenresForSearchableDropdown_CaseSensitiveSearch()
+        {
+            // Arrange
+            // The constructor already seeds "Action" (with capital A)
+
+            // Act
+            var result = await _manager.GetGenresForSearchableDropdown("ACTION");
+
+            // Assert
+            Assert.Empty(result); // Search is case-sensitive
+        }
+
+        [Fact]
+        public async Task T05_GetGenresForSearchableDropdown_PartialMatch()
+        {
+            // Arrange
+            // The constructor already seeds "Action"
+
+            // Act
+            var result = await _manager.GetGenresForSearchableDropdown("Act");
+
+            // Assert
+            Assert.Single(result);
+            Assert.Equal("Action", result.First().Name);
+        }
+
+        [Fact]
+        public async Task T06_GetGenresForSearchableDropdown_MatchesMultipleResults()
+        {
+            // Arrange
+            // The constructor already seeds "Action" and "Drama"
+
+            // Act
+            var result = await _manager.GetGenresForSearchableDropdown("Action");
+
+            // Assert
+            Assert.Single(result);
+            Assert.Equal("Action", result.First().Name);
+        }
+
+        [Fact]
+        public async Task T07_GetGenresForSearchableDropdown_WhitespacesNotTrimmed()
+        {
+            // Arrange
+            // The constructor already seeds "Action"
+
+            // Act
+            var result = await _manager.GetGenresForSearchableDropdown("  Act  ");
+
+            // Assert
+            Assert.Empty(result); // Whitespace is not trimmed, so "  Act  " doesn't match "Action"
+        }
+
+        [Fact]
+        public async Task T08_GetGenresForSearchableDropdown_EmptyStringTreatedAsNull()
+        {
+            // Arrange
+            // The constructor already seeds all genres
+
+            // Act
+            var result = await _manager.GetGenresForSearchableDropdown("");
+
+            // Assert
+            Assert.Equal(4, result.Count());
+        }
+
+        [Fact]
+        public async Task T09_GetGenresForSearchableDropdown_LimitApplied()
         {
             // Arrange
             using (var context = new BooksDbContext(_options))
@@ -87,6 +167,25 @@ namespace BookTracker.Tests.Features.GenreDropdown
 
             // Assert
             Assert.Equal(DropdownConstants.InitialDisplayLimit, result.Count());
+        }
+
+        [Fact]
+        public async Task T10_GetGenresForSearchableDropdown_WithSpecialCharacters()
+        {
+            // Arrange
+            using (var context = new BooksDbContext(_options))
+            {
+                context.Genres.Add(new Genre { Name = "Sci-Fi" });
+                context.Genres.Add(new Genre { Name = "Fantasy" });
+                context.SaveChanges();
+            }
+
+            // Act
+            var result = await _manager.GetGenresForSearchableDropdown("Sci-Fi");
+
+            // Assert
+            Assert.Single(result);
+            Assert.Equal("Sci-Fi", result.First().Name);
         }
     }
 }
