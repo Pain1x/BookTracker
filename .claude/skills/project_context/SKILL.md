@@ -3,6 +3,34 @@
 ## Overview
 Book tracking web app built with C#, .NET 8, Blazor Server, EF Core with PostgreSQL (Npgsql), AutoMapper, and built-in .NET DI.
 
+## Structure and dependencies
+BookTracker/
+├── BlazorWebApp/          # Presentation layer (Blazor Server UI)
+│   ├── Components/         # Reusable UI components (e.g., PaginatedList, NavMenu)
+│   ├── Configurations/     # Service and database configuration extensions
+│   ├── Pages/              # Razor pages for specific views (e.g., Books.razor)
+│   └── wwwroot/            # Static assets (CSS, JS, images)
+├── BookTracker.BLL/       # Business logic layer
+│   ├── Abstractions/      # Service contract interfaces (e.g., IBooksService)
+│   ├── Models/             # Domain models (BookModel, AuthorModel)
+│   └── Services/           # Business logic implementations (BooksService)
+├── BookTracker.DAL/       # Data access layer
+│   ├── Abstractions/      # Data access interfaces (e.g., IBookDBManager)
+│   ├── DBContexts/         # EF Core DbContext setup
+│   ├── Entities/           # Database entities (Author, Book, Genre)
+│   └── DbManagers/         # Data access implementations (BookDbManager)
+├── BookTracker.Common/    # Shared library for common types and enums
+│   ├── Enums/              # Shared enumerations (e.g., StatusEnum)
+│   └── BookTracker.Common.csproj
+├── BookTraker.Automapper/  # Centralized AutoMapper profiles
+│   ├── AutoMapper/         # All mapping profile definitions
+│   └── BookTraker.Automapper.csproj
+├── BookTracker.Jobs/      # Background worker services and scheduled tasks
+│   ├── Models/             # Data models specific to job payloads (e.g., JobStatus)
+│   └── BookTracker.Jobs.csproj
+├── BlazorWebApp.sln       # Solution file
+└── AGENTS.md               # This file
+
 ## Architecture & Layers
 1.  **Presentation (`BlazorWebApp`):** UI layer. Must not use DbContext or DAL types directly; always go through BLL services.
 2.  **Business Logic (`BookTracker.BLL`):** Core logic. References `BookTracker.Automapper` and `BookTracker.DAL`.
@@ -20,18 +48,10 @@ Book tracking web app built with C#, .NET 8, Blazor Server, EF Core with Postgre
     - `BlazorWebApp` $\rightarrow$ `BookTracker.BLL`
     - `BookTracker.BLL` $\rightarrow$ (`BookTracker.Automapper`, `BookTracker.DAL`)
     - `BookTracker.Jobs` $\rightarrow$ `BookTracker.BLL`
-
-## Common Commands
-- **Build:** `dotnet build BookTracker.sln`
-- **Run:** `dotnet run --project BlazorWebApp/BlazorWebApp.csproj`
-- **Test:** `dotnet test BookTracker.sln`
-- **Add Migration:** `dotnet ef migrations add <MigrationName> --project BookTracker.DAL --startup-project BlazorWebApp`
-- **Apply Migrations:** `dotnet ef database update --project BookTracker.DAL --startup-project BlazorWebApp`
-
-## Git Workflow
-- Branch names: `feature/<short-name>`, `fix/<short-name>`
-- Commit messages: short, imperative, English.
-
 ## New Features & Logic (Added Oct 2026)
 - [[searchable-dropdowns]]
+- [[book-management]]
+- [[translation-system]]
+- [[author-genre-management]]
+- [[background-jobs]]
 - 

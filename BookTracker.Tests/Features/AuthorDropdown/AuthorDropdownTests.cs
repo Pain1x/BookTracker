@@ -3,6 +3,7 @@ using BookTracker.Common;
 using BookTracker.DAL.DBContexts;
 using BookTracker.DAL.DBManagers;
 using BookTracker.DAL.Entities.Authors;
+using BookTracker.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookTracker.Tests.Features.AuthorDropdown
@@ -28,48 +29,54 @@ namespace BookTracker.Tests.Features.AuthorDropdown
                 .ReturnsAsync(new BooksDbContext(_options));
 
             _manager = new AuthorDbManager(_mockContextFactory.Object);
-
-            // Seed the database with sample data
-            using (var context = new BooksDbContext(_options))
-            {
-                context.Authors.AddRange(new List<Author>
-                {
-                    new() { Name = "Zebra" },
-                    new() { Name = "Apple" },
-                    new() { Name = "Banana" },
-                    new() { Name = "Author 1" },
-                    new() { Name = "Author 2", }
-                });
-                context.SaveChanges();
-            }
         }
 
         [Fact]
-        public async Task T01_GetAuthorsForSearchableDropdown_ReturnsSortedList()
+        public async Task GetAuthorsForSearchableDropdown_ReturnsSortedList()
         {
             // Arrange
             var authors = new List<Author>
             {
                 new() { Name = "Zebra" },
-                new() { Name = "Apple" }
+                new() { Name = "Apple" },
+                new() { Name = "Banana" },
+                new() { Name = "Author 1" },
+                new() { Name = "Author 2" }
             };
+
+            await using (var context = new BooksDbContext(_options))
+            {
+                context.Authors.AddRange(authors);
+                await context.SaveChangesAsync();
+            }
 
             // Act
             var result = await _manager.GetAuthorsForSearchableDropdown(null);
 
             // Assert
             Assert.Equal("Apple", result.First().Name);
+            Assert.Equal("Author 1", result.Skip(1).First().Name);
+            Assert.Equal("Author 2", result.Skip(2).First().Name);
+            Assert.Equal("Banana", result.Skip(3).First().Name);
+            Assert.Equal("Zebra", result.Last().Name);
         }
 
         [Fact]
-        public async Task T02_GetAuthorsForSearchableDropdown_FiltersByTerm()
+        public async Task GetAuthorsForSearchableDropdown_FiltersBySearchTerm()
         {
             // Arrange
             var authors = new List<Author>
             {
                 new() { Name = "Apple" },
-                new() { Name = "Banana" }
+                new() { Name = "Banana" },
+                new() { Name = "Cherry" }
             };
+
+            await using (var context = new BooksDbContext(_options))
+            {
+                context.Authors.AddRange(authors);
+                await context.SaveChangesAsync();
+            }
 
             // Act
             var result = await _manager.GetAuthorsForSearchableDropdown("Banana");
@@ -80,13 +87,17 @@ namespace BookTracker.Tests.Features.AuthorDropdown
         }
 
         [Fact]
-        public async Task T03_GetAuthorsForSearchableDropdown_AppliesLimit()
+        public async Task GetAuthorsForSearchableDropdown_AppliesDisplayLimit()
         {
             // Arrange
-            using (var context = new BooksDbContext(_options))
+            await using (var context = new BooksDbContext(_options))
             {
                 var authors = new List<Author>();
-                for (int i = 0; i < 20; i++) authors.Add(new Author { Name = $"Author {i}" });
+                for (int i = 0; i < 20; i++)
+                {
+                    authors.Add(new Author { Name = $"Author {i}" });
+                }
+
                 context.Authors.AddRange(authors);
                 await context.SaveChangesAsync();
             }
@@ -99,10 +110,22 @@ namespace BookTracker.Tests.Features.AuthorDropdown
         }
 
         [Fact]
-        public async Task T04_GetAuthorsForSearchableDropdown_ReturnsEmptyWhenNoMatch()
+        public async Task GetAuthorsForSearchableDropdown_ReturnsEmptyWhenNoMatch()
         {
             // Arrange
+            var authors = new List<Author>
+            {
+                new() { Name = "Apple" },
+                new() { Name = "Banana" },
+                new() { Name = "Cherry" }
+            };
 
+            await using (var context = new BooksDbContext(_options))
+            {
+                context.Authors.AddRange(authors);
+                await context.SaveChangesAsync();
+            }
+            
             // Act
             var result = await _manager.GetAuthorsForSearchableDropdown("NonExistentAuthor");
 
@@ -111,10 +134,22 @@ namespace BookTracker.Tests.Features.AuthorDropdown
         }
 
         [Fact]
-        public async Task T05_GetAuthorsForSearchableDropdown_CaseSensitiveSearch()
+        public async Task GetAuthorsForSearchableDropdown_CaseSensitiveSearch()
         {
             // Arrange
+            var authors = new List<Author>
+            {
+                new() { Name = "Apple" },
+                new() { Name = "Banana" },
+                new() { Name = "Cherry" }
+            };
 
+            await using (var context = new BooksDbContext(_options))
+            {
+                context.Authors.AddRange(authors);
+                await context.SaveChangesAsync();
+            }
+            
             // Act
             var result = await _manager.GetAuthorsForSearchableDropdown("apple");
 
@@ -123,10 +158,23 @@ namespace BookTracker.Tests.Features.AuthorDropdown
         }
 
         [Fact]
-        public async Task T06_GetAuthorsForSearchableDropdown_MatchesMultipleResults()
+        public async Task GetAuthorsForSearchableDropdown_MatchesMultipleResults()
         {
             // Arrange
+            var authors = new List<Author>
+            {
+                new() { Name = "Author" },
+                new() { Name = "Author 2" },
+                new() { Name = "Genre" },
+                new() { Name = "Genre 2" }
+            };
 
+            await using (var context = new BooksDbContext(_options))
+            {
+                context.Authors.AddRange(authors);
+                await context.SaveChangesAsync();
+            }
+            
             // Act
             var result = await _manager.GetAuthorsForSearchableDropdown("Author");
 
@@ -135,10 +183,19 @@ namespace BookTracker.Tests.Features.AuthorDropdown
         }
 
         [Fact]
-        public async Task T07_GetAuthorsForSearchableDropdown_WhitespacesNotTrimmed()
+        public async Task GetAuthorsForSearchableDropdown_WhitespacesNotTrimmed()
         {
             // Arrange
+            var authors = new List<Author>
+            {
+                new() { Name = "Apple" }
+            };
 
+            await using (var context = new BooksDbContext(_options))
+            {
+                context.Authors.AddRange(authors);
+                await context.SaveChangesAsync();
+            }
             // Act
             var result = await _manager.GetAuthorsForSearchableDropdown("  Apple  ");
 
@@ -147,26 +204,38 @@ namespace BookTracker.Tests.Features.AuthorDropdown
         }
 
         [Fact]
-        public async Task T08_GetAuthorsForSearchableDropdown_EmptyStringTreatedAsNull()
+        public async Task GetAuthorsForSearchableDropdown_EmptyStringTreatedAsNull()
         {
             // Arrange
+            var authors = new List<Author>
+            {
+                new() { Name = "Author" },
+                new() { Name = "Author 2" },
+                new() { Name = "Genre" },
+                new() { Name = "Genre 2" }
+            };
 
+            await using (var context = new BooksDbContext(_options))
+            {
+                context.Authors.AddRange(authors);
+                await context.SaveChangesAsync();
+            }
             // Act
             var result = await _manager.GetAuthorsForSearchableDropdown("");
 
             // Assert
-            Assert.Equal(5, result.Count()); // All authors should be returned
+            Assert.Equal(4, result.Count()); // All authors should be returned
         }
 
         [Fact]
-        public async Task T10_GetAuthorsForSearchableDropdown_WithSpecialCharacters()
+        public async Task GetAuthorsForSearchableDropdown_WithSpecialCharacters()
         {
             // Arrange
-            using (var context = new BooksDbContext(_options))
+            await using (var context = new BooksDbContext(_options))
             {
                 context.Authors.Add(new Author { Name = "Author O'Brien" });
                 context.Authors.Add(new Author { Name = "Author García" });
-                context.SaveChanges();
+                context.SaveChangesAsync();
             }
 
             // Act

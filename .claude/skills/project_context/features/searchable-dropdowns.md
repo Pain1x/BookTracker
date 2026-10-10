@@ -12,10 +12,12 @@ Implemented searchable dropdown menus for Authors and Genres to simplify data en
     - Services in `BookTracker.BLL` map DAL entities to UI models using AutoMapper.
 - **UI Layer (Blazor):**
     - Updated `AddBook.razor` to include search input fields and selection logic for the dropdowns.
+    - Uses `SearchableDropdown.razor` reusable component with debounce-based search.
 
 ## Key Constraints & Constants
 - **Display Limit:** Controlled by `DropdownConstants.InitialDisplayLimit` (default: 10) to ensure consistent behavior between data fetching and UI rendering.
 - **Localization:** All displayed names in dropdowns are localized via translation tables.
+- **Debounce Delay:** Search triggers after 300ms of user input to minimize API calls.
 
 ## Testing
 - Unit tests exist for both managers, verifying sorting, filtering, and limit application using an In-Memory database.

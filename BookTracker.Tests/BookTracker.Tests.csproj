@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageReference Include="Moq" Version="4.20.7" />
     <PackageReference Include="xunit" Version="2.6.5" />
@@ -24,6 +25,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BookTracker.BLL\BookTracker.BLL.csproj" />
+    <ProjectReference Include="..\BookTracker.DAL\BookTracker.DAL.csproj" />
+    <ProjectReference Include="..\BookTracker.Common\BookTracker.Common.csproj" />
+    <ProjectReference Include="..\BookTracker.Jobs\BookTracker.Jobs.csproj" />
+    <ProjectReference Include="..\Resources\BookTracker.Resources.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,15 +1,16 @@
 #!/bin/bash
-# Evaluates the metric by compiling and counting compiler warnings
-# Output format: METRIC=<number>
+# Evaluates the metric by running acceptance tests
+# Output format: METRIC=<number_of_failing_tests>
 
 cd "$(dirname "$0")/.."
+source ./.karpathy/config.env
 
-# Clean and build, capturing warnings
-BUILD_OUTPUT=$(dotnet build BlazorWebApp/BlazorWebApp.csproj -v q 2>&1)
+# Run the guard command and capture output
+TEST_OUTPUT=$($GUARD_CMD 2>&1)
 BUILD_EXIT_CODE=$?
 
-# Count warning lines (CS0... or CS8...)
-WARNING_COUNT=$(echo "$BUILD_OUTPUT" | grep -E "^\s*(warning|CS[0-9]+)" | wc -l)
+# Extract failed count from "Passed!  - Failed: X, Passed: Y, Skipped: Z, Total: W"
+METRIC=$(echo "$TEST_OUTPUT" | grep -oP 'Failed: \K\d+' || echo "0")
 
-echo "METRIC=$WARNING_COUNT"
+echo "METRIC=$METRIC"
 exit $BUILD_EXIT_CODE

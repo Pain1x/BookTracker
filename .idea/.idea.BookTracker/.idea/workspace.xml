@@ -16,14 +16,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4712fe08-e66f-4def-ae33-3c7ce6824b36" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.claude/skills/project_context/SKILL.md" beforeDir="false" afterPath="$PROJECT_DIR$/.claude/skills/project_context/SKILL.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.claude/skills/project_context/features/searchable-dropdowns.md" beforeDir="false" afterPath="$PROJECT_DIR$/.claude/skills/project_context/features/searchable-dropdowns.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.BookTracker/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BookTracker/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.BookTracker/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BookTracker/.idea/indexLayout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.BookTracker/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BookTracker/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorWebApp/Components/Pages/Books/Details/AddBook.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorWebApp/Components/Pages/Books/Details/AddBook.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorWebApp/Components/Pages/Books/Details/BookDetails.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorWebApp/Components/Pages/Books/Details/BookDetails.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorWebApp/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorWebApp/appsettings.Development.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookTracker.DAL/Abstractions/ITextTranslator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.DAL/Abstractions/ITextTranslator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookTracker.DAL/Services/BookTranslationProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.DAL/Services/BookTranslationProcessor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.DAL/Services/ConfigurableTextTranslator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BookTracker.Tests/BookTracker.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.Tests/BookTracker.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BookTracker.Tests/Features/AuthorDropdown/AuthorDropdownTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.Tests/Features/AuthorDropdown/AuthorDropdownTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BookTracker.Tests/Features/GenreDropdown/GenreDropdownTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BookTracker.Tests/Features/GenreDropdown/GenreDropdownTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/CLAUDE.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +36,13 @@
   </component>
   <component name="EmbeddingIndexingInfo">
     <option name="cachedIndexableFilesCount" value="6" />
-    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -49,12 +56,17 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/Pain1x/BookTracker.git&quot;,
-    &quot;accountId&quot;: &quot;2ef072cc-3591-48b5-acc4-d76d997efed5&quot;
+    &quot;accountId&quot;: &quot;813a5032-de2c-446a-ac34-7911bc6197f4&quot;
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3d1453d855dab4ce57612f2826d460aaf3a3b875d3432e8466295dbe38bca/NavLink.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/5967259aff81a295fc2280e640ed76b14d29f2687882c55d5297aabd281af70/Task.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6780d13016c376c4491c5618b257d84da7eacf747ed2719783e775546b79b/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/BookTracker.DAL/Entities/Languages/Languages.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8bdada1fea82f26f2d51baed41fe528bdf0f22432478d7e0d6b683361a81/MapperConfiguration.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ce37be1a06b16c6faa02038d2cc477dd3bca5b217ceeb41c5f2ad45c1bf9/ServiceProvider.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/fe1e66e174729fcc9f77713dd32602a59258866b1352c592572783d3dd3d029/IDbContextFactory.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BookTracker.BLL/Abstractions/IGenreService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///Immediate Window" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="McpProjectServerCommands">
@@ -64,62 +76,65 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000214301613093" />
-      <entry key="MS500" value="1.124488565739034" />
-      <entry key="S2" value="1.8834520662176448" />
-      <entry key="S5" value="2.423725678699581" />
-      <entry key="S10" value="2.683688181135186" />
-      <entry key="S30" value="2.887519976357848" />
-      <entry key="S60" value="2.9429497069506567" />
-      <entry key="M2" value="2.9833826567085917" />
-      <entry key="M5" value="3.3936543395551935" />
-      <entry key="M10" value="5.523890045192764" />
-      <entry key="M15" value="8.614695230702129" />
-      <entry key="M30" value="19.766150895981664" />
-      <entry key="H1" value="41.97263616345416" />
-      <entry key="H2" value="69.81372210627067" />
-      <entry key="H4" value="93.16837244939558" />
-      <entry key="D1" value="120.44109186079265" />
-      <entry key="W1" value="126.03741563844221" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0000000000002638" />
+      <entry key="S10" value="1.000000628281144" />
+      <entry key="S30" value="1.019327293553577" />
+      <entry key="S60" value="1.320448478904162" />
+      <entry key="M2" value="2.478734054279152" />
+      <entry key="M5" value="5.776240578967598" />
+      <entry key="M10" value="12.004898294667196" />
+      <entry key="M15" value="19.705204943586807" />
+      <entry key="M30" value="41.74181784455464" />
+      <entry key="H1" value="70.03339348868211" />
+      <entry key="H2" value="104.73886858779906" />
+      <entry key="H4" value="151.19610942357122" />
+      <entry key="D1" value="249.80469980127913" />
+      <entry key="W1" value="278.6754074762175" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="1.9706854972639072E-185" />
-      <entry key="S2" value="6.683224878071069E-47" />
-      <entry key="S5" value="3.718734227912802E-19" />
-      <entry key="S10" value="7.646332006690102E-10" />
-      <entry key="S30" value="0.0014024174395368444" />
-      <entry key="S60" value="0.052717675944918566" />
-      <entry key="M2" value="0.32442216329092494" />
-      <entry key="M5" value="0.9899614071057665" />
-      <entry key="M10" value="1.5573422793736313" />
-      <entry key="M15" value="1.9743641747215446" />
-      <entry key="M30" value="3.8528322839319347" />
-      <entry key="H1" value="8.975914875390608" />
-      <entry key="H2" value="16.043086517963257" />
-      <entry key="H4" value="22.12046848339809" />
-      <entry key="D1" value="29.275205639203392" />
-      <entry key="W1" value="30.74681158339033" />
+      <entry key="MS500" value="1.1545036986687692E-177" />
+      <entry key="S2" value="5.82906411386353E-45" />
+      <entry key="S5" value="2.024135272130907E-18" />
+      <entry key="S10" value="1.422721080230031E-9" />
+      <entry key="S30" value="0.0011247083591498636" />
+      <entry key="S60" value="0.03353872780093107" />
+      <entry key="M2" value="0.18566111345058062" />
+      <entry key="M5" value="0.7444671033673073" />
+      <entry key="M10" value="2.468769923534184" />
+      <entry key="M15" value="5.077786172566444" />
+      <entry key="M30" value="13.063287433018084" />
+      <entry key="H1" value="23.560763806807923" />
+      <entry key="H2" value="35.49166169214092" />
+      <entry key="H4" value="49.321301646606074" />
+      <entry key="D1" value="76.03353948534537" />
+      <entry key="W1" value="83.60930739149917" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.2414905873428315" />
-      <entry key="MS500" value="0.8518770393898936" />
-      <entry key="S2" value="1.7760242717464527" />
-      <entry key="S5" value="2.3725247129627665" />
-      <entry key="S10" value="2.656272041344237" />
-      <entry key="S30" value="2.879290586524339" />
-      <entry key="S60" value="2.9901128809082027" />
-      <entry key="M2" value="3.3029687563392645" />
-      <entry key="M5" value="4.377646605876948" />
-      <entry key="M10" value="7.073757318529214" />
-      <entry key="M15" value="10.581213029108836" />
-      <entry key="M30" value="23.610787210456675" />
-      <entry key="H1" value="50.94014637319572" />
-      <entry key="H2" value="85.8498419020745" />
-      <entry key="H4" value="115.28418987436314" />
-      <entry key="D1" value="149.7152946407614" />
-      <entry key="W1" value="156.78407728047162" />
+      <entry key="MS100" value="0.9201876506248751" />
+      <entry key="MS500" value="0.9835020740262483" />
+      <entry key="S2" value="0.9958497530944581" />
+      <entry key="S5" value="0.9983378297046298" />
+      <entry key="S10" value="0.9991691980404599" />
+      <entry key="S30" value="1.0201037433759668" />
+      <entry key="S60" value="1.35291392997609" />
+      <entry key="M2" value="2.6617974935865156" />
+      <entry key="M5" value="6.514482864840826" />
+      <entry key="M10" value="14.461667334074878" />
+      <entry key="M15" value="24.767831494301266" />
+      <entry key="M30" value="54.78826032970387" />
+      <entry key="H1" value="93.57995981940638" />
+      <entry key="H2" value="140.21973705630612" />
+      <entry key="H4" value="200.5095339307205" />
+      <entry key="D1" value="325.836064043241" />
+      <entry key="W1" value="362.28436839538864" />
     </decayedShown>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -133,34 +148,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.BlazorWebApp: http.executor&quot;: &quot;Debug&quot;,
-    &quot;Attach to Process.14349:BlazorWebApp.executor&quot;: &quot;Debug&quot;,
-    &quot;Docker.BlazorWebApp/Dockerfile.executor&quot;: &quot;Debug&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/NC-Localization-of-db&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.BlazorWebApp: http.executor": "Debug",
+    "27e63b44-0f2d-4874-8373-1d946df3e43c.executor": "Debug",
+    "Attach to Process.14349:BlazorWebApp.executor": "Debug",
+    "Docker.BlazorWebApp/Dockerfile.executor": "Debug",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "Adding-new-old-features",
+    "last_opened_file_path": "/home/deck/Code/BookTracker/Checks",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "rider.unittesting.toolwindow.stripe.button.shown": "true",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.BlazorWebApp: http">
     <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
       <deployment type="dockerfile">
@@ -291,6 +310,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Merge branch 'master' into develop" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -307,6 +328,14 @@
           <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
           <option name="timeStamp" value="3" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/BlazorWebApp/Components/Pages/Books/List/BooksList.razor</url>
+          <line>2</line>
+          <properties isMultiMethodBreakpoint="true">
+            <option name="multiMethodBreakpoint" value="true" />
+          </properties>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

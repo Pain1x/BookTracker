@@ -1,0 +1,228 @@
+{
+  "main": {
+    "id": "0a7bff3a86e9a524",
+    "type": "split",
+    "children": [
+      {
+        "id": "f36d795538a6e167",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "022caaea701c818c",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "Нова вкладка"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "fb140066afc8616a",
+    "type": "split",
+    "children": [
+      {
+        "id": "a55b7fd807c810b7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e4bbcd1d5e6a3dad",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Файловий менеджер"
+            }
+          },
+          {
+            "id": "8e184f69ba1b5864",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Пошук"
+            }
+          },
+          {
+            "id": "3e1d07e421d9beb2",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Закладки"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "c94e3fe95e3a5af8",
+    "type": "split",
+    "children": [
+      {
+        "id": "855826f470d7ccc7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "70dabf10ed02cba4",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": ".claude/skills/build/SKILL.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Зворотні посилання"
+            }
+          },
+          {
+            "id": "ea75aadcd67860f8",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": ".claude/skills/build/SKILL.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Вихідні посилання"
+            }
+          },
+          {
+            "id": "3ae3e26fa96242dd",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Мітки"
+            }
+          },
+          {
+            "id": "1d8df3ffc8c283a4",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Всі властивості"
+            }
+          },
+          {
+            "id": "8055bb15d3308663",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": ".claude/skills/build/SKILL.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Вміст"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Відкрити провідник файлів": false,
+      "graph:Граф": false,
+      "canvas:Створити нове полотно": false,
+      "daily-notes:Сьогоднішня нотатка": false,
+      "templates:Вставити шаблон": false,
+      "command-palette:Відкрити меню команд": false,
+      "bases:Створити нову базу": false
+    }
+  },
+  "active": "e4bbcd1d5e6a3dad",
+  "lastOpenFiles": [
+    "BookTracker.Tests/obj/3da2523b-a147-44b6-b876-a9db465afb22.tmp",
+    "BookTracker.Tests/obj/e6cd97de-ceb4-45c7-bfda-5fc668f2ab33.tmp",
+    "BookTracker.DAL/obj/c03c5876-4cdc-4514-9343-05650f87b33a.tmp",
+    "Resources/obj/f50529d6-9907-4c3e-a4dd-232ec68e2109.tmp",
+    "BookTracker.Tests/Features/GenreDropdown/GenreDropdownTests.cs~",
+    "BookTracker.Tests/Features/AuthorDropdown/AuthorDropdownTests.cs~",
+    "BookTracker.Tests/bin/Debug/net8.0/uk-UA/BookTracker.Resources.resources.dll",
+    "BookTracker.Tests/bin/Debug/net8.0/uk-UA",
+    "BookTracker.Tests/bin/Debug/net8.0/BookTracker.Resources.pdb",
+    "BookTracker.Tests/bin/Debug/net8.0/BookTracker.Resources.dll",
+    "BookTracker.Tests/bin/Debug/net8.0/Microsoft.Extensions.Localization.dll",
+    ".claude/skills/project_context/SKILL.md",
+    "CLAUDE.md",
+    ".claude/README.md",
+    "AGENTS.md",
+    ".claude/skills/project_context/features/author-genre-management.md",
+    ".claude/skills/project_context/features/background-jobs.md",
+    ".claude/skills/project_context/features/book-management.md",
+    ".claude/skills/project_context/features/searchable-dropdowns.md",
+    ".claude/skills/project_context/features/translation-system.md",
+    ".claude/skills/feature-spec/templates/program.feature.md",
+    ".claude/skills/loop-run/references/dotnet-metrics.md",
+    ".claude/skills/loop-run/SKILL.md",
+    ".claude/skills/loop-init/templates/program.md",
+    ".claude/skills/feature-spec/SKILL.md",
+    ".claude/skills (1)/loop-run/references/dotnet-metrics.md",
+    ".claude/skills (1)/loop-init/templates/program.md",
+    ".claude/skills (1)/feature-spec/templates/program.feature.md",
+    ".claude/skills (1)/loop-run/SKILL.md",
+    ".claude/skills (1)/loop-init/SKILL.md",
+    ".claude/skills (1)/feature-spec/SKILL.md",
+    ".claude/agents (1)/loop-strategist.md",
+    ".claude/agents (1)/loop-guard.md",
+    ".claude/agents (1)/loop-experimenter.md",
+    ".claude/.claude/skills/loop-run/references/dotnet-metrics.md",
+    ".claude/.claude/skills/loop-init/templates/program.md",
+    ".claude/worktrees/agent-a4a068104c9ddbde6/BlazorWebApp/wwwroot/favicon.png",
+    ".claude/worktrees/agent-a8963da0199589472/BlazorWebApp/wwwroot/favicon.png"
+  ]
+}
